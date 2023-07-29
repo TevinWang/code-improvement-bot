@@ -1,1 +1,6 @@
 .env
+.venv
+node_modules
+package-lock.json
+pandas_docs
+data
