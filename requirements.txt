@@ -1,2 +1,3 @@
 pygithub
 python-dotenv
+anthropic
