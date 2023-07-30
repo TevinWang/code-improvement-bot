@@ -11,7 +11,7 @@ app = Flask(__name__)
 def run_stuff(repo_url):
     repo_url = repo_url.replace("%", "/")
     # receiving "username/repo" from nodejs
-    claude.main(repo_url)
+    claude.main("https://github.com/" + repo_url)
     pr.main(repo_url)
     return repo_url
 
