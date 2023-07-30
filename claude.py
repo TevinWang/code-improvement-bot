@@ -8,34 +8,34 @@ from github_scraper import fetch_python_files_from_github_url
 load_dotenv()
 CLAUDE_API = os.getenv("CLAUDE_API")
 
-# scrape
-github_url = "https://github.com/tevinwang/ClassGPT"
-python_files = fetch_python_files_from_github_url(github_url)
-# ASSUMING OUTPUT IS A LIST OF TUPLES OF (FILE_PATH, [FILE LINES])
-for i in python_files:
-    context_list = []
-    for j, line in enumerate(i[1]):
-        if len(line) < 10:
-            continue
-        if (not line):
-            continue
-        p = subprocess.Popen(['node', 'add_doc_context.js', line], stdout=subprocess.PIPE)
-        out = p.stdout.read()
-        context_list.append((line, j, out))
-    python_files[i] += (context_list,)
+# # scrape
+# github_url = "https://github.com/tevinwang/ClassGPT"
+# python_files = fetch_python_files_from_github_url(github_url)
+# # ASSUMING OUTPUT IS A LIST OF TUPLES OF (FILE_PATH, [FILE LINES])
+# for i in python_files:
+#     context_list = []
+#     for j, line in enumerate(i[1]):
+#         if len(line) < 10:
+#             continue
+#         if (not line):
+#             continue
+#         p = subprocess.Popen(['node', 'add_doc_context.js', line], stdout=subprocess.PIPE)
+#         out = p.stdout.read()
+#         context_list.append((line, j, out))
+#     python_files[i] += (context_list,)
 
-# python_files is now [(FILE_PATH, [FILE LINES], [(LINE, LINE NUMBER, CONTEXT)])]
+# # python_files is now [(FILE_PATH, [FILE LINES], [(LINE, LINE NUMBER, CONTEXT)])]
 
 
-# write the file
-with open("python_files.txt", "w") as f:
-    f.write('<files>\n')
-    for file_path, file_content, file_context in python_files:
-        f.write(f"<file>\n<file_path>{file_path}</file_path>\n<file_content>\n{file_content}\n</file_content>\n<file_context>\n")
-        for context in file_context:
-            f.write(f"<line>\n<line_number>{context[1]}</line_number>\n<line_content>{context[0]}</line_content>\n<context>\n{context[2]}\n</context>\n</line>\n")
-        f.write("</file_context>\n</file>\n")
-    f.write('</files>')
+# # write the file
+# with open("python_files.txt", "w") as f:
+#     f.write('<files>\n')
+#     for file_path, file_content, file_context in python_files:
+#         f.write(f"<file>\n<file_path>{file_path}</file_path>\n<file_content>\n{file_content}\n</file_content>\n<file_context>\n")
+#         for context in file_context:
+#             f.write(f"<line>\n<line_number>{context[1]}</line_number>\n<line_content>{context[0]}</line_content>\n<context>\n{context[2]}\n</context>\n</line>\n")
+#         f.write("</file_context>\n</file>\n")
+#     f.write('</files>')
 
 #LOOKS LIKE
 # """
@@ -75,7 +75,47 @@ with open("python_files.txt", "r") as f:
     python_files = f.read()
 
 
-prompt = f"""{HUMAN_PROMPT} Claude, I'm seeking your expertise in reviewing, optimizing, and modifying Python code files. Your task is to carefully review each file, make improvements to ensure clean and efficient code, and provide the updated code in a xml structure:
+prompt = f"""{HUMAN_PROMPT} 
+"Codebase Cleanup and Documentation: LLM Quick Prompt"
+
+Description:
+In this prompt, you are given a codebase that requires thorough cleanup, additional comments, and the implementation of documentation tests (doc tests). Your task is to enhance the readability, maintainability, and understanding of the codebase through comments and clear documentation. Additionally, you will implement doc tests to ensure the accuracy of the documentation while also verifying the code's functionality.
+
+Tasks:
+
+Codebase Cleanup:
+
+Identify and remove any redundant or unused code.
+Refactor any convoluted or confusing sections to improve clarity.
+Comments and Documentation:
+
+Add inline comments to explain complex algorithms, logic, or code blocks.
+Document the purpose, input, output, and usage of functions and methods.
+Describe the role of key variables and data structures used in the code.
+Doc Tests Implementation:
+
+Identify critical functions or methods that require doc tests.
+Write doc tests that demonstrate the expected behavior and output of the functions.
+Ensure the doc tests cover various scenarios and edge cases.
+Function and Variable Naming:
+
+Review function and variable names for clarity and consistency.
+Rename functions and variables if needed to improve readability.
+Readme File Update (Optional):
+
+Update the README file with a summary of the codebase and its purpose.
+Provide clear instructions for running the code and any dependencies required.
+Note:
+
+The codebase provided may lack sufficient comments and documentation.
+Focus on making the code easier to understand for others who read it in the future.
+Prioritize clarity and conciseness when writing comments and documentation.
+Implement doc tests using appropriate testing frameworks or methods.
+Ensure that the doc tests cover various scenarios to validate the code's correctness.
+This prompt allows the LLM to work on improving codebase quality through comments and documentation while also implementing doc tests for verification. Cleaning up and enhancing codebases in this way is a crucial skill for any developer, as it facilitates teamwork, code maintenance, and future development efforts.Claude, I'm seeking your expertise in adding comments and doc tests to Python code files.:
+
+Provide the updated code in a xml structure:
+
 <root>
 <diff>
 <!--Ensure the diff follows the unified diff format that would be returned by python difflib, providing clear context and line-by-line changes for ALL files.
@@ -83,26 +123,36 @@ Give line numbers with the first line of the file content being line 1,
 ONLY CHANGE LINES OF FILE CONTENT. Do this for all files.
 Add the entire thing as a cdata section '<![CDATA['
 This is what it is supposed to look like per file:
---- a/path/to/file.txt
-+++ b/path/to/file.txt
-@@ -1,4 +1,4 @@
-  This is the original content. (next line after the @@ must be on a newline)
+--- a/path/to/file.txt (make sure to include the 'a/' in the path, and exactly 3 +s)
++++ b/path/to/file.txt (make sure to include the 'b/' in the path, and exactly 3 -s)
+@@ -1,4 +1,4 @@ (ANYTHING after the @@ MUST BE ON A NEW LINE)
+  This is the original content. 
 -Some lines have been removed.
 +Some lines have been added.
   More content here.
-Remove this comment and add the diff patch contents in the diff tag directly. do not add it in this comment
+Remove this comment and add the diff patch contents in the diff tag directly. DO NOT ADD THIS IN THE COMMENT
 -->
 
 </diff>
+[NO MORE DIFF SYNTAX AFTER THE DIFF TAG]
 <title>
-<!-- Include a github pull request title for your changes -->
+<!-- Relevant emoji + Include a github pull request title for your changes -->
 </title>
 <changes>
-  <!-- Include details of the changes made in plain text -->
+  <!-- Include details of the changes made in github BULLET POINTS, not xml, with some relevant emojis -->
 </changes>
 </root>
 
-Your focus should be on pythonic principles, clean coding practices, efficiency, and optimization.
+Your focus should be on pythonic principles, clean coding practices, grammar, efficiency, and optimization. Do not change the file if you don't know what to do. 
+
+Before you make a change, evaluate the following:
+- The code must work and stay valid
+- The code doesn't add any duplicate code that isn't necessary
+- The code has the right indentation for python
+- The code works
+If one of these is not valid, do not add the change.
+
+Reminder to add the entire diff as a cdata section '<![CDATA[' (not individually)
 
 Please find the files for review and modification below:
 {python_files}

@@ -26,6 +26,7 @@ def apply_patch(s,patch,revert=False):
   while i < len(p) and p[i].startswith(("---","+++")): i += 1 # skip header lines
   while i < len(p):
     m = _hdr_pat.match(p[i].strip())
+    print(p[i].strip())
     if not m: raise Exception("Cannot process diff")
     i += 1
     l = int(m.group(midx))-1 + (m.group(midx+1) == '0')
@@ -98,12 +99,12 @@ if __name__ == "__main__":
     completion_root = tree.getroot()
     diff_string = completion_root.find('diff').text
 
-    diff_chunks = diff_string.split('--- ')
+    diff_chunks = diff_string.split('--- a/')
 
     for chunk in diff_chunks[1:]:
         file_path_line, diff_content = chunk.split('\n', 1)
         file_path_line_parts = file_path_line.split(' ')
-        file_path = file_path_line.split('a/')[1].split('\n+++')[0]
+        file_path = file_path_line.split('\n+++')[0]
         print("file_path: ", file_path)
         for file_elem in file_root.findall('.//file'):
             file_path_elem = file_elem.find('file_path')
