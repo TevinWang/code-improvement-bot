@@ -21,8 +21,7 @@ embed_fun.embed = async function (batch) {
     const table = await db.openTable("python_docs", embed_fun);
 
     let input = process.argv[2];
-    console.log(input);
 
-    let result = await table.search(input).select(['text']).limit(5).execute();
-    console.log(result.map(r => r.text))
+    let result = await table.search(input).select(['text']).limit(1).execute();
+    console.log(result.map(r => r.text)[0])
 })();
