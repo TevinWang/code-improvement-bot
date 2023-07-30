@@ -1,7 +1,5 @@
-import { LanceDB } from "langchain/vectorstores/lancedb";
-import { RetrievalQAChain } from "langchain/chains";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
-import { UnstructuredLoader,  } from "langchain/document_loaders/fs/unstructured";
+import { UnstructuredLoader } from "langchain/document_loaders/fs/unstructured";
 import fs from 'fs';
 import * as path from "node:path";
 import { download } from '@guoyunhe/downloader';
@@ -14,6 +12,7 @@ const lancedb = await import("vectordb");
 const { pipeline } = await import('@xenova/transformers')
 const pipe = await pipeline('feature-extraction', 'Xenova/all-MiniLM-L6-v2');
 
+const delay = ms => new Promise(res => setTimeout(res, ms));
 
 async function read_data(){
     const unstructuredKey = process.env.UNSTRUCTURED_API_KEY
@@ -38,13 +37,16 @@ async function read_data(){
                 const docPath = path.join(subfolder, p);
                 console.log(docPath);
                 var rawDocument;
-                try {
-                const loader = new UnstructuredLoader(docPath, options);
-                rawDocument = await loader.load();
-
-                } catch (e) {
-                    console.log('Error loading document:', e);
-                    continue;
+                while (true) {
+                    try {
+                        const loader = new UnstructuredLoader(docPath, options);
+                        rawDocument = await loader.load();
+                        break;
+                    } catch (e) {
+                        console.log('Error loading document:', e);
+                        console.log('Waiting 50 seconds to retry');
+                        await delay(50000);
+                    }
                 }
                 const metadata = {
                     title: subfolders[i],
@@ -92,6 +94,7 @@ embed_fun.embed = async function (batch) {
         data.push({text: doc['pageContent'], metadata: doc['metadata']});
     }
 
-    const table = await db.createTable("python_docs", data, embed_fun);
-
+    console.log("creating table");
+    const _ = await db.createTable("python_docs", data, embed_fun);
+    console.log("table created");
 })();

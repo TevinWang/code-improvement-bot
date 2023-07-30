@@ -1,4 +1,4 @@
-import os
+import os, subprocess
 
 from anthropic import AI_PROMPT, HUMAN_PROMPT, Anthropic
 from dotenv import load_dotenv
@@ -11,16 +11,64 @@ CLAUDE_API = os.getenv("CLAUDE_API")
 # scrape
 github_url = "https://github.com/tevinwang/ClassGPT"
 python_files = fetch_python_files_from_github_url(github_url)
+# ASSUMING OUTPUT IS A LIST OF TUPLES OF (FILE_PATH, [FILE LINES])
+for i in python_files:
+    context_list = []
+    for j, line in enumerate(i[1]):
+        if len(line) < 10:
+            continue
+        if (not line):
+            continue
+        p = subprocess.Popen(['node', 'add_doc_context.js', line], stdout=subprocess.PIPE)
+        out = p.stdout.read()
+        context_list.append((line, j, out))
+    python_files[i] += (context_list,)
+
+# python_files is now [(FILE_PATH, [FILE LINES], [(LINE, LINE NUMBER, CONTEXT)])]
+
 
 # write the file
 with open("python_files.txt", "w") as f:
-    f.write('<files>')
-    f.writelines(
-        f"<file>\n<file_path>{file_path}</file_path>\n<file_content>\n{file_content}\n</file_content>\n</file>\n"
-        for file_path, file_content in python_files
-    )
+    f.write('<files>\n')
+    for file_path, file_content, file_context in python_files:
+        f.write(f"<file>\n<file_path>{file_path}</file_path>\n<file_content>\n{file_content}\n</file_content>\n<file_context>\n")
+        for context in file_context:
+            f.write(f"<line>\n<line_number>{context[1]}</line_number>\n<line_content>{context[0]}</line_content>\n<context>\n{context[2]}\n</context>\n</line>\n")
+        f.write("</file_context>\n</file>\n")
     f.write('</files>')
 
+#LOOKS LIKE
+"""
+<files>
+    <file>
+        <file_path>path/to/file.py</file_path>
+        <file_content>
+            import os, subprocess
+            etc
+            etc
+        </file_content>
+        <file_context>
+            <line>
+                <line_number>1</line_number>
+                <line_content>import os, subprocess</line_content>
+                <context>
+                    import os, subprocess
+                    context here
+                </context>
+            </line>
+            <line>
+                <line_number>2</line_number>
+                etc
+                etc
+            </line>
+        </file_context>
+    </file>
+    <file>
+        etc
+        etc
+    </file>
+</files>
+"""
 
 # read the file
 with open("python_files.txt", "r") as f:
