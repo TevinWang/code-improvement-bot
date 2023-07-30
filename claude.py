@@ -8,21 +8,26 @@ from github_scraper import fetch_python_files_from_github_url
 load_dotenv()
 CLAUDE_API = os.getenv("CLAUDE_API")
 
-# # scrape
-# github_url = "https://github.com/tevinwang/ClassGPT"
-# python_files = fetch_python_files_from_github_url(github_url)
-# # ASSUMING OUTPUT IS A LIST OF TUPLES OF (FILE_PATH, [FILE LINES])
-# for i in python_files:
-#     context_list = []
-#     for j, line in enumerate(i[1]):
-#         if len(line) < 10:
-#             continue
-#         if (not line):
-#             continue
-#         p = subprocess.Popen(['node', 'add_doc_context.js', line], stdout=subprocess.PIPE)
-#         out = p.stdout.read()
-#         context_list.append((line, j, out))
-#     python_files[i] += (context_list,)
+# scrape
+github_url = "https://github.com/tevinwang/ClassGPT"
+python_files = fetch_python_files_from_github_url(github_url)
+# ASSUMING OUTPUT IS A LIST OF TUPLES OF (FILE_PATH, [FILE LINES])
+for i in python_files:
+    context_list = []
+    for j, line in enumerate(i[1]):
+        if len(line) < 10:
+            continue
+        if (not line):
+            continue
+        line = list(line)
+        for i, char in enumerate(line):
+            if char == "\"":
+                line[i] = "\'"
+        line = "".join(line)
+        p = subprocess.Popen(['node', 'add_doc_context.js', line], stdout=subprocess.PIPE)
+        out = p.stdout.read()
+        context_list.append((line, j, out))
+    python_files[i] += (context_list,)
 
 # # python_files is now [(FILE_PATH, [FILE LINES], [(LINE, LINE NUMBER, CONTEXT)])]
 

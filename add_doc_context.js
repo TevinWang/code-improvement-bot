@@ -9,9 +9,8 @@ embed_fun.sourceColumn = 'text'
 embed_fun.embed = async function (batch) {
     let result = []
     for (let text of batch) {
-        console.log("embedding " + stringify(batch))
         const res = await pipe(text, { pooling: 'mean', normalize: true })
-        result.push(Array.from(res['data']))
+        result.push(Array.from(await res['data']))
     }
     return (result)
 };
@@ -19,10 +18,11 @@ embed_fun.embed = async function (batch) {
 
 (async () => {
     const db = await lancedb.connect("data/sample-lancedb")
-    const table = await db.openTable("python_docs");
+    const table = await db.openTable("python_docs", embed_fun);
 
     let input = process.argv[2];
+    console.log(input);
 
-    const result = await table.search(input).limit(1).execute();
-    console.log(result);
+    let result = await table.search(input).select(['text']).limit(5).execute();
+    console.log(result.map(r => r.text))
 })();
