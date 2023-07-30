@@ -25,8 +25,7 @@ def apply_patch(s,patch,revert=False):
   (midx,sign) = (1,'+') if not revert else (3,'-')
   while i < len(p) and p[i].startswith(("---","+++")): i += 1 # skip header lines
   while i < len(p):
-    print(p[i])
-    m = _hdr_pat.match(p[i])
+    m = _hdr_pat.match(p[i].strip())
     if not m: raise Exception("Cannot process diff")
     i += 1
     l = int(m.group(midx))-1 + (m.group(midx+1) == '0')

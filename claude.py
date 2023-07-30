@@ -38,37 +38,37 @@ with open("python_files.txt", "w") as f:
     f.write('</files>')
 
 #LOOKS LIKE
-"""
-<files>
-    <file>
-        <file_path>path/to/file.py</file_path>
-        <file_content>
-            import os, subprocess
-            etc
-            etc
-        </file_content>
-        <file_context>
-            <line>
-                <line_number>1</line_number>
-                <line_content>import os, subprocess</line_content>
-                <context>
-                    import os, subprocess
-                    context here
-                </context>
-            </line>
-            <line>
-                <line_number>2</line_number>
-                etc
-                etc
-            </line>
-        </file_context>
-    </file>
-    <file>
-        etc
-        etc
-    </file>
-</files>
-"""
+# """
+# <files>
+#     <file>
+#         <file_path>path/to/file.py</file_path>
+#         <file_content>
+#             import os, subprocess
+#             etc
+#             etc
+#         </file_content>
+#         <file_context>
+#             <line>
+#                 <line_number>1</line_number>
+#                 <line_content>import os, subprocess</line_content>
+#                 <context>
+#                     import os, subprocess
+#                     context here
+#                 </context>
+#             </line>
+#             <line>
+#                 <line_number>2</line_number>
+#                 etc
+#                 etc
+#             </line>
+#         </file_context>
+#     </file>
+#     <file>
+#         etc
+#         etc
+#     </file>
+# </files>
+# """
 
 # # read the file
 with open("python_files.txt", "r") as f:
