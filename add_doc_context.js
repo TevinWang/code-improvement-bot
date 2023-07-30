@@ -18,11 +18,11 @@ embed_fun.embed = async function (batch) {
 
 (async () => {
     const db = await lancedb.connect("data/sample-lancedb")
-   const table = await db.openTable("python_docs", embed_fun);
+    const table = await db.openTable("python_docs", embed_fun);
 
     let input = process.argv[2];
     console.log(input);
 
-    let result = await table.search(input).limit(5).execute();
+    let result = await table.search(input).select(['text']).limit(5).execute();
     console.log(result.map(r => r.text))
 })();

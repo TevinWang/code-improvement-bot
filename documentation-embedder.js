@@ -91,7 +91,7 @@ embed_fun.embed = async function (batch) {
     console.log(docs[0]['pageContent'])
     let data = [];
     for (let doc of docs) {
-        data.push({text: doc['pageContent'], metadata: doc['metadata']});
+        data.push({text: doc['pageContent'], metadata: JSON.stringify(doc['metadata'])});
     }
 
     console.log("creating table");
