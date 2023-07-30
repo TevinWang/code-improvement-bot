@@ -11,17 +11,6 @@ const { pipeline } = await import('@xenova/transformers')
 const pipe = await pipeline('feature-extraction', 'Xenova/all-MiniLM-L6-v2');
 
 
-function get_document_title(document) {
-    const source = document.metadata.source;
-    const regex = /pandas.documentation(.*).html/;
-    const title = regex.exec(source);
-    if (source | title) {
-        console.log("title", title[1]);
-        console.log("source", source);
-    }
-    return title | "";
-};
-
 async function read_data(){
     process.env.UNSTRUCTURED_API_KEY = "yCzUUQOmrDlayNDCZN58gfASLqzy1a"
     const unstructuredKey = process.env.UNSTRUCTURED_API_KEY
@@ -31,49 +20,49 @@ async function read_data(){
                     docker- https://js.langchain.com/docs/modules/indexes/document_loaders/examples/file_loaders/unstructured `)
     }
     var docs = [];
-    const docsPath = "pandas_docs/pandas.documentation"
+    const docsPath = "data/python-3.11.4-docs-text"
     const options = {
         apiKey: unstructuredKey,
     };
 
-    if (fs.existsSync(docsPath)) {
-        for (const p of fs.readdirSync(docsPath).filter((f) => f.endsWith('.html'))) {
-            const docPath = path.join(docsPath, p);
-            console.log(docPath);
-            var rawDocument;
-            try {
-            const loader = new UnstructuredLoader(docPath, options);
-            rawDocument = await loader.load();
+    var subfolders = fs.readdirSync(docsPath);
+    for (let i = 0; i < subfolders.length; i++) {
+        const subfolder = docsPath + "/" + subfolders[i];
+        console.log(subfolder)
+        if (!fs.lstatSync(subfolder).isDirectory()) { continue; }
+        if (fs.existsSync(subfolder)) {
+            for (const p of fs.readdirSync(subfolder).filter((f) => f.endsWith('.txt'))) {
+                const docPath = path.join(subfolder, p);
+                console.log(docPath);
+                var rawDocument;
+                try {
+                const loader = new UnstructuredLoader(docPath, options);
+                rawDocument = await loader.load();
 
-            } catch (e) {
-                console.log('Error loading document:', e);
-                continue;
+                } catch (e) {
+                    console.log('Error loading document:', e);
+                    continue;
+                }
+                const metadata = {
+                    title: subfolders[i],
+                    version: '3.11.4',
+                };
+                rawDocument[0].metadata = Object.assign(rawDocument[0].metadata, metadata);
+                rawDocument[0].metadata['source'] = JSON.stringify(rawDocument[0].metadata['source']);
+                docs = docs.concat(rawDocument);
             }
-            const metadata = {
-                title: get_document_title(rawDocument[0]),
-                version: '2.0rc0',
-            };
-            rawDocument[0].metadata = Object.assign(rawDocument[0].metadata, metadata);
-            rawDocument[0].metadata['source'] = JSON.stringify(rawDocument[0].metadata['source']);
-            docs = docs.concat(rawDocument);
-        }
 
+        }
     }
     return docs;
 };
 
 
-// Define the function. `sourceColumn` is required for LanceDB to know
-// which column to use as input.
 const embed_fun = {}
 embed_fun.sourceColumn = 'text'
 embed_fun.embed = async function (batch) {
     let result = []
-    // Given a batch of strings, we will use the `pipe` function to get
-    // the vector embedding of each string.
     for (let text of batch) {
-        // 'mean' pooling and normalizing allows the embeddings to share the
-        // same length.
         const res = await pipe(text, { pooling: 'mean', normalize: true })
         result.push(Array.from(res['data']))
     }
@@ -85,7 +74,7 @@ embed_fun.embed = async function (batch) {
 (async () => {
     const db = await lancedb.connect("data/sample-lancedb")
 
-    await download("https://eto-public.s3.us-west-2.amazonaws.com/datasets/pandas_docs/pandas.documentation.zip", "pandas_docs", { extract: true })
+    // await download("https://eto-public.s3.us-west-2.amazonaws.com/datasets/pandas_docs/pandas.documentation.zip", "pandas_docs", { extract: true })
     var docs = await read_data();
     // make table here
     const splitter = new RecursiveCharacterTextSplitter({
@@ -100,6 +89,6 @@ embed_fun.embed = async function (batch) {
         data.push({text: doc['pageContent'], metadata: doc['metadata']});
     }
 
-    const table = await db.createTable("pandas_docs", data, embed_fun);
+    const table = await db.createTable("python_docs", data, embed_fun);
 
 })();

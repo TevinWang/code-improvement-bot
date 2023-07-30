@@ -1,0 +1,121 @@
+Reference Counting
+******************
+
+The macros in this section are used for managing reference counts of
+Python objects.
+
+void Py_INCREF(PyObject *o)
+
+   Increment the reference count for object *o*.
+
+   This function is usually used to convert a *borrowed reference* to
+   a *strong reference* in-place. The "Py_NewRef()" function can be
+   used to create a new *strong reference*.
+
+   The object must not be "NULL"; if you aren't sure that it isn't
+   "NULL", use "Py_XINCREF()".
+
+void Py_XINCREF(PyObject *o)
+
+   Increment the reference count for object *o*.  The object may be
+   "NULL", in which case the macro has no effect.
+
+   See also "Py_XNewRef()".
+
+PyObject *Py_NewRef(PyObject *o)
+    * Part of the Stable ABI since version 3.10.*
+
+   Create a new *strong reference* to an object: increment the
+   reference count of the object *o* and return the object *o*.
+
+   When the *strong reference* is no longer needed, "Py_DECREF()"
+   should be called on it to decrement the object reference count.
+
+   The object *o* must not be "NULL"; use "Py_XNewRef()" if *o* can be
+   "NULL".
+
+   For example:
+
+      Py_INCREF(obj);
+      self->attr = obj;
+
+   can be written as:
+
+      self->attr = Py_NewRef(obj);
+
+   See also "Py_INCREF()".
+
+   New in version 3.10.
+
+PyObject *Py_XNewRef(PyObject *o)
+    * Part of the Stable ABI since version 3.10.*
+
+   Similar to "Py_NewRef()", but the object *o* can be NULL.
+
+   If the object *o* is "NULL", the function just returns "NULL".
+
+   New in version 3.10.
+
+void Py_DECREF(PyObject *o)
+
+   Decrement the reference count for object *o*.
+
+   If the reference count reaches zero, the object's type's
+   deallocation function (which must not be "NULL") is invoked.
+
+   This function is usually used to delete a *strong reference* before
+   exiting its scope.
+
+   The object must not be "NULL"; if you aren't sure that it isn't
+   "NULL", use "Py_XDECREF()".
+
+   Warning:
+
+     The deallocation function can cause arbitrary Python code to be
+     invoked (e.g. when a class instance with a "__del__()" method is
+     deallocated).  While exceptions in such code are not propagated,
+     the executed code has free access to all Python global variables.
+     This means that any object that is reachable from a global
+     variable should be in a consistent state before "Py_DECREF()" is
+     invoked.  For example, code to delete an object from a list
+     should copy a reference to the deleted object in a temporary
+     variable, update the list data structure, and then call
+     "Py_DECREF()" for the temporary variable.
+
+void Py_XDECREF(PyObject *o)
+
+   Decrement the reference count for object *o*.  The object may be
+   "NULL", in which case the macro has no effect; otherwise the effect
+   is the same as for "Py_DECREF()", and the same warning applies.
+
+void Py_CLEAR(PyObject *o)
+
+   Decrement the reference count for object *o*.  The object may be
+   "NULL", in which case the macro has no effect; otherwise the effect
+   is the same as for "Py_DECREF()", except that the argument is also
+   set to "NULL".  The warning for "Py_DECREF()" does not apply with
+   respect to the object passed because the macro carefully uses a
+   temporary variable and sets the argument to "NULL" before
+   decrementing its reference count.
+
+   It is a good idea to use this macro whenever decrementing the
+   reference count of an object that might be traversed during garbage
+   collection.
+
+void Py_IncRef(PyObject *o)
+    * Part of the Stable ABI.*
+
+   Increment the reference count for object *o*. A function version of
+   "Py_XINCREF()". It can be used for runtime dynamic embedding of
+   Python.
+
+void Py_DecRef(PyObject *o)
+    * Part of the Stable ABI.*
+
+   Decrement the reference count for object *o*. A function version of
+   "Py_XDECREF()". It can be used for runtime dynamic embedding of
+   Python.
+
+The following functions or macros are only for use within the
+interpreter core: "_Py_Dealloc()", "_Py_ForgetReference()",
+"_Py_NewReference()", as well as the global variable "_Py_RefTotal".
