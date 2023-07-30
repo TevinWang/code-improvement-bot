@@ -3,10 +3,12 @@ import claude
 import requests
 import pr
 import os
+from flask_cors import CORS
 
 # create flask server for nodejs to call
 
 app = Flask(__name__)
+CORS(app)  # Add this line to enable CORS for the entire app
 
 
 @app.route("/setrepo/<repo_url>", methods=["GET"])
