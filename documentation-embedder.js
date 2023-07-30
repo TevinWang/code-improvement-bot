@@ -23,6 +23,7 @@ function get_document_title(document) {
 };
 
 async function read_data(){
+    process.env.UNSTRUCTURED_API_KEY = "yCzUUQOmrDlayNDCZN58gfASLqzy1a"
     const unstructuredKey = process.env.UNSTRUCTURED_API_KEY
     if (unstructuredKey == null || unstructuredKey == undefined) {
         console.warn(`You need to provide an Unstructured API key, here we read it from the
@@ -62,19 +63,21 @@ async function read_data(){
 };
 
 
+// Define the function. `sourceColumn` is required for LanceDB to know
+// which column to use as input.
 const embed_fun = {}
 embed_fun.sourceColumn = 'text'
-embed_fun.embed = async function (text) {
-    const res = await pipe(text, { pooling: 'mean', normalize: true })
-    return (Array.from(res['data']))
-};
-embed_fun.embedDocuments = async function (documents) {
-    let results = [];
-    for (let text of documents) {
+embed_fun.embed = async function (batch) {
+    let result = []
+    // Given a batch of strings, we will use the `pipe` function to get
+    // the vector embedding of each string.
+    for (let text of batch) {
+        // 'mean' pooling and normalizing allows the embeddings to share the
+        // same length.
         const res = await pipe(text, { pooling: 'mean', normalize: true })
-        results.push(Array.from(res['data']));
+        result.push(Array.from(res['data']))
     }
-    return results;
+    return (result)
 };
 
 
@@ -91,12 +94,12 @@ embed_fun.embedDocuments = async function (documents) {
     });
     docs = await splitter.splitDocuments(docs);
     console.log(docs[0])
-    const table = await db.createTable("vectors", [{ vector: await embed_fun.embed("Hello world"), text: "sample", id: "a" },]);
+    console.log(docs[0]['pageContent'])
+    let data = [];
+    for (let doc of docs) {
+        data.push({text: doc['pageContent'], metadata: doc['metadata']});
+    }
 
-    const vectorStore = await LanceDB.fromDocuments(
-        docs,
-        embed_fun,
-        { table }
-    );
+    const table = await db.createTable("pandas_docs", data, embed_fun);
 
 })();
