@@ -1,3 +1,4 @@
 pygithub
 python-dotenv
 anthropic
+lancedb
