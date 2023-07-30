@@ -9,33 +9,33 @@ load_dotenv()
 CLAUDE_API = os.getenv("CLAUDE_API")
 
 # scrape
-# github_url = "https://github.com/tevinwang/ClassGPT"
-# python_files = fetch_python_files_from_github_url(github_url)
-# # ASSUMING OUTPUT IS A LIST OF TUPLES OF (FILE_PATH, [FILE LINES])
-# for i in python_files:
-#     context_list = []
-#     for j, line in enumerate(i[1]):
-#         if len(line) < 10:
-#             continue
-#         if (not line):
-#             continue
-#         p = subprocess.Popen(['node', 'add_doc_context.js', line], stdout=subprocess.PIPE)
-#         out = p.stdout.read()
-#         context_list.append((line, j, out))
-#     python_files[i] += (context_list,)
+github_url = "https://github.com/tevinwang/ClassGPT"
+python_files = fetch_python_files_from_github_url(github_url)
+# ASSUMING OUTPUT IS A LIST OF TUPLES OF (FILE_PATH, [FILE LINES])
+for i in python_files:
+    context_list = []
+    for j, line in enumerate(i[1]):
+        if len(line) < 10:
+            continue
+        if (not line):
+            continue
+        p = subprocess.Popen(['node', 'add_doc_context.js', line], stdout=subprocess.PIPE)
+        out = p.stdout.read()
+        context_list.append((line, j, out))
+    python_files[i] += (context_list,)
 
-# # python_files is now [(FILE_PATH, [FILE LINES], [(LINE, LINE NUMBER, CONTEXT)])]
+# python_files is now [(FILE_PATH, [FILE LINES], [(LINE, LINE NUMBER, CONTEXT)])]
 
 
-# # write the file
-# with open("python_files.txt", "w") as f:
-#     f.write('<files>\n')
-#     for file_path, file_content, file_context in python_files:
-#         f.write(f"<file>\n<file_path>{file_path}</file_path>\n<file_content>\n{file_content}\n</file_content>\n<file_context>\n")
-#         for context in file_context:
-#             f.write(f"<line>\n<line_number>{context[1]}</line_number>\n<line_content>{context[0]}</line_content>\n<context>\n{context[2]}\n</context>\n</line>\n")
-#         f.write("</file_context>\n</file>\n")
-#     f.write('</files>')
+# write the file
+with open("python_files.txt", "w") as f:
+    f.write('<files>\n')
+    for file_path, file_content, file_context in python_files:
+        f.write(f"<file>\n<file_path>{file_path}</file_path>\n<file_content>\n{file_content}\n</file_content>\n<file_context>\n")
+        for context in file_context:
+            f.write(f"<line>\n<line_number>{context[1]}</line_number>\n<line_content>{context[0]}</line_content>\n<context>\n{context[2]}\n</context>\n</line>\n")
+        f.write("</file_context>\n</file>\n")
+    f.write('</files>')
 
 #LOOKS LIKE
 # """
@@ -79,9 +79,9 @@ prompt = f"""{HUMAN_PROMPT} Claude, I'm seeking your expertise in reviewing, opt
 <root>
 <diff>
 <!--Ensure the diff follows the unified diff format that would be returned by python difflib, providing clear context and line-by-line changes for ALL files.
-Give line numbers with the first line of the file content being line 1, 
-ONLY CHANGE LINES OF FILE CONTENT. Do this for all files. 
-Add the entire thing as a cdata section '<![CDATA[' 
+Give line numbers with the first line of the file content being line 1,
+ONLY CHANGE LINES OF FILE CONTENT. Do this for all files.
+Add the entire thing as a cdata section '<![CDATA['
 This is what it is supposed to look like per file:
 --- a/path/to/file.txt
 +++ b/path/to/file.txt
