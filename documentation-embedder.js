@@ -5,14 +5,17 @@ import { UnstructuredLoader,  } from "langchain/document_loaders/fs/unstructured
 import fs from 'fs';
 import * as path from "node:path";
 import { download } from '@guoyunhe/downloader';
+import dotenv from 'dotenv'
+
+dotenv.config()
 const lancedb = await import("vectordb");
+
 
 const { pipeline } = await import('@xenova/transformers')
 const pipe = await pipeline('feature-extraction', 'Xenova/all-MiniLM-L6-v2');
 
 
 async function read_data(){
-    process.env.UNSTRUCTURED_API_KEY = "yCzUUQOmrDlayNDCZN58gfASLqzy1a"
     const unstructuredKey = process.env.UNSTRUCTURED_API_KEY
     if (unstructuredKey == null || unstructuredKey == undefined) {
         console.warn(`You need to provide an Unstructured API key, here we read it from the
@@ -74,7 +77,7 @@ embed_fun.embed = async function (batch) {
 (async () => {
     const db = await lancedb.connect("data/sample-lancedb")
 
-    // await download("https://eto-public.s3.us-west-2.amazonaws.com/datasets/pandas_docs/pandas.documentation.zip", "pandas_docs", { extract: true })
+    await download("https://docs.python.org/3/archives/python-3.11.4-docs-text.zip", "data/", { extract: true })
     var docs = await read_data();
     // make table here
     const splitter = new RecursiveCharacterTextSplitter({
