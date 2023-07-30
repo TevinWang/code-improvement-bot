@@ -28,9 +28,9 @@ function App() {
       window.history.pushState({}, null, newUrl[0]);
 
       async function fetch() {
-        const response = await axios.post('https://drcode-server.vercel.app/auth/github/access_token', { code: newUrl[1] });
+        const response = await axios.post('https://drcode-c2c0979f214d.herokuapp.com/auth/github/access_token', { code: newUrl[1] });
         const accessToken = response.data.access_token;
-        const userResponse = await axios.get('https://drcode-server.vercel.app/api/github/repos', {
+        const userResponse = await axios.get('https://drcode-c2c0979f214d.herokuapp.com/api/github/repos', {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
