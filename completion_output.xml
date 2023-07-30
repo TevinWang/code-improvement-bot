@@ -1,239 +1,77 @@
- Here is the GitHub style diff for the code review and optimization:
-
-<root>
+ <root>
 <diff>
-diff --git a/app/01_❓_Ask.py b/app/01_❓_Ask.py
-index 4f7052e..8aa4f84 100644
+&lt;![CDATA[
 --- a/app/01_❓_Ask.py
 +++ b/app/01_❓_Ask.py
-@@ -7,7 +7,7 @@ from utils import query_gpt, query_gpt_memory, show_pdf
- 
- st.set_page_config(
-     page_title="ClassGPT",
--    page_icon="🤖",
-+    page_icon="⚛️",
-     layout="wide",
+@@ -13,7 +13,7 @@
      initial_sidebar_state="expanded",
      menu_items={
-@@ -64,14 +64,12 @@ if st.session_state.chosen_pdf != "--":
+         "Get Help": "https://twitter.com/benthecoder1",
+-        "Report a bug": "https://github.com/benthecoder/ClassGPT/issues",
++        "Report an issue": "https://github.com/benthecoder/ClassGPT/issues",
+         "About": "ClassGPT is a chatbot that answers questions about your pdf files",
+     },
+ )
+@@ -56,11 +56,13 @@
+                     st.spinner("Generating answer..."):
+                 if query == "":
+                     st.error("Please enter a question")
++                else:
                  with st.spinner("Generating answer..."):
                      # res = query_gpt_memory(chosen_class, chosen_pdf, query)
                      res = query_gpt(chosen_class, chosen_pdf, query)
--                    st.markdown(res)
-+                    st.markdown(res.strip())
+                     st.markdown(res)
  
++                    st.session_state.queries.append(query)
                      # with st.expander("Memory"):
                      #      st.write(st.session_state.memory.replace("\n", "\n\n"))
  
-         with col2:
--            show_pdf(chosen_class, chosen_pdf)
--
- diff --git a/app/components/sidebar.py b/app/components/sidebar.py
- index a21b336..4ef83bb 100644
+@@ -68,6 +70,10 @@
+             with col2:
+                 show_pdf(chosen_class, chosen_pdf)
+ 
++st.subheader("Recent Questions")
++for query in st.session_state.queries[-5:]:
++    st.markdown(f"- {query}")
++
  --- a/app/components/sidebar.py
-@@ -43,6 +43,8 @@ def sidebar():
-             here are some example prompts:
-             - What are the key points in this lecture?
-             - Summarize slide 5.
-+            - What is vectorization and why is it important?
-+            - Give a coding example of vectorization in Python.
-             """
+ +++ b/app/components/sidebar.py
+ @@ -40,7 +40,7 @@
+@@ -97,7 +103,7 @@
+         "Delete a class or a PDF file"
+ 
+         chosen_class = st.selectbox(
+-            "Select a class to delete",
++            "Select a class",
+             list(all_classes.keys()) + ["--"],
+             index=len(all_classes),
          )
+@@ -108,7 +114,7 @@
+         # Remove empty values
+         all_pdfs = [x for x in all_pdfs if x]
  
-@@ -51,6 +53,7 @@ index a21b336..4ef83bb 100644
-             api_key = st.secrets["OPENAI_API_KEY"]
-             openai.api_key = api_key
+-        chosen_pdf = st.selectbox(
++        chosen_file = st.selectbox(
+             "Select a PDF file or choose 'all' to delete the whole class",
+             all_pdfs + ["--"],
+             index=len(all_pdfs),
+@@ -116,13 +122,13 @@
  
-+
-         if "chat_history" not in st.session_state:
-             st.session_state.chat_history = ""
- 
-diff --git a/app/pages/02_📁_Data.py b/app/pages/02_📁_Data.py
-index 7dcc331..c85eed8 100644
---- a/app/pages/02_📁_Data.py
-+++ b/app/pages/02_📁_Data.py
-@@ -1,6 +1,7 @@
- import streamlit as st
- from components.sidebar import sidebar
- from s3 import S3
-+from pathlib import Path
- 
- sidebar()
- 
-@@ -32,7 +33,8 @@ with tab1:
- 
-                 if submit_button:
-                     if len(uploaded_files) == 0:
--                        st.error("Please upload at least one file")
-+                        st.error("Please upload at least one PDF file")
-+                        st.stop()
-                     else:
-                         with st.spinner(f"Uploading {len(uploaded_files)} files..."):
-                             for uploaded_file in uploaded_files:
-@@ -54,6 +56,9 @@ with tab2:
- 
-         if submit_button:
-             if add_class == "":
-+                st.write(" ") # hack to clear button state
-+                st.stop()
-+
-             else:
-                 s3.create_folder(add_class)
-                 st.success(f"Class {add_class} added")
-@@ -82,11 +87,14 @@ with tab3:
- 
-         if submit_button:
-             if chosen_pdf == "all":
-+                st.write(" ") # hack to clear button state
-                 s3.remove_folder(chosen_class)
-                 st.success(f"{chosen_class} removed")
-+
-             else:
-                 s3.remove_file(chosen_class, chosen_pdf)
-                 st.success(f"{chosen_pdf} removed")
-+
- diff --git a/app/s3.py b/app/s3.py
- index f8b7361..a4f1202 100644
- --- a/app/s3.py
-@@ -94,6 +94,7 @@ index f8b7361..a4f1202 100644
- import boto3
- import botocore
- 
-+from pathlib import Path
- 
- class S3:
-     """
-@@ -129,7 +130,8 @@ class S3:
-         self.bucket_name = bucket_name
-         self.s3 = boto3.resource("s3")
-         self.bucket = self.s3.Bucket(bucket_name)
--
-+    
-+    @st.cache_resource
-     def list_folders(self):
-         folders = set()
-         for obj in self.bucket.objects.filter():
-@@ -137,6 +139,7 @@ class S3:
- 
-         return folders
- 
-+    @st.cache_resource
-     def list_files(self):
-         classes = defaultdict(list)
- 
-@@ -148,6 +151,7 @@ class S3:
- 
-         return classes
- 
-+    @st.cache_resource
-     def folder_exists(self, folder_name):
-         for _ in self.bucket.objects.filter(Prefix=f"{folder_name}/"):
-             return True
-@@ -171,6 +175,7 @@ class S3:
-         if not self.folder_exists(folder_name):
-             self.bucket.put_object(Key=f"{folder_name}/")
- 
-+    @st.cache_resource
-     def upload_files(self, file_obj, file_path):
-         self.bucket.upload_fileobj(file_obj, file_path)
- 
-@@ -182,6 +187,7 @@ class S3:
-                 key.delete()
- 
-     def remove_file(self, folder_name, file_name):
-+        file_path = Path(folder_name) / file_name
-         if self.folder_exists(folder_name):
-             self.bucket.objects.filter(Prefix=f"{folder_name}/{file_name}").delete(
-                 Delete={"Objects": [{"Key": f"{folder_name}/{file_name}"}]}
-@@ -189,7 +195,9 @@ class S3:
- 
-     def download_file(self, from_file_path, to_file_path):
-         self.bucket.download_file(from_file_path, to_file_path)
--            
-+
-+    @st.cache_resource(hash_funcs={Path: lambda p: hash(p.name)})  
-+    def get_filesize(self, path):
-+        return self.s3.Object(self.bucket_name, str(path)).content_length
- diff --git a/app/utils.py b/app/utils.py
- index bf84441..42f1ccb 100644
- --- a/app/utils.py
-@@ -202,6 +202,7 @@ from dotenv import load_dotenv
- 
- import openai
- import streamlit as st
-+from streamlit_ace import st_ace
- from langchain import OpenAI
- from langchain.agents import Tool, initialize_agent
- from langchain.chains.conversation.memory import ConversationBufferMemory
-@@ -213,6 +214,8 @@ from pypdf import PdfReader
- from s3 import S3
- 
- load_dotenv()
-+
-+st.set_page_config(page_title="ClassGPT", page_icon="⚛️")
- openai.api_key = os.getenv("OPENAI_API_KEY")
- 
- s3 = S3("classgpt")
-@@ -267,6 +270,8 @@ def query_gpt(chosen_class, chosen_pdf, query):
-         llm=ChatOpenAI(
-             temperature=0,
-             model_name="gpt-3.5-turbo",
-+            frequency_penalty=0,
-+            presence_penalty=0
-         )
-     )
- 
-@@ -274,7 +279,7 @@ def query_gpt(chosen_class, chosen_pdf, query):
-     response = index.query(query, llm_predictor=llm_predictor)
- 
-     # logging.info(response.get_formatted_sources())
--
-+    response = response.strip()
-     return response
- 
- 
-@@ -313,6 +318,7 @@ def query_gpt_memory(chosen_class, chosen_pdf, query):
-         res = agent.run(input=query)
-     except Exception as e:
-         logging.error(e)
-+        st.error("Something went wrong... Please try again.")
-         res = "Something went wrong... Please try again."
- 
-     st.session_state.memory = agent.memory.buffer
-@@ -339,11 +345,18 @@ def show_pdf(folder_name, file_name):
-             base64_pdf = base64.b64encode(f.read()).decode("utf-8")
- 
-         pdf_display = f"""
-+        <style>
-+        iframe {{
-+            min-width: 500px;
-+            width: 100%;
-+            height: 1000px;   
-+        }}
-+        </style>
-         <iframe
-             src="data:application/pdf;base64,{base64_pdf}"
-             width="100%" height="1000"
-             type="application/pdf"
--            style="min-width: 400px;"
-+            style="border: none;"
-         >
-         </iframe>
-         """
-@@ -351,6 +364,7 @@ def show_pdf(folder_name, file_name):
-         st.markdown(pdf_display, unsafe_allow_html=True)
- 
- </diff>  
-+
- <title>
- Code Review and Optimization
- </title>
-@@ -363,6 +377,7 @@ My changes focused on the following:
- - Added caching to S3 methods to improve performance 
- - Stripped trailing whitespace from API responses
- - Added error handling and cleared button state in Streamlit
-+- Some minor style tweaks for PDF rendering
- 
- The goal was to optimize for performance, clean up the code, and improve the user experience. Let me know if you have any other feedback!
- </changes>
+         if chosen_pdf != "--":
+             submit_button = st.button("Remove")
+&gt;![CDATA]
+</diff>
+
+<title>
+Improve code quality and user experience
+</title>
+
+<changes>
+- Added validation to require user to enter a question before submitting
+- Changed "Report a bug" to "Report an issue" in menu 
+- Saved previous questions asked in session state
+- Display recent questions asked by user
+- Improved wording of delete class/file dropdowns
+</changes>
+
 </root>
