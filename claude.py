@@ -1,4 +1,5 @@
-import os, subprocess
+import os, subprocess, threading
+from tqdm import tqdm
 
 from anthropic import AI_PROMPT, HUMAN_PROMPT, Anthropic
 from dotenv import load_dotenv
@@ -12,75 +13,91 @@ CLAUDE_API = os.getenv("CLAUDE_API")
 github_url = "https://github.com/tevinwang/ClassGPT"
 python_files = fetch_python_files_from_github_url(github_url)
 # ASSUMING OUTPUT IS A LIST OF TUPLES OF (FILE_PATH, [FILE LINES])
-for i in python_files:
+for i, file in enumerate(tqdm(python_files)):
     context_list = []
-    for j, line in enumerate(i[1]):
-        if len(line) < 10:
+    threads = []
+    to_react = []
+    for j, line in enumerate(file[1].splitlines()):
+        if len(line.strip()) < 10:
             continue
         if (not line):
             continue
+        if (line[0].strip() == "#"):
+            continue
         line = list(line)
-        for i, char in enumerate(line):
+        for k, char in enumerate(line):
             if char == "\"":
-                line[i] = "\'"
-        line = "".join(line)
-        p = subprocess.Popen(['node', 'add_doc_context.js', line], stdout=subprocess.PIPE)
+                line[k] = "\'"
+        line = "".join(line).strip()
+        to_react.append(str(j) + "|||" + line)
+    def start(to_react, cur_i):
+        p = subprocess.Popen(['node', 'add_doc_context.js', "|||||".join(to_react)], stdout=subprocess.PIPE)
         out = p.stdout.read()
-        context_list.append((line, j, out))
-    python_files[i] += (context_list,)
+        # expected: line1|||line|||context|||||..
+        context_list = [tuple(line.split("|||")) for line in out.decode("utf-8").split("|||||")]
+        python_files[cur_i] += (context_list,)
 
-# # python_files is now [(FILE_PATH, [FILE LINES], [(LINE, LINE NUMBER, CONTEXT)])]
+    thread = threading.Thread(target=start, args=(to_react, i))
+    threads.append(thread)
+    thread.start()
+
+for thread in threads:
+    thread.join()
+
+print(python_files)
+
+# python_files is now [(FILE_PATH, [FILE LINES], [(LINE NUMBER, LINE, CONTEXT)])]
 
 
-# # write the file
-# with open("python_files.txt", "w") as f:
-#     f.write('<files>\n')
-#     for file_path, file_content, file_context in python_files:
-#         f.write(f"<file>\n<file_path>{file_path}</file_path>\n<file_content>\n{file_content}\n</file_content>\n<file_context>\n")
-#         for context in file_context:
-#             f.write(f"<line>\n<line_number>{context[1]}</line_number>\n<line_content>{context[0]}</line_content>\n<context>\n{context[2]}\n</context>\n</line>\n")
-#         f.write("</file_context>\n</file>\n")
-#     f.write('</files>')
+# write the file
+with open("python_files.txt", "w", encoding="utf-8") as f:
+    f.write('<files>\n')
+    for file_path, file_content, file_context in python_files:
+        f.write(f"<file>\n<file_path>{file_path}</file_path>\n<file_content>\n{file_content}\n</file_content>\n<file_context>\n")
+        for context in file_context:
+            f.write(f"<line>\n<line_number>{context[0]}</line_number>\n<line_content>{context[1]}</line_content>\n<context>\n{context[2]}</context>\n</line>\n")
+        f.write("</file_context>\n</file>\n")
+    f.write('</files>')
 
-#LOOKS LIKE
-# """
-# <files>
-#     <file>
-#         <file_path>path/to/file.py</file_path>
-#         <file_content>
-#             import os, subprocess
-#             etc
-#             etc
-#         </file_content>
-#         <file_context>
-#             <line>
-#                 <line_number>1</line_number>
-#                 <line_content>import os, subprocess</line_content>
-#                 <context>
-#                     import os, subprocess
-#                     context here
-#                 </context>
-#             </line>
-#             <line>
-#                 <line_number>2</line_number>
-#                 etc
-#                 etc
-#             </line>
-#         </file_context>
-#     </file>
-#     <file>
-#         etc
-#         etc
-#     </file>
-# </files>
-# """
+# LOOKS LIKE
+"""
+<files>
+    <file>
+        <file_path>path/to/file.py</file_path>
+        <file_content>
+            import os, subprocess
+            etc
+            etc
+        </file_content>
+        <file_context>
+            <line>
+                <line_number>1</line_number>
+                <line_content>import os, subprocess</line_content>
+                <context>
+                    import os, subprocess
+                    context here
+                </context>
+            </line>
+            <line>
+                <line_number>2</line_number>
+                etc
+                etc
+            </line>
+        </file_context>
+    </file>
+    <file>
+        etc
+        etc
+    </file>
+</files>
+"""
 
-# # read the file
-with open("python_files.txt", "r") as f:
+# read the file
+with open("python_files.txt", "r", encoding="utf-8") as f:
     python_files = f.read()
 
 
-prompt = f"""{HUMAN_PROMPT} 
+prompt = f"""{HUMAN_PROMPT}
 "Codebase Cleanup and Documentation: LLM Quick Prompt"
 
 Description:
@@ -131,7 +148,7 @@ This is what it is supposed to look like per file:
 --- a/path/to/file.txt (make sure to include the 'a/' in the path, and exactly 3 +s)
 +++ b/path/to/file.txt (make sure to include the 'b/' in the path, and exactly 3 -s)
 @@ -1,4 +1,4 @@ (ANYTHING after the @@ MUST BE ON A NEW LINE)
-  This is the original content. 
+  This is the original content.
 -Some lines have been removed.
 +Some lines have been added.
   More content here.
@@ -148,7 +165,7 @@ Remove this comment and add the diff patch contents in the diff tag directly. DO
 </changes>
 </root>
 
-Your focus should be on pythonic principles, clean coding practices, grammar, efficiency, and optimization. Do not change the file if you don't know what to do. 
+Your focus should be on pythonic principles, clean coding practices, grammar, efficiency, and optimization. Do not change the file if you don't know what to do.
 
 Before you make a change, evaluate the following:
 - The code must work and stay valid
@@ -174,5 +191,5 @@ completion = anthropic.completions.create(
     prompt=prompt,
 )
 
-with open("completion_output.xml", "w") as file:
+with open("completion_output.xml", "w", encoding="utf-8") as file:
     file.write(completion.completion)

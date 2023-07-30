@@ -3,3 +3,4 @@ python-dotenv
 anthropic
 lancedb
 patch
+tqdm

@@ -6,3 +6,4 @@ node_modules
 package-lock.json
 pandas_docs
 docs.pkl
+__pycache__
