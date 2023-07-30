@@ -5,3 +5,4 @@ lancedb
 patch
 tqdm
 flask
+flask-cors
