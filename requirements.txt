@@ -4,3 +4,4 @@ anthropic
 lancedb
 patch
 tqdm
+flask

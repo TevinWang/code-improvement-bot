@@ -69,12 +69,12 @@ def commit_changes(repo, branch_name, file_path, patch_content, file_content):
 def create_pull_request(repo, branch_name, base_branch_name, pr_title, pr_body):
     repo.create_pull(title=pr_title, body=pr_body, head=branch_name, base=base_branch_name)
 
-if __name__ == "__main__":
+def main(repo):
     username = 'TevinWang'
     app_id = '368612'
     private_key_path = 'gooddiff.pem'
     target_id = '40181391'
-    full_repo_name = f'{username}/ClassGPT'
+    full_repo_name = repo
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
     branch_name = f'gooddiff-{timestamp}'
     base_branch_name = 'main'
@@ -116,3 +116,7 @@ if __name__ == "__main__":
     pr_body = completion_root.find('changes').text
 
     create_pull_request(repo, branch_name, base_branch_name, pr_title, pr_body)
+
+
+if __name__ == "__main__":
+    main()
