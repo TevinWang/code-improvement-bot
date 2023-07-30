@@ -19,6 +19,11 @@ for i in python_files:
             continue
         if (not line):
             continue
+        line = list(line)
+        for i, char in enumerate(line):
+            if char == "\"":
+                line[i] = "\'"
+        line = "".join(line)
         p = subprocess.Popen(['node', 'add_doc_context.js', line], stdout=subprocess.PIPE)
         out = p.stdout.read()
         context_list.append((line, j, out))
