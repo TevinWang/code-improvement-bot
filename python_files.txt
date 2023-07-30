@@ -90,313 +90,313 @@ if st.session_state.chosen_class != "--":
 <line_number>0</line_number>
 <line_content>import streamlit as st</line_content>
 <context>
-StreamReader</context>
+StreamReader, Streams, Streams, Streams, "stream": "ext://sys.stderr"</context>
 </line>
 <line>
 <line_number>1</line_number>
 <line_content>from components.sidebar import sidebar</line_content>
 <context>
-"foo" imports "bar"</context>
+"foo" imports "bar", from bar import bar_var, import selectors, import selectors, >>> import custom</context>
 </line>
 <line>
 <line_number>2</line_number>
 <line_content>from s3 import S3</line_content>
 <context>
->>> import custom3</context>
+>>> import custom3, import, >>> import io, sys, Imports, imports</context>
 </line>
 <line>
 <line_number>3</line_number>
 <line_content>from utils import query_gpt, query_gpt_memory, show_pdf</line_content>
 <context>
-objects. The memory is taken from the Python private heap.</context>
+objects. The memory is taken from the Python private heap., All memory pointed to in the "Py_buffer" structure belongs to the exporter and must remain valid until there are no consumers left. "format", "shape", "strides", "suboffsets" and "internal" are read- only for the consumer., The "PYTHONMALLOC" environment variable can be used to configure the memory allocators used by Python., In addition to the functions aimed at handling raw memory blocks from the Python heap, objects in Python are allocated and released with "PyObject_New", "PyObject_NewVar" and "PyObject_Del()"., See also "PyEval_SetTrace()" and "PyEval_SetProfile()" functions.</context>
 </line>
 <line>
 <line_number>5</line_number>
 <line_content>st.set_page_config(</line_content>
 <context>
-config_str, const char</context>
+config_str, const char, CONFIG = ''', config -, config -, print(config.x)</context>
 </line>
 <line>
 <line_number>6</line_number>
 <line_content>page_title='ClassGPT',</line_content>
 <context>
-defining_class,</context>
+defining_class,, return __class__, def get_defining_class(self):, subclass_of*, 1.__class__</context>
 </line>
 <line>
 <line_number>7</line_number>
 <line_content>page_icon='🤖',</line_content>
 <context>
-python example.py https://example.com/path/page.html</context>
+python example.py https://example.com/path/page.html, python example.py http://example.com/path/page.html, the_page = response.read(), Py_UNICODE, Py_UNICODE</context>
 </line>
 <line>
 <line_number>8</line_number>
 <line_content>layout='wide',</line_content>
 <context>
-width</context>
+width, wide., width', default=10.5, type=int), Namespace(length=10, width=10.5), Changed in version 3.4: Support width and precision formatter for ""%s"", ""%A"", ""%U"", ""%V"", ""%S"", ""%R"" added.</context>
 </line>
 <line>
 <line_number>9</line_number>
 <line_content>initial_sidebar_state='expanded',</line_content>
 <context>
-Empty globals for "bar" are created</context>
+Empty globals for "bar" are created, Py_ssize_t tp_basicsize, tp_itemsize; /, Changed in version 3.9: No longer called before the module state is allocated., Changed in version 3.9: No longer called before the module state is allocated., Changed in version 3.9: No longer called before the module state is allocated.</context>
 </line>
 <line>
 <line_number>10</line_number>
 <line_content>menu_items={</line_content>
 <context>
-['foo', 'item']</context>
+['foo', 'item'], item = PyList_GetItem(list, 0);, item = PyList_GetItem(list, 0);, item = PyList_GetItem(list, 0);, item;</context>
 </line>
 <line>
 <line_number>11</line_number>
 <line_content>'Get Help': 'https://twitter.com/benthecoder1',</line_content>
 <context>
-"'help'" - This prints a complete help message for all the options</context>
+"'help'" - This prints a complete help message for all the options, foo', help='foo help'), foo', help='foo help'), The "help" value is a string containing a brief description of the argument. When a user requests help (usually by using "-h" or "--help" at the command line), these "help" descriptions will be displayed with each argument:, add_help - Add a "-h/--help" option to the parser (default:</context>
 </line>
 <line>
 <line_number>12</line_number>
 <line_content>'Report a bug': 'https://github.com/benthecoder/ClassGPT/issues',</line_content>
 <context>
-Fixes code broken from the removal of some members in the "types" module.</context>
+Fixes code broken from the removal of some members in the "types" module., Changed in version 3.11: This class was made an alias of "TimeoutError"., Let's fix that bug:, class Message:, The error messages are significantly more detailed when using the class constructors directly. For example:</context>
 </line>
 <line>
 <line_number>13</line_number>
 <line_content>'About': 'ClassGPT is a chatbot that answers questions about your pdf files',</line_content>
 <context>
-The TextFile class</context>
+The TextFile class, class documentation. In any event, they are intended as an, class Directory:, class ast.GtE, class Message:</context>
 </line>
 <line>
 <line_number>19</line_number>
 <line_content>if 'chosen_class' not in st.session_state:</line_content>
 <context>
-return __class__</context>
+return __class__, class P:, defining_class,, my_struct *state = (my_struct*)PyType_GetModuleState(type); if (state === NULL) { return NULL; }, @classmethod def __subclasshook__(cls, C): if cls is MyIterable: if any("__iter__" in B.__dict__ for B in C.__mro__): return True return NotImplemented</context>
 </line>
 <line>
 <line_number>20</line_number>
 <line_content>st.session_state.chosen_class = '--'</line_content>
 <context>
-class LoggedAccess:</context>
+class LoggedAccess:, class LoggedAgeAccess:, >>> hex(id(c.__class__)), return __class__, Note that inclusion in the *choices* sequence is checked after any type conversions have been performed, so the type of the objects in the *choices* sequence should match the type specified:</context>
 </line>
 <line>
 <line_number>22</line_number>
 <line_content>if 'chosen_pdf' not in st.session_state:</line_content>
 <context>
-if (_Pickler_ClearBuffer(self) < 0) { return NULL; }</context>
+if (_Pickler_ClearBuffer(self) < 0) { return NULL; }, Note that inclusion in the *choices* sequence is checked after any type conversions have been performed, so the type of the objects in the *choices* sequence should match the type specified:, "_pickle.Pickler.dump()" has neither, so our sample is unchanged., selections., A very common situation is that of recording logging events in a file, so let's look at that next. Be sure to try the following in a newly started Python interpreter, and don't just continue from the session described above:</context>
 </line>
 <line>
 <line_number>23</line_number>
 <line_content>st.session_state.chosen_pdf = '--'</line_content>
 <context>
-option string is present but not followed by a command-line</context>
+option string is present but not followed by a command-line, Note that inclusion in the *choices* sequence is checked after any type conversions have been performed, so the type of the objects in the *choices* sequence should match the type specified:, Replace all "optparse.OptionParser.add_option()" calls with, action. The "option_string" argument is optional, and will be absent, A very common situation is that of recording logging events in a file, so let's look at that next. Be sure to try the following in a newly started Python interpreter, and don't just continue from the session described above:</context>
 </line>
 <line>
 <line_number>25</line_number>
 <line_content>if 'memory' not in st.session_state:</line_content>
 <context>
-If the request fails, "PyMem_Realloc()" returns "NULL" and *p* remains a valid pointer to the previous memory area.</context>
+If the request fails, "PyMem_Realloc()" returns "NULL" and *p* remains a valid pointer to the previous memory area., If the request fails, "PyMem_RawRealloc()" returns "NULL" and *p* remains a valid pointer to the previous memory area., Since memory allocation may fail, we must check the "tp_alloc" result against "NULL" before proceeding., Why isn't all memory freed when CPython exits? ==============================================, Same as "PyMem_Malloc()", but allocates "(n * sizeof(TYPE))" bytes of memory. Returns a pointer cast to TYPE*. The memory will not have been initialized in any way.</context>
 </line>
 <line>
 <line_number>26</line_number>
 <line_content>st.session_state.memory = ''</line_content>
 <context>
-If the request fails, "PyMem_Realloc()" returns "NULL" and *p* remains a valid pointer to the previous memory area.</context>
+If the request fails, "PyMem_Realloc()" returns "NULL" and *p* remains a valid pointer to the previous memory area., If the request fails, "PyMem_RawRealloc()" returns "NULL" and *p* remains a valid pointer to the previous memory area., Why isn't all memory freed when CPython exits? ==============================================, Since memory allocation may fail, we must check the "tp_alloc" result against "NULL" before proceeding., How does Python manage memory? ==============================</context>
 </line>
 <line>
 <line_number>31</line_number>
 <line_content>st.header('ClassGPT: ChatGPT for your lectures slides')</line_content>
 <context>
-class Message:</context>
+class Message:, class Song:, class ast.GtE, class ast.And, >>> (1).__class__</context>
 </line>
 <line>
 <line_number>33</line_number>
 <line_content>bucket_name = 'classgpt'</line_content>
 <context>
-defining_class,</context>
+defining_class,, return __class__, "name" is a raw string for the class name, def get_defining_class(self):, class G: @classmethod @property def __doc__(cls): return f'A doc for {cls.__name__!r}'</context>
 </line>
 <line>
 <line_number>34</line_number>
 <line_content>s3 = S3(bucket_name)</line_content>
 <context>
-s2)</context>
+s2), %(name)s, %(name)s, %(name)s, def name(self): return "%s %s" % (self.first, self.last)</context>
 </line>
 <line>
 <line_number>36</line_number>
 <line_content>all_classes = s3.list_files()</line_content>
 <context>
-Returns the name of the object files for the given source files. *source_filenames* should be a list of filenames.</context>
+Returns the name of the object files for the given source files. *source_filenames* should be a list of filenames., class G: @classmethod @property def __doc__(cls): return f'A doc for {cls.__name__!r}', The FileList class, 9.17. "distutils.filelist" --- The FileList class, for file in very_long_list_of_files:</context>
 </line>
 <line>
 <line_number>38</line_number>
 <line_content>chosen_class = st.selectbox(</line_content>
 <context>
-class _pickle.Pickler "PicklerObject</context>
+class _pickle.Pickler "PicklerObject, class _pickle.Pickler "PicklerObject, class _pickle.Pickler "PicklerObject, class _pickle.Pickler "PicklerObject, selector = selectors.SelectSelector()</context>
 </line>
 <line>
 <line_number>39</line_number>
 <line_content>'Select a class', list(all_classes.keys()) + ['--'], index=len(all_classes)</line_content>
 <context>
-How do I get a list of all instances of a given class? ------------------------------------------------------</context>
+How do I get a list of all instances of a given class? ------------------------------------------------------, >>> p = re.compile('\bclass\b') >>> print(p.search('no class at all')) None >>> print(p.search('\b' + 'class' + '\b')) <re.Match object; span=(0, 7), match='\x08class\x08'>, class ast.Dict(keys, values), A better approach is to define a "search()" method on all the classes and just call it:, >>> p = re.compile(r'\bclass\b') >>> print(p.search('no class at all')) <re.Match object; span=(3, 8), match='class'> >>> print(p.search('the declassified algorithm')) None >>> print(p.search('one subclass is')) None</context>
 </line>
 <line>
 <line_number>42</line_number>
 <line_content>st.session_state.chosen_class = chosen_class</line_content>
 <context>
-class LoggedAccess:</context>
+class LoggedAccess:, class LoggedAgeAccess:, Module State Access from Classes --------------------------------, return __class__, defining_class,</context>
 </line>
 <line>
 <line_number>44</line_number>
 <line_content>if st.session_state.chosen_class != '--':</line_content>
 <context>
->>> class Color(Flag): ...     BLACK = 0 ...     RED = auto() ...     BLUE = auto() ...     GREEN = auto() ... >>> Color.BLACK <Color.BLACK: 0> >>> bool(Color.BLACK) False</context>
+>>> class Color(Flag): ...     BLACK = 0 ...     RED = auto() ...     BLUE = auto() ...     GREEN = auto() ... >>> Color.BLACK <Color.BLACK: 0> >>> bool(Color.BLACK) False, >>> hex(id(c.__class__)), return __class__, class P:, my_struct *state = (my_struct*)PyType_GetModuleState(type); if (state === NULL) { return NULL; }</context>
 </line>
 <line>
 <line_number>45</line_number>
 <line_content>all_pdfs = all_classes[chosen_class]</line_content>
 <context>
-subclass_of*</context>
+subclass_of*, A better approach is to define a "search()" method on all the classes and just call it:, How do I get a list of all instances of a given class? ------------------------------------------------------, Python does not keep track of all instances of a class (or of a built- in type). You can program the class's constructor to keep track of all instances by keeping a list of weak references to each instance., return __class__</context>
 </line>
 <line>
 <line_number>47</line_number>
 <line_content>chosen_pdf = st.selectbox(</line_content>
 <context>
-Use "select".</context>
+Use "select"., class distutils.fancy_getopt.FancyGetopt([option_table=None]), type = "PicklerObject, selector = selectors.SelectSelector(), selector = selectors.SelectSelector()</context>
 </line>
 <line>
 <line_number>48</line_number>
 <line_content>'Select a PDF file', all_pdfs + ['--'], index=len(all_pdfs)</line_content>
 <context>
-for file in very_long_list_of_files:</context>
+for file in very_long_list_of_files:, for file in very_long_list_of_files:, Note that the "doc_files" option is simply a whitespace-separated string split across multiple lines for readability., >>> print(len(s)), object_filenames(source_filenames[, strip_dir=0, output_dir=''])</context>
 </line>
 <line>
 <line_number>51</line_number>
 <line_content>st.session_state.chosen_pdf = chosen_pdf</line_content>
 <context>
-Note that inclusion in the *choices* sequence is checked after any type conversions have been performed, so the type of the objects in the *choices* sequence should match the type specified:</context>
+Note that inclusion in the *choices* sequence is checked after any type conversions have been performed, so the type of the objects in the *choices* sequence should match the type specified:, selections., A very common situation is that of recording logging events in a file, so let's look at that next. Be sure to try the following in a newly started Python interpreter, and don't just continue from the session described above:, "choice(S)" chooses a random element from a given sequence., "_pickle.Pickler.dump()" has neither, so our sample is unchanged.</context>
 </line>
 <line>
 <line_number>53</line_number>
 <line_content>if st.session_state.chosen_pdf != '--':</line_content>
 <context>
-command line, if the option string is encountered with no command-</context>
+command line, if the option string is encountered with no command-, You can select only certain elements by adding an ""if"" condition:, be present in the parsed value for the option, with any values from, checking for -, Return the current dictionary of "-X" options, similarly to "sys._xoptions". On error, "NULL" is returned and an exception is set.</context>
 </line>
 <line>
 <line_number>54</line_number>
 <line_content>col1, col2 = st.columns(2)</line_content>
 <context>
-[2] Columns:</context>
+[2] Columns:, where the columns are:, col_offset, col_offset, end_col_offset</context>
 </line>
 <line>
 <line_number>56</line_number>
 <line_content>with col1:</line_content>
 <context>
-with a:</context>
+with a:, col_offset, col_offset, group1:, [2] Columns:</context>
 </line>
 <line>
 <line_number>57</line_number>
 <line_content>st.subheader('Ask a question')</line_content>
 <context>
-Headers</context>
+Headers, "inquiry", "str";, <html><head><title>Title</title>, This implies inclusion of the following standard headers: "<stdio.h>", "<string.h>", "<errno.h>", "<limits.h>", "<assert.h>" and "<stdlib.h>" (if available).</context>
 </line>
 <line>
 <line_number>58</line_number>
 <line_content>st.markdown(</line_content>
 <context>
-formatters:</context>
+formatters:, "str";, format (i.e. is framed with <~ and ~>)., Formatters, str -</context>
 </line>
 <line>
 <line_number>60</line_number>
 <line_content>Here are some prompts:</line_content>
 <context>
-readline configuration on interactive prompts.</context>
+readline configuration on interactive prompts., Show the help message and exit., commands, commands, commands</context>
 </line>
 <line>
 <line_number>61</line_number>
 <line_content>- `What is the main idea of this lecture in simple terms?`</line_content>
 <context>
-Basic concepts</context>
+Basic concepts, The basics, Basic usage, [ Introduction ]-, Concepts</context>
 </line>
 <line>
 <line_number>62</line_number>
 <line_content>- `Summarize the main points of slide 5`</line_content>
 <context>
-To summarize:</context>
+To summarize:, create a complete usage summary, The important points to remember are:, The following sections walk you through this example., Informative functions:</context>
 </line>
 <line>
 <line_number>63</line_number>
 <line_content>- `Provide 5 practice questions on this lecture with answers`</line_content>
 <context>
-3. include "test/test</context>
+3. include "test/test, class Ten:, Class methods, Class methods, Classes</context>
 </line>
 <line>
 <line_number>66</line_number>
 <line_content>query = st.text_area('Enter your question', max_chars=200)</line_content>
 <context>
-Create a new Unicode object. *maxchar* should be the true maximum code point to be placed in the string. As an approximation, it can be rounded up to the nearest value in the sequence 127, 255, 65535, 1114111.</context>
+Create a new Unicode object. *maxchar* should be the true maximum code point to be placed in the string. As an approximation, it can be rounded up to the nearest value in the sequence 127, 255, 65535, 1114111., Fail if *fill_char* is bigger than the string maximum character, or if the string has more than 1 reference., size of other formatted text does not exceed 1000 bytes. Also, 'short string' A single line of text, not more than 200 characters., The global variable "maxlen" can be set to an integer indicating the maximum size of a POST request. POST requests larger than this size will result in a "ValueError" being raised during parsing. The default value of this variable is "0", meaning the request size is unlimited.</context>
 </line>
 <line>
 <line_number>68</line_number>
 <line_content>if st.button('Ask'):</line_content>
 <context>
-"'?'". One argument will be consumed from the command line if</context>
+"'?'". One argument will be consumed from the command line if, if key in self:, Return "True" if, Return "True" if, How to use the "#ifdef" trick -----------------------------</context>
 </line>
 <line>
 <line_number>69</line_number>
 <line_content>if query == '':</line_content>
 <context>
-if (result ==</context>
+if (result ==, if (result == NULL), "'?'". One argument will be consumed from the command line if, if value is null:, if line:</context>
 </line>
 <line>
 <line_number>70</line_number>
 <line_content>st.error('Please enter a question')</line_content>
 <context>
-An ERROR message</context>
+An ERROR message, An ERROR message, ERROR, ERROR, ERROR</context>
 </line>
 <line>
 <line_number>71</line_number>
 <line_content>with st.spinner('Generating answer...'):</line_content>
 <context>
-Here's the simplest example of a generator function:</context>
+Here's the simplest example of a generator function:, will produce the following output:, Generators, : "Generator Expressions", "generators" is a list of "comprehension" nodes.</context>
 </line>
 <line>
 <line_number>72</line_number>
 <line_content># res = query_gpt_memory(chosen_class, chosen_pdf, query)</line_content>
 <context>
-objects. The memory is taken from the Python private heap.</context>
+objects. The memory is taken from the Python private heap., o, Py_ssize_t refcnt), "PyGC_Collect()", 1. The memory for the object must be allocated using "PyObject_GC_New" or "PyObject_GC_NewVar"., Releases memory allocated to an object using "PyObject_GC_New" or "PyObject_GC_NewVar".</context>
 </line>
 <line>
 <line_number>73</line_number>
 <line_content>res = query_gpt(chosen_class, chosen_pdf, query)</line_content>
 <context>
->>> class Student: ...     def __init__(self, name, grade, age): ...         self.name = name ...         self.grade = grade ...         self.age = age ...     def __repr__(self): ...         return repr((self.name, self.grade, self.age))</context>
+>>> class Student: ...     def __init__(self, name, grade, age): ...         self.name = name ...         self.grade = grade ...         self.age = age ...     def __repr__(self): ...         return repr((self.name, self.grade, self.age)), fut.set_result(42), The C type of the object returned by "Py_GenericAlias()". Equivalent to "types.GenericAlias" in Python., "PyGC_Collect()", fut.set_result(value)</context>
 </line>
 <line>
 <line_number>74</line_number>
 <line_content>st.markdown(res)</line_content>
 <context>
-For such REs, specifying the "re.VERBOSE" flag when compiling the regular expression can be helpful, because it allows you to format the regular expression more clearly.</context>
+For such REs, specifying the "re.VERBOSE" flag when compiling the regular expression can be helpful, because it allows you to format the regular expression more clearly., res;, res;, formatters:, format (i.e. is framed with <~ and ~>).</context>
 </line>
 <line>
 <line_number>76</line_number>
 <line_content># with st.expander('Memory'):</line_content>
 <context>
-"U#" ("str" or "None") [const char *, "Py_ssize_t"] Same as "s#".</context>
+"U#" ("str" or "None") [const char *, "Py_ssize_t"] Same as "s#"., "es#" ("str") [const char *encoding, char **buffer, "Py_ssize_t" *buffer_length] This variant on "s#" is used for encoding Unicode into a character buffer. Unlike the "es" format, this variant allows input data which contains NUL characters., >>> str(addr4), Return a pointer to a newly allocated wide character string, use "PyMem_RawFree()" to free the memory. If size is not "NULL", write the number of wide characters excluding the null character into "*size", "y#" (read-only *bytes-like object*) [const char *, "Py_ssize_t"] This variant on "s#" doesn't accept Unicode objects, only bytes- like objects.</context>
 </line>
 <line>
 <line_number>77</line_number>
 <line_content>#      st.write(st.session_state.memory.replace('\n', '\n\n'))</line_content>
 <context>
-sys.stderr.write('%s\n' % s)</context>
+sys.stderr.write('%s\n' % s), with open(fname + '.new', 'w', encoding="ascii", errors="surrogateescape") as f: f.write(data), >>> sys.stderr.write(sys.stdout.getvalue()), Return a pointer to a newly allocated wide character string, use "PyMem_RawFree()" to free the memory. If size is not "NULL", write the number of wide characters excluding the null character into "*size", stdscr = curses.initscr()</context>
 </line>
 <line>
 <line_number>79</line_number>
 <line_content>with col2:</line_content>
 <context>
-with a:</context>
+with a:, [2] Columns:, group2:, col_offset, col_offset</context>
 </line>
 <line>
 <line_number>80</line_number>
 <line_content>show_pdf(chosen_class, chosen_pdf)</line_content>
 <context>
-return __class__
+return __class__, The Distribution class, class P:, example.show(), class _pickle.Pickler "PicklerObject
 </context>
 </line>
 </file_context>
@@ -450,127 +450,127 @@ def sidebar():
 <line_number>2</line_number>
 <line_content>import streamlit as st</line_content>
 <context>
-StreamReader</context>
+StreamReader, Streams, Streams, Streams, "stream": "ext://sys.stderr"</context>
 </line>
 <line>
 <line_number>5</line_number>
 <line_content>def sidebar():</line_content>
 <context>
-"bar.py":</context>
+"bar.py":, def do_bar(self):, bar.py, bar.py, bar.py</context>
 </line>
 <line>
 <line_number>6</line_number>
 <line_content>with st.sidebar:</line_content>
 <context>
->bar);</context>
+>bar);, bar, h] bar, stmt, bar')</context>
 </line>
 <line>
 <line_number>7</line_number>
 <line_content>st.markdown(</line_content>
 <context>
-formatters:</context>
+formatters:, "str";, format (i.e. is framed with <~ and ~>)., Formatters, str -</context>
 </line>
 <line>
 <line_number>8</line_number>
 <line_content>'## How to use\n'</line_content>
 <context>
-# some code</context>
+# some code, # or:, ## Options:, # Output the value of # the expression., # create formatter</context>
 </line>
 <line>
 <line_number>9</line_number>
 <line_content>'1. Add your files in 📁 Data page\n'</line_content>
 <context>
-The "data_files" option can be used to specify additional files needed by the module distribution: configuration files, message catalogs, data files, anything which doesn't fit in the previous categories.</context>
+The "data_files" option can be used to specify additional files needed by the module distribution: configuration files, message catalogs, data files, anything which doesn't fit in the previous categories., "file": {, "file": {, "file", "file"</context>
 </line>
 <line>
 <line_number>10</line_number>
 <line_content>'2. Ask a question on the ❓ Ask page\n'</line_content>
 <context>
-q" option.</context>
+q" option., "inquiry", 2. Fill in the requested fields., b" option., r'"')</context>
 </line>
 <line>
 <line_number>12</line_number>
 <line_content>api_key_input = st.text_input(</line_content>
 <context>
-Converts "raw_input()" to "input()".</context>
+Converts "raw_input()" to "input()"., name = raw_input(), raw_input, self.key = key, self.key = key</context>
 </line>
 <line>
 <line_number>13</line_number>
 <line_content>'OpenAI API Key',</line_content>
 <context>
-Limited API Caveats</context>
+Limited API Caveats, This version of the API does not support platforms where the native TLS key is defined in a way that cannot be safely cast to "int". On such platforms, "PyThread_create_key()" will return immediately with a failure status, and the other TLS functions will all be no-ops on such platforms., self.key = key, self.key = key, API identifier (ASCII character):</context>
 </line>
 <line>
 <line_number>14</line_number>
 <line_content>type='password',</line_content>
 <context>
-# create a password manager password_mgr = urllib.request.HTTPPasswordMgrWithDefaultRealm()</context>
+# create a password manager password_mgr = urllib.request.HTTPPasswordMgrWithDefaultRealm(), type, type, TYPE, type</context>
 </line>
 <line>
 <line_number>15</line_number>
 <line_content>placeholder='sk-xxx...',</line_content>
 <context>
-2. Replace the ASCII section with whatever placeholders you like, but make sure that the data that appears in there after substitution is always ASCII (that way, it will remain unchanged after UTF-8 encoding).</context>
+2. Replace the ASCII section with whatever placeholders you like, but make sure that the data that appears in there after substitution is always ASCII (that way, it will remain unchanged after UTF-8 encoding)., only attribute: %s", name);, >>> __ = DollarMessage >>> print(__('Message with $num $what', num=2, what='placeholders')) Message with 2 placeholders >>>, formats should occur; these should be limited using "%.<N>s" where, Using a string as the value would look like:</context>
 </line>
 <line>
 <line_number>16</line_number>
 <line_content>help='Get an API key here 👉 https://platform.openai.com/account/api-keys.',</line_content>
 <context>
-self.key = key</context>
+self.key = key, self.key = key, Changed in version 3.10: Added the *key* parameter., Changed in version 3.10: Added the *key* parameter., Changed in version 3.10: Added the *key* parameter.</context>
 </line>
 <line>
 <line_number>20</line_number>
 <line_content>if api_key_input:</line_content>
 <context>
-if key in self:</context>
+if key in self:, has_key, if key in mydict: value = mydict[key] else: value = mydict[key] = getvalue(key), f has_key example.py, self.key = key</context>
 </line>
 <line>
 <line_number>21</line_number>
 <line_content>os.environ['OPENAI_API_KEY'] = api_key_input</line_content>
 <context>
-self.key = key</context>
+self.key = key, self.key = key, Changed in version 3.10: Added the *key* parameter., Changed in version 3.10: Added the *key* parameter., Changed in version 3.10: Added the *key* parameter.</context>
 </line>
 <line>
 <line_number>22</line_number>
 <line_content>st.success('API key set')</line_content>
 <context>
-On success, return a list of the keys in object *o*. On failure, return "NULL".</context>
+On success, return a list of the keys in object *o*. On failure, return "NULL"., stdscr.getkey(), self.key = key, self.key = key, Remove the entry in dictionary *p* with key *key*. *key* must be *hashable*; if it isn't, "TypeError" is raised. If *key* is not in the dictionary, "KeyError" is raised. Return "0" on success or "-1" on failure.</context>
 </line>
 <line>
 <line_number>24</line_number>
 <line_content>st.markdown(</line_content>
 <context>
-formatters:</context>
+formatters:, "str";, format (i.e. is framed with <~ and ~>)., Formatters, str -</context>
 </line>
 <line>
 <line_number>29</line_number>
 <line_content>ClassGPT lets you ask questions about your class \</line_content>
 <context>
-What is a class?</context>
+What is a class?, Classes, class ast.And, The classes can be used like this:, class ast.Or</context>
 </line>
 <line>
 <line_number>30</line_number>
 <line_content>lectures and get accurate answers</line_content>
 <context>
-Classes</context>
+Classes, classes., The basics, class ast.And, Class methods</context>
 </line>
 <line>
 <line_number>32</line_number>
 <line_content>This tool is a work in progress.</line_content>
 <context>
-Installing the tools</context>
+Installing the tools, Recommended third party tools, Each of these tasks is covered in this document., Some additional functions are provided which perform some useful manipulations for other parts of the "distutils" package., This is done as follows:</context>
 </line>
 <line>
 <line_number>34</line_number>
 <line_content>Contributions are welcomed on [GitHub](https://github.com/benthecoder/ClassGPT)</line_content>
 <context>
-Version 0.21: Added more references suggested on the tutor mailing list.</context>
+Version 0.21: Added more references suggested on the tutor mailing list., class ast.GtE, class ast.Gt, 2to3's library, The descriptions of the specific node classes displayed here were initially adapted from the fantastic Green Tree Snakes project and all its contributors.</context>
 </line>
 <line>
 <line_number>36</line_number>
 <line_content>Made with ♥️ by [Benedict Neo](https://benneo.super.site/)</line_content>
 <context>
-https://code.activestate.com/recipes/52560/
+https://code.activestate.com/recipes/52560/, unicode, unicode, Unicode, Unicode
 </context>
 </line>
 </file_context>
@@ -672,349 +672,349 @@ with tab3:
 <line_number>0</line_number>
 <line_content>import streamlit as st</line_content>
 <context>
-StreamReader</context>
+StreamReader, Streams, Streams, Streams, "stream": "ext://sys.stderr"</context>
 </line>
 <line>
 <line_number>1</line_number>
 <line_content>from components.sidebar import sidebar</line_content>
 <context>
-"foo" imports "bar"</context>
+"foo" imports "bar", from bar import bar_var, import selectors, import selectors, >>> import custom</context>
 </line>
 <line>
 <line_number>2</line_number>
 <line_content>from s3 import S3</line_content>
 <context>
->>> import custom3</context>
+>>> import custom3, import, >>> import io, sys, imports, Imports</context>
 </line>
 <line>
 <line_number>5</line_number>
 <line_content>bucket_name = 'classgpt'</line_content>
 <context>
-defining_class,</context>
+defining_class,, return __class__, "name" is a raw string for the class name, def get_defining_class(self):, class G: @classmethod @property def __doc__(cls): return f'A doc for {cls.__name__!r}'</context>
 </line>
 <line>
 <line_number>6</line_number>
 <line_content>s3 = S3(bucket_name)</line_content>
 <context>
-s2)</context>
+s2), %(name)s, %(name)s, %(name)s, def name(self): return "%s %s" % (self.first, self.last)</context>
 </line>
 <line>
 <line_number>7</line_number>
 <line_content>all_classes = s3.list_files()</line_content>
 <context>
-Returns the name of the object files for the given source files. *source_filenames* should be a list of filenames.</context>
+Returns the name of the object files for the given source files. *source_filenames* should be a list of filenames., class G: @classmethod @property def __doc__(cls): return f'A doc for {cls.__name__!r}', The FileList class, 9.17. "distutils.filelist" --- The FileList class, for file in very_long_list_of_files:</context>
 </line>
 <line>
 <line_number>9</line_number>
 <line_content>tab1, tab2, tab3 = st.tabs(['Upload data', 'Add Class', 'Delete'])</line_content>
 <context>
-How do I keep editors from inserting tabs into my Python source? ================================================================</context>
+How do I keep editors from inserting tabs into my Python source? ================================================================, The FAQ does not recommend using tabs, and the Python style guide, **PEP 8**, recommends 4 spaces for distributed Python code; this is also the Emacs python-mode default., "PyExc_TabError", Python raises "IndentationError" or "TabError" if mixed tabs and spaces are causing problems in leading whitespace. You may also run the "tabnanny" module to check a directory tree in batch mode., data_files=[('bitmaps', ['bm/b1.gif', 'bm/b2.gif']),</context>
 </line>
 <line>
 <line_number>11</line_number>
 <line_content>with tab1:</line_content>
 <context>
-Here's an example which shows how you can:</context>
+Here's an example which shows how you can:, you could use e.g. :, with a:, which you can use like this:, Use a list:</context>
 </line>
 <line>
 <line_number>12</line_number>
 <line_content>st.subheader('Upload new lectures')</line_content>
 <context>
-class ast.Sub</context>
+class ast.Sub, Headers, The bulk of the work is in the header file "spammodule.h", which looks like this:, class ast.USub, "stream": "ext://sys.stderr"</context>
 </line>
 <line>
 <line_number>14</line_number>
 <line_content>chosen_class = st.selectbox(</line_content>
 <context>
-class _pickle.Pickler "PicklerObject</context>
+class _pickle.Pickler "PicklerObject, class _pickle.Pickler "PicklerObject, class _pickle.Pickler "PicklerObject, class _pickle.Pickler "PicklerObject, selector = selectors.SelectSelector()</context>
 </line>
 <line>
 <line_number>15</line_number>
 <line_content>'Select a class',</line_content>
 <context>
-What is a class?</context>
+What is a class?, A class definition., 1.__class__, class P:, class D:</context>
 </line>
 <line>
 <line_number>16</line_number>
 <line_content>list(all_classes.keys()) + ['--'],</line_content>
 <context>
-class ast.Dict(keys, values)</context>
+class ast.Dict(keys, values), How do I get a list of all instances of a given class? ------------------------------------------------------, >>> # no negative number options, so -1 and -5 are positional arguments >>> parser.parse_args(['-x', '-1', '-5']) Namespace(foo='-5', x='-1'), >>> a_list = [], >>> # negative number options present, so -1 is an option >>> parser.parse_args(['-1', 'X']) Namespace(foo=None, one='X')</context>
 </line>
 <line>
 <line_number>17</line_number>
 <line_content>index=len(all_classes),</line_content>
 <context>
-How do I get a list of all instances of a given class? ------------------------------------------------------</context>
+How do I get a list of all instances of a given class? ------------------------------------------------------, A better approach is to define a "search()" method on all the classes and just call it:, >>> p = re.compile('\bclass\b') >>> print(p.search('no class at all')) None >>> print(p.search('\b' + 'class' + '\b')) <re.Match object; span=(0, 7), match='\x08class\x08'>, len(cls.slot_names), >>> p = re.compile(r'\bclass\b') >>> print(p.search('no class at all')) <re.Match object; span=(3, 8), match='class'> >>> print(p.search('the declassified algorithm')) None >>> print(p.search('one subclass is')) None</context>
 </line>
 <line>
 <line_number>20</line_number>
 <line_content>if chosen_class != '--':</line_content>
 <context>
->>> class Color(Flag): ...     BLACK = 0 ...     RED = auto() ...     BLUE = auto() ...     GREEN = auto() ... >>> Color.BLACK <Color.BLACK: 0> >>> bool(Color.BLACK) False</context>
+>>> class Color(Flag): ...     BLACK = 0 ...     RED = auto() ...     BLUE = auto() ...     GREEN = auto() ... >>> Color.BLACK <Color.BLACK: 0> >>> bool(Color.BLACK) False, >>> (1).__class__, class P:, @classmethod def __subclasshook__(cls, C): if cls is MyIterable: if any("__iter__" in B.__dict__ for B in C.__mro__): return True return NotImplemented, class D:</context>
 </line>
 <line>
 <line_number>21</line_number>
 <line_content>with st.form('upload_pdf'):</line_content>
 <context>
-The file upload draft standard entertains the possibility of uploading multiple files from one field (using a recursive *multipart/** encoding). When this occurs, the item will be a dictionary-like "FieldStorage" item. This can be determined by testing its "type" attribute, which should be *multipart/form-data* (or perhaps another MIME type matching *multipart/**). In this case, it can be iterated over recursively just like the top-level form object.</context>
+The file upload draft standard entertains the possibility of uploading multiple files from one field (using a recursive *multipart/** encoding). When this occurs, the item will be a dictionary-like "FieldStorage" item. This can be determined by testing its "type" attribute, which should be *multipart/form-data* (or perhaps another MIME type matching *multipart/**). In this case, it can be iterated over recursively just like the top-level form object., cgi.print_form(form), Parse input of type *multipart/form-data* (for  file uploads). Arguments are *fp* for the input file, *pdict* for a dictionary containing other parameters in the *Content-Type* header, and *encoding*, the request encoding., destination <name> new <type> <file_template>, "copy_file()".</context>
 </line>
 <line>
 <line_number>22</line_number>
 <line_content>uploaded_files = st.file_uploader(</line_content>
 <context>
-"file"</context>
+"file", "file", "file" *, "copy_file()"., file as file_obj: object</context>
 </line>
 <line>
 <line_number>23</line_number>
 <line_content>'Upload a PDF file', type='pdf', accept_multiple_files=True</line_content>
 <context>
-The file upload draft standard entertains the possibility of uploading multiple files from one field (using a recursive *multipart/** encoding). When this occurs, the item will be a dictionary-like "FieldStorage" item. This can be determined by testing its "type" attribute, which should be *multipart/form-data* (or perhaps another MIME type matching *multipart/**). In this case, it can be iterated over recursively just like the top-level form object.</context>
+The file upload draft standard entertains the possibility of uploading multiple files from one field (using a recursive *multipart/** encoding). When this occurs, the item will be a dictionary-like "FieldStorage" item. This can be determined by testing its "type" attribute, which should be *multipart/form-data* (or perhaps another MIME type matching *multipart/**). In this case, it can be iterated over recursively just like the top-level form object., Note that the "doc_files" option is simply a whitespace-separated string split across multiple lines for readability., distutils.file_util.write_file(filename, contents), int Py_file_input, You can specify as many formats as you like using the "--formats" option, for example:</context>
 </line>
 <line>
 <line_number>26</line_number>
 <line_content>submit_button = st.form_submit_button('Upload')</line_content>
 <context>
-"copy_file()".</context>
+"copy_file()"., The script's input is connected to the client too, and sometimes the form data is read this way; at other times the form data is passed via the "query string" part of the URL. This module is intended to take care of the different cases and provide a simpler interface to the Python script. It also provides a number of utilities that help in debugging scripts, and the latest addition is support for file uploads from a form (if your browser supports it)., s.send(data_to_send), cgi.print_form(form), int Py_file_input</context>
 </line>
 <line>
 <line_number>28</line_number>
 <line_content>if submit_button:</line_content>
 <context>
-However, this idiom is unsafe, as it can give wrong results when *on_true* has a false boolean value. Therefore, it is always better to use the "... if ... else ..." form.</context>
+However, this idiom is unsafe, as it can give wrong results when *on_true* has a false boolean value. Therefore, it is always better to use the "... if ... else ..." form., if record.name == "root":, Return true if, Return true if, Return True if</context>
 </line>
 <line>
 <line_number>29</line_number>
 <line_content>if len(uploaded_files) == 0:</line_content>
 <context>
-fileitem = form["userfile"] if fileitem.file: # It's an uploaded file; count lines linecount = 0 while True: line = fileitem.file.readline() if not line: break linecount = linecount + 1</context>
+fileitem = form["userfile"] if fileitem.file: # It's an uploaded file; count lines linecount = 0 while True: line = fileitem.file.readline() if not line: break linecount = linecount + 1, , limit=None, file=None), If *filename* is a file object (rather than an actual file name), a mode of "'w'" does not truncate the file, and is instead equivalent to "'a'"., "file" *, "file"</context>
 </line>
 <line>
 <line_number>30</line_number>
 <line_content>st.error('Please upload at least one file')</line_content>
 <context>
-file* must be a regular file object open in binary mode.</context>
+file* must be a regular file object open in binary mode., except FileNotFoundError:, "file" *, "file", "file"</context>
 </line>
 <line>
 <line_number>32</line_number>
 <line_content>with st.spinner(f'Uploading {len(uploaded_files)} files...'):</line_content>
 <context>
-for file in very_long_list_of_files:</context>
+for file in very_long_list_of_files:, for file in very_long_list_of_files:, "file", "file", "file" *</context>
 </line>
 <line>
 <line_number>33</line_number>
 <line_content>for uploaded_file in uploaded_files:</line_content>
 <context>
-"file"</context>
+"file", "file", "file" *, for file in very_long_list_of_files:, for file in very_long_list_of_files:</context>
 </line>
 <line>
 <line_number>34</line_number>
 <line_content>s3.upload_files(</line_content>
 <context>
-"file": {</context>
+"file": {, "file": {, Changed in version 3.3: Support was added for *filename* being a *file object* instead of an actual filename., "file" *, "file"</context>
 </line>
 <line>
 <line_number>35</line_number>
 <line_content>uploaded_file, f'{chosen_class}/{uploaded_file.name}'</line_content>
 <context>
-Changed in version 3.4: The "__file__" attribute is no longer set on the module.</context>
+Changed in version 3.4: The "__file__" attribute is no longer set on the module., "file", "file", file as file_obj: object, "file" *</context>
 </line>
 <line>
 <line_number>38</line_number>
 <line_content>st.success(f'{len(uploaded_files)} files uploaded')</line_content>
 <context>
-"file" *</context>
+"file" *, Write string *s* to file object *p*. Return "0" on success or "-1" on failure; the appropriate exception will be set., "file", "file", Send a *file* over a *transport*. Return the total number of bytes sent.</context>
 </line>
 <line>
 <line_number>41</line_number>
 <line_content>with tab2:</line_content>
 <context>
-which you can use like this:</context>
+which you can use like this:, you could use e.g. :, Here's an example which shows how you can:, window may be useful!), This is done as follows:</context>
 </line>
 <line>
 <line_number>42</line_number>
 <line_content>st.subheader('Add a new class')</line_content>
 <context>
-class Sub(Base):</context>
+class Sub(Base):, class Base:, class Base:, class Base:, How can I organize my code to make it easier to change the base class? ----------------------------------------------------------------------</context>
 </line>
 <line>
 <line_number>44</line_number>
 <line_content>with st.form('add_class'):</line_content>
 <context>
-defining_class,</context>
+defining_class,, return __class__, class Field:, class ast.Add, formatter_class</context>
 </line>
 <line>
 <line_number>45</line_number>
 <line_content>add_class = st.text_input('Enter a new class name')</line_content>
 <context>
-/*[clinic input] module.class.new_function [as c_basename] = module.class.existing_function</context>
+/*[clinic input] module.class.new_function [as c_basename] = module.class.existing_function, defining_class,, name = raw_input(), "name" is a raw string for the class name, return __class__</context>
 </line>
 <line>
 <line_number>47</line_number>
 <line_content>submit_button = st.form_submit_button('Add')</line_content>
 <context>
-The add_argument() method</context>
+The add_argument() method, The add_argument() method, add_help, add_help, keyword argument to "add_argument()".</context>
 </line>
 <line>
 <line_number>49</line_number>
 <line_content>if submit_button:</line_content>
 <context>
-However, this idiom is unsafe, as it can give wrong results when *on_true* has a false boolean value. Therefore, it is always better to use the "... if ... else ..." form.</context>
+However, this idiom is unsafe, as it can give wrong results when *on_true* has a false boolean value. Therefore, it is always better to use the "... if ... else ..." form., if record.name == "root":, Return True if, Return true if, Return true if</context>
 </line>
 <line>
 <line_number>50</line_number>
 <line_content>if add_class == '':</line_content>
 <context>
-defining_class,</context>
+defining_class,, return __class__, >>> 1.__class__, >>> 1 .__class__, @classmethod def __subclasshook__(cls, C): if cls is MyIterable: if any("__iter__" in B.__dict__ for B in C.__mro__): return True return NotImplemented</context>
 </line>
 <line>
 <line_number>51</line_number>
 <line_content>st.error('Please enter a class name')</line_content>
 <context>
-"name" is a raw string for the class name</context>
+"name" is a raw string for the class name, class Message:, This exception is a subclass of "EOFError"., "PyExceptionClass_Name()", return __class__</context>
 </line>
 <line>
 <line_number>53</line_number>
 <line_content>s3.create_folder(add_class)</line_content>
 <context>
-class Directory:</context>
+class Directory:, directory_created(path), defining_class,, class distutils.command.build_py.build_py_2to3, The "type.__new__()" method takes care of adding member objects to class variables:</context>
 </line>
 <line>
 <line_number>54</line_number>
 <line_content>st.success(f'Class {add_class} added')</line_content>
 <context>
-return __class__</context>
+return __class__, class Function:, defining_class,, class ast.Add, class Message:</context>
 </line>
 <line>
 <line_number>56</line_number>
 <line_content>with tab3:</line_content>
 <context>
-which you can use like this:</context>
+which you can use like this:, with a:, you could use e.g. :, window may be useful!), New in version 3.10.</context>
 </line>
 <line>
 <line_number>57</line_number>
 <line_content>st.subheader('Delete a class or a PDF file')</line_content>
 <context>
-How do I delete a file? (And other file questions...) -----------------------------------------------------</context>
+How do I delete a file? (And other file questions...) -----------------------------------------------------, class ast.Delete(targets), class ast.Del, My class defines __del__ but it is not called when I delete the object. -----------------------------------------------------------------------, Use "os.remove(filename)" or "os.unlink(filename)"; for documentation, see the "os" module. The two functions are identical; "unlink()" is simply the name of the Unix system call for this function.</context>
 </line>
 <line>
 <line_number>59</line_number>
 <line_content>chosen_class = st.selectbox(</line_content>
 <context>
-class _pickle.Pickler "PicklerObject</context>
+class _pickle.Pickler "PicklerObject, class _pickle.Pickler "PicklerObject, class _pickle.Pickler "PicklerObject, class _pickle.Pickler "PicklerObject, selector = selectors.SelectSelector()</context>
 </line>
 <line>
 <line_number>60</line_number>
 <line_content>'Select a class to delete',</line_content>
 <context>
-My class defines __del__ but it is not called when I delete the object. -----------------------------------------------------------------------</context>
+My class defines __del__ but it is not called when I delete the object. -----------------------------------------------------------------------, class ast.Delete(targets), deleteMe(), class ast.Del, 'Emulate member_delete() in Objects/descrobject.c'</context>
 </line>
 <line>
 <line_number>61</line_number>
 <line_content>list(all_classes.keys()) + ['--'],</line_content>
 <context>
-class ast.Dict(keys, values)</context>
+class ast.Dict(keys, values), How do I get a list of all instances of a given class? ------------------------------------------------------, >>> # no negative number options, so -1 and -5 are positional arguments >>> parser.parse_args(['-x', '-1', '-5']) Namespace(foo='-5', x='-1'), >>> a_list = [], >>> # negative number options present, so -1 is an option >>> parser.parse_args(['-1', 'X']) Namespace(foo=None, one='X')</context>
 </line>
 <line>
 <line_number>62</line_number>
 <line_content>index=len(all_classes),</line_content>
 <context>
-How do I get a list of all instances of a given class? ------------------------------------------------------</context>
+How do I get a list of all instances of a given class? ------------------------------------------------------, A better approach is to define a "search()" method on all the classes and just call it:, >>> p = re.compile('\bclass\b') >>> print(p.search('no class at all')) None >>> print(p.search('\b' + 'class' + '\b')) <re.Match object; span=(0, 7), match='\x08class\x08'>, len(cls.slot_names), >>> p = re.compile(r'\bclass\b') >>> print(p.search('no class at all')) <re.Match object; span=(3, 8), match='class'> >>> print(p.search('the declassified algorithm')) None >>> print(p.search('one subclass is')) None</context>
 </line>
 <line>
 <line_number>65</line_number>
 <line_content>if chosen_class != '--':</line_content>
 <context>
->>> class Color(Flag): ...     BLACK = 0 ...     RED = auto() ...     BLUE = auto() ...     GREEN = auto() ... >>> Color.BLACK <Color.BLACK: 0> >>> bool(Color.BLACK) False</context>
+>>> class Color(Flag): ...     BLACK = 0 ...     RED = auto() ...     BLUE = auto() ...     GREEN = auto() ... >>> Color.BLACK <Color.BLACK: 0> >>> bool(Color.BLACK) False, >>> (1).__class__, class P:, @classmethod def __subclasshook__(cls, C): if cls is MyIterable: if any("__iter__" in B.__dict__ for B in C.__mro__): return True return NotImplemented, class D:</context>
 </line>
 <line>
 <line_number>66</line_number>
 <line_content>all_pdfs = all_classes[chosen_class] + ['all']</line_content>
 <context>
-How do I get a list of all instances of a given class? ------------------------------------------------------</context>
+How do I get a list of all instances of a given class? ------------------------------------------------------, A better approach is to define a "search()" method on all the classes and just call it:, Python does not keep track of all instances of a class (or of a built- in type). You can program the class's constructor to keep track of all instances by keeping a list of weak references to each instance., >>> p = re.compile('\bclass\b') >>> print(p.search('no class at all')) None >>> print(p.search('\b' + 'class' + '\b')) <re.Match object; span=(0, 7), match='\x08class\x08'>, allocfunc PyTypeObject.tp_alloc</context>
 </line>
 <line>
 <line_number>68</line_number>
 <line_content># Remove empty values</line_content>
 <context>
-Omitting values</context>
+Omitting values, empty(), have "None" value., Empty an existing set of all elements., if value is null:</context>
 </line>
 <line>
 <line_number>69</line_number>
 <line_content>all_pdfs = [x for x in all_pdfs if x]</line_content>
 <context>
-The "any(iter)" and "all(iter)" built-ins look at the truth values of an iterable's contents. "any()" returns "True" if any element in the iterable is a true value, and "all()" returns "True" if all of the elements are true values:</context>
+The "any(iter)" and "all(iter)" built-ins look at the truth values of an iterable's contents. "any()" returns "True" if any element in the iterable is a true value, and "all()" returns "True" if all of the elements are true values:, >>> list(x for x in range(10) if is_even(x)) [0, 2, 4, 6, 8], [on_true] if [expression] else [on_false], x = [, Test if the *x* object is the *y* object, the same as "x is y" in Python.</context>
 </line>
 <line>
 <line_number>71</line_number>
 <line_content>chosen_pdf = st.selectbox(</line_content>
 <context>
-Use "select".</context>
+Use "select"., class distutils.fancy_getopt.FancyGetopt([option_table=None]), type = "PicklerObject, selector = selectors.SelectSelector(), selector = selectors.SelectSelector()</context>
 </line>
 <line>
 <line_number>72</line_number>
 <line_content>'Select a PDF file or choose 'all' to delete the whole class',</line_content>
 <context>
-How do I delete a file? (And other file questions...) -----------------------------------------------------</context>
+How do I delete a file? (And other file questions...) -----------------------------------------------------, A better approach is to define a "search()" method on all the classes and just call it:, may include the class. The second puts in "None" for the instance, and always includes the class., class P:</context>
 </line>
 <line>
 <line_number>73</line_number>
 <line_content>all_pdfs + ['--'],</line_content>
 <context>
->>> print(ast.dump(ast.parse('a,</context>
+>>> print(ast.dump(ast.parse('a,, object_filenames(source_filenames[, strip_dir=0, output_dir='']), >>> parser.add_argument('-, >>> parser.add_argument('-, >>> parser.add_argument('-</context>
 </line>
 <line>
 <line_number>74</line_number>
 <line_content>index=len(all_pdfs),</line_content>
 <context>
->>> print(len(s))</context>
+>>> print(len(s)), , from character index, Retrieve the start, stop and step indices from the slice object *slice*, assuming a sequence of length *length*. Treats indices greater than *length* as errors., If *index* is greater than or equal to *list* length, append *item* to *list*., o, Py_ssize_t index)</context>
 </line>
 <line>
 <line_number>77</line_number>
 <line_content>if chosen_pdf != '--':</line_content>
 <context>
-You can select only certain elements by adding an ""if"" condition:</context>
+You can select only certain elements by adding an ""if"" condition:, command with the "-, Note that slight difference in the usage text. Note the "[-v | -q]", which tells us that we can either use "-v" or "-q", but not both at the same time:, arguments (default: '-'), >>> # negative number options present, so -2 is an option >>> parser.parse_args(['-2']) usage: PROG [-h] [-1 ONE] [foo] PROG: error: no such option: -2</context>
 </line>
 <line>
 <line_number>78</line_number>
 <line_content>submit_button = st.button('Remove')</line_content>
 <context>
-self.clear_button.clicked.connect(self.clear_display)</context>
+self.clear_button.clicked.connect(self.clear_display), Remove, Remove, "loop.add_signal_handler()" and "loop.remove_signal_handler()" are, remove(x)</context>
 </line>
 <line>
 <line_number>80</line_number>
 <line_content>if submit_button:</line_content>
 <context>
-However, this idiom is unsafe, as it can give wrong results when *on_true* has a false boolean value. Therefore, it is always better to use the "... if ... else ..." form.</context>
+However, this idiom is unsafe, as it can give wrong results when *on_true* has a false boolean value. Therefore, it is always better to use the "... if ... else ..." form., if record.name == "root":, Return true if, Return True if, Return true if</context>
 </line>
 <line>
 <line_number>81</line_number>
 <line_content>if chosen_pdf == 'all':</line_content>
 <context>
-You can select only certain elements by adding an ""if"" condition:</context>
+You can select only certain elements by adding an ""if"" condition:, Use "select"., selections., Selecting elements, bool is_package;</context>
 </line>
 <line>
 <line_number>82</line_number>
 <line_content>s3.remove_folder(chosen_class)</line_content>
 <context>
-distutils.dir_util.remove_tree(directory[, verbose=0, dry_run=0])</context>
+distutils.dir_util.remove_tree(directory[, verbose=0, dry_run=0]), >>> s = Directory('songs') >>> g = Directory('games') >>> s.size                              # The songs directory has twenty files 20 >>> g.size                              # The games directory has three files 3 >>> os.remove('games/chess')            # Delete a game >>> g.size                              # File count is automatically updated 2, To remove a directory, use "os.rmdir()"; use "os.mkdir()" to create one. "os.makedirs(path)" will create any intermediate directories in "path" that don't exist. "os.removedirs(path)" will remove intermediate directories as long as they're empty; if you want to delete an entire directory tree and its contents, use "shutil.rmtree()"., class Directory:, Changed in version 3.1: "Py_CLEANUP_SUPPORTED" was added.</context>
 </line>
 <line>
 <line_number>83</line_number>
 <line_content>st.success(f'{chosen_class} removed')</line_content>
 <context>
-return __class__</context>
+return __class__, The function returns "True" if the handler was successfully removed, "False" if there was nothing to remove., My class defines __del__ but it is not called when I delete the object. -----------------------------------------------------------------------, Return the result of the call on success, or raise an exception and return *NULL* on failure., Return the result of the call on success, or raise an exception and return *NULL* on failure.</context>
 </line>
 <line>
 <line_number>85</line_number>
 <line_content>s3.remove_file(chosen_class, chosen_pdf)</line_content>
 <context>
-with tempfile.NamedTemporaryFile(delete=False) as tmp_file:</context>
+with tempfile.NamedTemporaryFile(delete=False) as tmp_file:, Use "os.remove(filename)" or "os.unlink(filename)"; for documentation, see the "os" module. The two functions are identical; "unlink()" is simply the name of the Unix system call for this function., How do I delete a file? (And other file questions...) -----------------------------------------------------, class distutils.text_file.TextFile([filename=None, file=None, *, >>> s = Directory('songs') >>> g = Directory('games') >>> s.size                              # The songs directory has twenty files 20 >>> g.size                              # The games directory has three files 3 >>> os.remove('games/chess')            # Delete a game >>> g.size                              # File count is automatically updated 2</context>
 </line>
 <line>
 <line_number>86</line_number>
 <line_content>st.success(f'{chosen_pdf} removed')</line_content>
 <context>
-loop.remove_reader(fd)
+loop.remove_reader(fd), The function returns "True" if the handler was successfully removed, "False" if there was nothing to remove., PyDoc_STRVAR(pop_doc, "Remove and return the rightmost element. ");, remove(x), print(f'[{cmd!r} exited with {proc.returncode}]')
 </context>
 </line>
 </file_context>
@@ -1116,355 +1116,355 @@ class S3:
 <line_number>0</line_number>
 <line_content>from collections import defaultdict</line_content>
 <context>
-newdict = olddict.copy()</context>
+newdict = olddict.copy(), You could use a global variable containing a dictionary instead of the default value; it's a matter of taste., from collections.abc import Mapping, def foo(mydict={}):, value = mydict[key]</context>
 </line>
 <line>
 <line_number>2</line_number>
 <line_content>import boto3</line_content>
 <context>
->>> import custom3</context>
+>>> import custom3, import, import sys, import sys, import sys</context>
 </line>
 <line>
 <line_number>3</line_number>
 <line_content>import botocore</line_content>
 <context>
-import</context>
+import, import copy, import sys, import sys, import sys</context>
 </line>
 <line>
 <line_number>8</line_number>
 <line_content>Class for interacting with S3</line_content>
 <context>
-Protocol classes can implement the following **callback methods**:</context>
+Protocol classes can implement the following **callback methods**:, The classes can be used like this:, In addition to the base "Handler" class, many useful subclasses are provided:, Action classes, Action classes</context>
 </line>
 <line>
 <line_number>11</line_number>
 <line_content>bucket_name (str): Name of the S3 bucket</line_content>
 <context>
-print_assign = lambda name, value: name + '=' + str(value)</context>
+print_assign = lambda name, value: name + '=' + str(value), Group: "tp_hash", "tp_richcompare", Group: "tp_hash", "tp_richcompare", set_name(value), name* is a string representing the piece of transport-specific</context>
 </line>
 <line>
 <line_number>13</line_number>
 <line_content>Attributes:</line_content>
 <context>
-Attributes for the character.</context>
+Attributes for the character., Attributes and Color, attribute of the, Managed attributes, Managed attributes</context>
 </line>
 <line>
 <line_number>14</line_number>
 <line_content>bucket_name (str): Name of the S3 bucket</line_content>
 <context>
-print_assign = lambda name, value: name + '=' + str(value)</context>
+print_assign = lambda name, value: name + '=' + str(value), Group: "tp_hash", "tp_richcompare", Group: "tp_hash", "tp_richcompare", set_name(value), name* is a string representing the piece of transport-specific</context>
 </line>
 <line>
 <line_number>15</line_number>
 <line_content>s3 (boto3.resource): S3 resource</line_content>
 <context>
-Resources limitations</context>
+Resources limitations, resource files in *sources*). Return a list of object, Other resources, New in version 3.2: "PyExc_ResourceWarning"., s2)</context>
 </line>
 <line>
 <line_number>16</line_number>
 <line_content>bucket (boto3.Bucket): S3 bucket</line_content>
 <context>
-s2)</context>
+s2), pipe:, pip, dir=python3, O3</context>
 </line>
 <line>
 <line_number>19</line_number>
 <line_content>list_folders: List all folders in the S3 bucket</line_content>
 <context>
-include_dirs*, if given, must be a list of strings, the</context>
+include_dirs*, if given, must be a list of strings, the, os.listdir(os.path.join('mydir', 'subdir')), library_dirs*, if supplied, should be a list of directories to, >>> s = sublist.SubList(range(3)), $ python listdir</context>
 </line>
 <line>
 <line_number>20</line_number>
 <line_content>list_files: List all files in the S3 bucket</line_content>
 <context>
-for file in very_long_list_of_files:</context>
+for file in very_long_list_of_files:, for file in very_long_list_of_files:, This module provides the "FileList" class, used for poking about the filesystem and building lists of files., include_dirs*, if given, must be a list of strings, the, Returns the name of the object files for the given source files. *source_filenames* should be a list of filenames.</context>
 </line>
 <line>
 <line_number>21</line_number>
 <line_content>folder_exists: Check if a folder exists in the S3 bucket</line_content>
 <context>
-If the folder cannot be retrieved, "OSError" is raised.</context>
+If the folder cannot be retrieved, "OSError" is raised., distutils.dir_util.mkpath(name[, mode=0o777, verbose=0, dry_run=0]), Create a directory and any missing ancestor directories. If the directory already exists (or if *name* is the empty string, which means the current directory, which of course exists), then do nothing. Raise "DistutilsFileError" if unable to create some directory along the way (eg. some sub-path exists, but is a file rather than a directory). If *verbose* is true, print a one-line summary of each mkdir to stdout. Return the list of directories actually created., (This way, the directory inserted last will be searched first!), dir=python3</context>
 </line>
 <line>
 <line_number>22</line_number>
 <line_content>file_exists: Check if a file exists in the S3 bucket</line_content>
 <context>
-"file": {</context>
+"file": {, "file": {, If "run_filename" is set and is a directory which contains a, Changed in version 3.3: Support was added for *filename* being a *file object* instead of an actual filename., except FileNotFoundError:</context>
 </line>
 <line>
 <line_number>23</line_number>
 <line_content>create_folder: Create a folder in the S3 bucket</line_content>
 <context>
-directory_created(path)</context>
+directory_created(path), file_created(path), distutils.dir_util.create_tree(base_dir, files[, mode=0o777, verbose=0, dry_run=0]), distutils.dir_util.mkpath(name[, mode=0o777, verbose=0, dry_run=0]), Create all the empty directories under *base_dir* needed to put *files* there. *base_dir* is just the name of a directory which doesn't necessarily exist yet; *files* is a list of filenames to be interpreted relative to *base_dir*. *base_dir* + the directory portion of every file in *files* will be created if it doesn't already exist. *mode*, *verbose* and *dry_run* flags  are as for "mkpath()".</context>
 </line>
 <line>
 <line_number>24</line_number>
 <line_content>upload_files: Upload a file to the S3 bucket</line_content>
 <context>
-The file upload draft standard entertains the possibility of uploading multiple files from one field (using a recursive *multipart/** encoding). When this occurs, the item will be a dictionary-like "FieldStorage" item. This can be determined by testing its "type" attribute, which should be *multipart/form-data* (or perhaps another MIME type matching *multipart/**). In this case, it can be iterated over recursively just like the top-level form object.</context>
+The file upload draft standard entertains the possibility of uploading multiple files from one field (using a recursive *multipart/** encoding). When this occurs, the item will be a dictionary-like "FieldStorage" item. This can be determined by testing its "type" attribute, which should be *multipart/form-data* (or perhaps another MIME type matching *multipart/**). In this case, it can be iterated over recursively just like the top-level form object., Changed in version 3.3: Support was added for *filename* being a *file object* instead of an actual filename., "file": {, "file": {, Changed in version 3.4: The "__file__" attribute is no longer set on the module.</context>
 </line>
 <line>
 <line_number>25</line_number>
 <line_content>remove_folder: Remove a folder from the S3 bucket</line_content>
 <context>
->>> s = Directory('songs') >>> g = Directory('games') >>> s.size                              # The songs directory has twenty files 20 >>> g.size                              # The games directory has three files 3 >>> os.remove('games/chess')            # Delete a game >>> g.size                              # File count is automatically updated 2</context>
+>>> s = Directory('songs') >>> g = Directory('games') >>> s.size                              # The songs directory has twenty files 20 >>> g.size                              # The games directory has three files 3 >>> os.remove('games/chess')            # Delete a game >>> g.size                              # File count is automatically updated 2, distutils.dir_util.remove_tree(directory[, verbose=0, dry_run=0]), To remove a directory, use "os.rmdir()"; use "os.mkdir()" to create one. "os.makedirs(path)" will create any intermediate directories in "path" that don't exist. "os.removedirs(path)" will remove intermediate directories as long as they're empty; if you want to delete an entire directory tree and its contents, use "shutil.rmtree()"., dir=python3, If the folder cannot be retrieved, "OSError" is raised.</context>
 </line>
 <line>
 <line_number>26</line_number>
 <line_content>remove_file: Remove a file from the S3 bucket</line_content>
 <context>
-How do I delete a file? (And other file questions...) -----------------------------------------------------</context>
+How do I delete a file? (And other file questions...) -----------------------------------------------------, with tempfile.NamedTemporaryFile(delete=False) as tmp_file:, >>> s = Directory('songs') >>> g = Directory('games') >>> s.size                              # The songs directory has twenty files 20 >>> g.size                              # The games directory has three files 3 >>> os.remove('games/chess')            # Delete a game >>> g.size                              # File count is automatically updated 2, Use "os.remove(filename)" or "os.unlink(filename)"; for documentation, see the "os" module. The two functions are identical; "unlink()" is simply the name of the Unix system call for this function., An attempt to delete a file (e.g. during file rotation) silently</context>
 </line>
 <line>
 <line_number>29</line_number>
 <line_content>def __init__(self, bucket_name):</line_content>
 <context>
-def __init__(self,</context>
+def __init__(self,, def __init__(self,, def __init__(self,, def __init__(self, key):, def __init__(self, key):</context>
 </line>
 <line>
 <line_number>30</line_number>
 <line_content>self.bucket_name = bucket_name</line_content>
 <context>
-self._name = name</context>
+self._name = name, def __hash__(self):, self.__dict__[name] = value, def __set_name__(self, owner, name): self.private_name = '_' + name, def __set_name__(self, owner, name): self.public_name = name self.private_name = '_' + name</context>
 </line>
 <line>
 <line_number>31</line_number>
 <line_content>self.s3 = boto3.resource('s3')</line_content>
 <context>
-Once you have fully translated your code to be compatible with Python 3, you will want to make sure your code doesn't regress and stop working under Python 3. This is especially true if you have a dependency which is blocking you from actually running under Python 3 at the moment.</context>
+Once you have fully translated your code to be compatible with Python 3, you will want to make sure your code doesn't regress and stop working under Python 3. This is especially true if you have a dependency which is blocking you from actually running under Python 3 at the moment., dir=python3, $ python3 prog.py, $ python3 prog.py, $ python3 prog.py</context>
 </line>
 <line>
 <line_number>32</line_number>
 <line_content>self.bucket = self.s3.Bucket(bucket_name)</line_content>
 <context>
-def __hash__(self):</context>
+def __hash__(self):, self._name = name, dir=python3, self.__dict__[name] = value, def __set_name__(self, owner, name):</context>
 </line>
 <line>
 <line_number>34</line_number>
 <line_content>def list_folders(self):</line_content>
 <context>
-$ python listdir</context>
+$ python listdir, self.the_list = the_list, os.listdir(os.path.join('mydir', 'subdir')), Lists, on the other hand, are more like arrays in other languages. They tend to hold a varying number of objects all of which have the same type and which are operated on one-by-one. For example, "os.listdir('.')" returns a list of strings representing the files in the current directory. Functions which operate on this output would generally not break if you added another file or two to the directory., print(os.listdir('.'))</context>
 </line>
 <line>
 <line_number>35</line_number>
 <line_content>folders = set()</line_content>
 <context>
-set_library_dirs(dirs)</context>
+set_library_dirs(dirs), directory ("". "")., Files and Directories, "Py_SetPath()", "Py_SetPath()"</context>
 </line>
 <line>
 <line_number>36</line_number>
 <line_content>for obj in self.bucket.objects.filter():</line_content>
 <context>
-Filter Objects</context>
+Filter Objects, obj.search(), result = [obj.method() for obj in mylist], 'filters': {, filter objects from the logger object. Filters are covered in more</context>
 </line>
 <line>
 <line_number>37</line_number>
 <line_content>folders.add(obj.key.split('/')[0])</line_content>
 <context>
-glob.glob(os.path.join('mydir', 'subdir', '</context>
+glob.glob(os.path.join('mydir', 'subdir', ', os.listdir(os.path.join('mydir', 'subdir')), It is also possible to use "os.path.join()" to append a backslash on Windows:, print(os.listdir('.')), return len(os.listdir(obj.dirname))</context>
 </line>
 <line>
 <line_number>39</line_number>
 <line_content>return folders</line_content>
 <context>
-Files and Directories</context>
+Files and Directories, return, return, return, Directory tree operations</context>
 </line>
 <line>
 <line_number>41</line_number>
 <line_content>def list_files(self):</line_content>
 <context>
-self.the_list = the_list</context>
+self.the_list = the_list, return self.the_list == other.the_list, Lists, on the other hand, are more like arrays in other languages. They tend to hold a varying number of objects all of which have the same type and which are operated on one-by-one. For example, "os.listdir('.')" returns a list of strings representing the files in the current directory. Functions which operate on this output would generally not break if you added another file or two to the directory., >>> a_list, for file in very_long_list_of_files:</context>
 </line>
 <line>
 <line_number>42</line_number>
 <line_content>classes = defaultdict(list)</line_content>
 <context>
-class Dict(dict):</context>
+class Dict(dict):, class ast.Dict(keys, values), This behavior is useful whenever the method only needs to have a class reference and does not rely on data stored in a specific instance. One use for class methods is to create alternate class constructors. For example, the classmethod "dict.fromkeys()" creates a new dictionary from a list of keys. The pure Python equivalent is:, def get_defining_class(self):, self.the_list = the_list</context>
 </line>
 <line>
 <line_number>44</line_number>
 <line_content># loop through only the parent directory</line_content>
 <context>
-Directory tree operations</context>
+Directory tree operations, current working directory: to get absolute paths, glob.glob(os.path.join('mydir', 'subdir', ', directory ("". "")., Extension(..., include_dirs=[incdir]),</context>
 </line>
 <line>
 <line_number>45</line_number>
 <line_content>for obj in self.bucket.objects.filter():</line_content>
 <context>
-Filter Objects</context>
+Filter Objects, obj.search(), result = [obj.method() for obj in mylist], 'filters': {, filter objects from the logger object. Filters are covered in more</context>
 </line>
 <line>
 <line_number>46</line_number>
 <line_content>cname, fname = obj.key.split('/')</line_content>
 <context>
-result = ''.join(chunks)</context>
+result = ''.join(chunks), query = ( f"HEAD {url.path or '/'} HTTP/1.0\r\n" f"Host: {url.hostname}\r\n" f"\r\n" ), key = 'title', class TitleStr(str): "Convert str to name suitable for a URL path" def __new__(cls, s): s = s.lower().replace(' ', '-') s = ''.join([c for c in s if c.isalnum() or c == '-']) return super().__new__(cls, s), foo XXX'.split())</context>
 </line>
 <line>
 <line_number>47</line_number>
 <line_content>if not fname.endswith('.json'):</line_content>
 <context>
-{basename_extension} The last '.' and everything after it. If the basename does not contain a period, this will be the empty string.</context>
+{basename_extension} The last '.' and everything after it. If the basename does not contain a period, this will be the empty string., import json, import json, import json, {'functionname', ... },</context>
 </line>
 <line>
 <line_number>48</line_number>
 <line_content>classes[cname].append(fname)</line_content>
 <context>
-append(...)</context>
+append(...), Append, Append, in function append:, L.append(object)</context>
 </line>
 <line>
 <line_number>50</line_number>
 <line_content>return classes</line_content>
 <context>
-return __class__</context>
+return __class__, class Function:, Classes, class ast.Return(value), Return types</context>
 </line>
 <line>
 <line_number>52</line_number>
 <line_content>def folder_exists(self, folder_name):</line_content>
 <context>
-directory_created(path)</context>
+directory_created(path), dir=python3, def __init__(self, dirname): self.dirname = dirname          # Regular instance attribute, distutils.dir_util.mkpath(name[, mode=0o777, verbose=0, dry_run=0]), os.listdir(os.path.join('mydir', 'subdir'))</context>
 </line>
 <line>
 <line_number>53</line_number>
 <line_content>for _ in self.bucket.objects.filter(Prefix=f'{folder_name}/'):</line_content>
 <context>
-object_filenames(source_filenames[, strip_dir=0, output_dir=''])</context>
+object_filenames(source_filenames[, strip_dir=0, output_dir='']), glob.glob(os.path.join('mydir', 'subdir', ', shared_object_filename(basename[, strip_dir=0, output_dir='']), os.listdir(os.path.join('mydir', 'subdir')), LOGGING = { 'version': 1, 'disable_existing_loggers': True, 'formatters': { 'verbose': { 'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s' }, 'simple': { 'format': '%(levelname)s %(message)s' }, }, 'filters': { 'special': { '()': 'project.logging.SpecialFilter', 'foo': 'bar', } }, 'handlers': { 'null': { 'level':'DEBUG', 'class':'django.utils.log.NullHandler', }, 'console':{ 'level':'DEBUG', 'class':'logging.StreamHandler', 'formatter': 'simple' }, 'mail_admins': { 'level': 'ERROR', 'class': 'django.utils.log.AdminEmailHandler', 'filters': ['special'] } }, 'loggers': { 'django': { 'handlers':['null'], 'propagate': True, 'level':'INFO', }, 'django.request': { 'handlers': ['mail_admins'], 'level': 'ERROR', 'propagate': False, }, 'myproject.custom': { 'handlers': ['console', 'mail_admins'], 'level': 'INFO', 'filters': ['special'] } } }</context>
 </line>
 <line>
 <line_number>54</line_number>
 <line_content>return True</line_content>
 <context>
-return True</context>
+return True, and return true, Return true if, Return true if, Return True if</context>
 </line>
 <line>
 <line_number>55</line_number>
 <line_content>return False</line_content>
 <context>
-return True</context>
+return True, Returns "False"., Return true if, Return True if, Return true if</context>
 </line>
 <line>
 <line_number>57</line_number>
 <line_content>def file_exists(self, folder_name, file_name):</line_content>
 <context>
-If "run_filename" is set and is a directory which contains a</context>
+If "run_filename" is set and is a directory which contains a, file_created(path), run_filename, distutils.dir_util.create_tree(base_dir, files[, mode=0o777, verbose=0, dry_run=0]), distutils.dir_util.mkpath(name[, mode=0o777, verbose=0, dry_run=0])</context>
 </line>
 <line>
 <line_number>59</line_number>
 <line_content>self.s3.Object(self.bucket_name, f'{folder_name}/{file_name}').load()</line_content>
 <context>
-shared_object_filename(basename[, strip_dir=0, output_dir=''])</context>
+shared_object_filename(basename[, strip_dir=0, output_dir='']), Changed in version 3.3: Support was added for *filename* being a *file object* instead of an actual filename., object_filenames(source_filenames[, strip_dir=0, output_dir='']), distutils.dir_util.mkpath(name[, mode=0o777, verbose=0, dry_run=0]), glob.glob(os.path.join('mydir', 'subdir', '</context>
 </line>
 <line>
 <line_number>60</line_number>
 <line_content>return True</line_content>
 <context>
-return True</context>
+return True, and return true, Return true if, Return true if, Return True if</context>
 </line>
 <line>
 <line_number>61</line_number>
 <line_content>except botocore.exceptions.ClientError as e:</line_content>
 <context>
-This exception is a subclass of "EOFError".</context>
+This exception is a subclass of "EOFError"., On error, sets the appropriate exception ("EOFError") and returns "-1"., On error, sets the appropriate exception ("EOFError") and returns "-1"., catch an "HTTPError"., The "except HTTPError"</context>
 </line>
 <line>
 <line_number>62</line_number>
 <line_content>if e.response['Error']['Code'] == '404':</line_content>
 <context>
-returned if there was an error.</context>
+returned if there was an error., When an error is raised the server responds by returning an HTTP error code *and* an error page. You can use the "HTTPError" instance as a response on the page returned. This means that as well as the code attribute, it also has read, geturl, and info, methods as returned by the "urllib.response" module:, html = response.read(), from urllib.request import Request, urlopen from urllib.error import URLError req = Request(someurl) try: response = urlopen(req) except URLError as e: if hasattr(e, 'reason'): print('We failed to reach a server.') print('Reason: ', e.reason) elif hasattr(e, 'code'): print('The server couldn\'t fulfill the request.') print('Error code: ', e.code) else: # everything is fine, from urllib.request import Request, urlopen from urllib.error import URLError, HTTPError req = Request(someurl) try: response = urlopen(req) except HTTPError as e: print('The server couldn\'t fulfill the request.') print('Error code: ', e.code) except URLError as e: print('We failed to reach a server.') print('Reason: ', e.reason) else: # everything is fine</context>
 </line>
 <line>
 <line_number>63</line_number>
 <line_content>return False</line_content>
 <context>
-return True</context>
+return True, Returns "False"., Return true if, Return true if, Return true if</context>
 </line>
 <line>
 <line_number>67</line_number>
 <line_content>def create_folder(self, folder_name):</line_content>
 <context>
-directory_created(path)</context>
+directory_created(path), Py_mod_create, file_created(path), distutils.dir_util.create_tree(base_dir, files[, mode=0o777, verbose=0, dry_run=0]), def __init__(self, dirname): self.dirname = dirname          # Regular instance attribute</context>
 </line>
 <line>
 <line_number>68</line_number>
 <line_content>if not self.folder_exists(folder_name):</line_content>
 <context>
-If the folder cannot be retrieved, "OSError" is raised.</context>
+If the folder cannot be retrieved, "OSError" is raised., If "run_filename" is set and is a directory which contains a, directory_created(path), distutils.dir_util.mkpath(name[, mode=0o777, verbose=0, dry_run=0]), distutils.dir_util.create_tree(base_dir, files[, mode=0o777, verbose=0, dry_run=0])</context>
 </line>
 <line>
 <line_number>69</line_number>
 <line_content>self.bucket.put_object(Key=f'{folder_name}/')</line_content>
 <context>
-shared_object_filename(basename[, strip_dir=0, output_dir=''])</context>
+shared_object_filename(basename[, strip_dir=0, output_dir='']), {'public_name': 'name', 'private_name': '_name'}, glob.glob(os.path.join('mydir', 'subdir', ', object_filenames(source_filenames[, strip_dir=0, output_dir='']), distutils.dir_util.mkpath(name[, mode=0o777, verbose=0, dry_run=0])</context>
 </line>
 <line>
 <line_number>71</line_number>
 <line_content>def upload_files(self, file_obj, file_path):</line_content>
 <context>
-int Py_file_input</context>
+int Py_file_input, file as file_obj: object, file_created(path), "PyFile_FromFd()", distutils.file_util.write_file(filename, contents)</context>
 </line>
 <line>
 <line_number>72</line_number>
 <line_content>self.bucket.upload_fileobj(file_obj, file_path)</line_content>
 <context>
-file as file_obj: object</context>
+file as file_obj: object, shutil.copyfileobj(response, tmp_file), shared_object_filename(basename[, strip_dir=0, output_dir='']), file_created(path), "PyFile_WriteObject()"</context>
 </line>
 <line>
 <line_number>74</line_number>
 <line_content>def remove_folder(self, folder_name):</line_content>
 <context>
-distutils.dir_util.remove_tree(directory[, verbose=0, dry_run=0])</context>
+distutils.dir_util.remove_tree(directory[, verbose=0, dry_run=0]), To remove a directory, use "os.rmdir()"; use "os.mkdir()" to create one. "os.makedirs(path)" will create any intermediate directories in "path" that don't exist. "os.removedirs(path)" will remove intermediate directories as long as they're empty; if you want to delete an entire directory tree and its contents, use "shutil.rmtree()"., def __delete__(self, obj):, >>> s = Directory('songs') >>> g = Directory('games') >>> s.size                              # The songs directory has twenty files 20 >>> g.size                              # The games directory has three files 3 >>> os.remove('games/chess')            # Delete a game >>> g.size                              # File count is automatically updated 2, def __init__(self, dirname): self.dirname = dirname          # Regular instance attribute</context>
 </line>
 <line>
 <line_number>75</line_number>
 <line_content>if self.folder_exists(folder_name):</line_content>
 <context>
-If "run_filename" is set and is a directory which contains a</context>
+If "run_filename" is set and is a directory which contains a, If the folder cannot be retrieved, "OSError" is raised., directory_created(path), distutils.dir_util.mkpath(name[, mode=0o777, verbose=0, dry_run=0]), Create all the empty directories under *base_dir* needed to put *files* there. *base_dir* is just the name of a directory which doesn't necessarily exist yet; *files* is a list of filenames to be interpreted relative to *base_dir*. *base_dir* + the directory portion of every file in *files* will be created if it doesn't already exist. *mode*, *verbose* and *dry_run* flags  are as for "mkpath()".</context>
 </line>
 <line>
 <line_number>76</line_number>
 <line_content>for key in self.bucket.objects.filter(Prefix=f'{folder_name}/'):</line_content>
 <context>
-object_filenames(source_filenames[, strip_dir=0, output_dir=''])</context>
+object_filenames(source_filenames[, strip_dir=0, output_dir='']), glob.glob(os.path.join('mydir', 'subdir', ', {'public_name': 'name', 'private_name': '_name'}, LOGGING = { 'version': 1, 'disable_existing_loggers': True, 'formatters': { 'verbose': { 'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s' }, 'simple': { 'format': '%(levelname)s %(message)s' }, }, 'filters': { 'special': { '()': 'project.logging.SpecialFilter', 'foo': 'bar', } }, 'handlers': { 'null': { 'level':'DEBUG', 'class':'django.utils.log.NullHandler', }, 'console':{ 'level':'DEBUG', 'class':'logging.StreamHandler', 'formatter': 'simple' }, 'mail_admins': { 'level': 'ERROR', 'class': 'django.utils.log.AdminEmailHandler', 'filters': ['special'] } }, 'loggers': { 'django': { 'handlers':['null'], 'propagate': True, 'level':'INFO', }, 'django.request': { 'handlers': ['mail_admins'], 'level': 'ERROR', 'propagate': False, }, 'myproject.custom': { 'handlers': ['console', 'mail_admins'], 'level': 'INFO', 'filters': ['special'] } } }, os.listdir(os.path.join('mydir', 'subdir'))</context>
 </line>
 <line>
 <line_number>77</line_number>
 <line_content>key.delete()</line_content>
 <context>
-deleteMe()</context>
+deleteMe(), del self[key], self.key = key, self.key = key, Delete(</context>
 </line>
 <line>
 <line_number>79</line_number>
 <line_content>def remove_file(self, folder_name, file_name):</line_content>
 <context>
-Use "os.remove(filename)" or "os.unlink(filename)"; for documentation, see the "os" module. The two functions are identical; "unlink()" is simply the name of the Unix system call for this function.</context>
+Use "os.remove(filename)" or "os.unlink(filename)"; for documentation, see the "os" module. The two functions are identical; "unlink()" is simply the name of the Unix system call for this function., distutils.dir_util.remove_tree(directory[, verbose=0, dry_run=0]), How do I delete a file? (And other file questions...) -----------------------------------------------------, >>> s = Directory('songs') >>> g = Directory('games') >>> s.size                              # The songs directory has twenty files 20 >>> g.size                              # The games directory has three files 3 >>> os.remove('games/chess')            # Delete a game >>> g.size                              # File count is automatically updated 2, To rename a file, use "os.rename(old_path, new_path)".</context>
 </line>
 <line>
 <line_number>80</line_number>
 <line_content>if self.folder_exists(folder_name):</line_content>
 <context>
-If "run_filename" is set and is a directory which contains a</context>
+If "run_filename" is set and is a directory which contains a, If the folder cannot be retrieved, "OSError" is raised., directory_created(path), distutils.dir_util.mkpath(name[, mode=0o777, verbose=0, dry_run=0]), Create all the empty directories under *base_dir* needed to put *files* there. *base_dir* is just the name of a directory which doesn't necessarily exist yet; *files* is a list of filenames to be interpreted relative to *base_dir*. *base_dir* + the directory portion of every file in *files* will be created if it doesn't already exist. *mode*, *verbose* and *dry_run* flags  are as for "mkpath()".</context>
 </line>
 <line>
 <line_number>81</line_number>
 <line_content>self.bucket.objects.filter(Prefix=f'{folder_name}/{file_name}').delete(</line_content>
 <context>
-object_filenames(source_filenames[, strip_dir=0, output_dir=''])</context>
+object_filenames(source_filenames[, strip_dir=0, output_dir='']), with tempfile.NamedTemporaryFile(delete=False) as tmp_file:, distutils.dir_util.remove_tree(directory[, verbose=0, dry_run=0]), >>> s = Directory('songs') >>> g = Directory('games') >>> s.size                              # The songs directory has twenty files 20 >>> g.size                              # The games directory has three files 3 >>> os.remove('games/chess')            # Delete a game >>> g.size                              # File count is automatically updated 2, shared_object_filename(basename[, strip_dir=0, output_dir=''])</context>
 </line>
 <line>
 <line_number>82</line_number>
 <line_content>Delete={'Objects': [{'Key': f'{folder_name}/{file_name}'}]}</line_content>
 <context>
->>> s = Directory('songs') >>> g = Directory('games') >>> s.size                              # The songs directory has twenty files 20 >>> g.size                              # The games directory has three files 3 >>> os.remove('games/chess')            # Delete a game >>> g.size                              # File count is automatically updated 2</context>
+>>> s = Directory('songs') >>> g = Directory('games') >>> s.size                              # The songs directory has twenty files 20 >>> g.size                              # The games directory has three files 3 >>> os.remove('games/chess')            # Delete a game >>> g.size                              # File count is automatically updated 2, {'public_name': 'name', 'private_name': '_name'}, {'public_name': 'age', 'private_name': '_age'}, Remove the mapping for the object *key* from the object *o*. Return "-1" on failure. This is equivalent to the Python statement "del o[key]"., def __delete__(self, obj): if self.fdel is None: raise AttributeError(f"property '{self._name}' has no deleter") self.fdel(obj)</context>
 </line>
 <line>
 <line_number>85</line_number>
 <line_content>def download_file(self, from_file_path, to_file_path):</line_content>
 <context>
-"PyFile_FromFd()"</context>
+"PyFile_FromFd()", "copy_file()"., "Py_GetPath()", From file itself, .py" (standard files)</context>
 </line>
 <line>
 <line_number>86</line_number>
 <line_content>self.bucket.download_file(from_file_path, to_file_path)</line_content>
 <context>
-file_created(path)
+file_created(path), distutils.file_util.write_file(filename, contents), self._outfile = outfile, '()': owned_file_handler,, object_filenames(source_filenames[, strip_dir=0, output_dir=''])
 </context>
 </line>
 </file_context>
@@ -1679,691 +1679,691 @@ def show_pdf(folder_name, file_name):
 <line_number>0</line_number>
 <line_content>import base64</line_content>
 <context>
-Lib/base64.py</context>
+Lib/base64.py, Valid base64:, base64.standard_b64decode(s), base64.standard_b64encode(s), base64.decodebytes(s)</context>
 </line>
 <line>
 <line_number>1</line_number>
 <line_content>import logging</line_content>
 <context>
-import logging</context>
+import logging, import logging, import logging, import logging, import logging</context>
 </line>
 <line>
 <line_number>3</line_number>
 <line_content>import sys</line_content>
 <context>
-import sys</context>
+import sys, import sys, import sys, import sys, import sys</context>
 </line>
 <line>
 <line_number>4</line_number>
 <line_content>import tempfile</line_content>
 <context>
-import tempfile</context>
+import tempfile, import copy, cd c:\Temp\foo, import config, import config</context>
 </line>
 <line>
 <line_number>5</line_number>
 <line_content>from io import BytesIO</line_content>
 <context>
->>> import io, sys</context>
+>>> import io, sys, The easiest way to do this is to use the "io.StringIO" class:, >>> sys.stdout = io.StringIO(), "Py_BytesMain()", Converting to Bytes</context>
 </line>
 <line>
 <line_number>7</line_number>
 <line_content>import openai</line_content>
 <context>
-import</context>
+import, imports, Imports, import atexit, import atexit</context>
 </line>
 <line>
 <line_number>8</line_number>
 <line_content>import streamlit as st</line_content>
 <context>
-StreamReader</context>
+StreamReader, Streams, Streams, Streams, "stream": "ext://sys.stderr"</context>
 </line>
 <line>
 <line_number>9</line_number>
 <line_content>from dotenv import load_dotenv</line_content>
 <context>
-Py_GETENV(s)</context>
+Py_GETENV(s), import__find__load__start(str modulename), #!/usr/bin/env python, #!/usr/bin/env python, #!/usr/bin/env python</context>
 </line>
 <line>
 <line_number>10</line_number>
 <line_content>from langchain import OpenAI</line_content>
 <context>
-import atexit</context>
+import atexit, import atexit, import atexit, import, Imports</context>
 </line>
 <line>
 <line_number>13</line_number>
 <line_content>from langchain.agents import Tool, initialize_agent</line_content>
 <context>
-Initialize configuration with the Python Configuration.</context>
+Initialize configuration with the Python Configuration., Initializing and finalizing the interpreter ===========================================, from curses import wrapper, "Py_InitializeEx()", import auxiliary_module</context>
 </line>
 <line>
 <line_number>14</line_number>
 <line_content>from langchain.chains.conversation.memory import ConversationBufferMemory</line_content>
 <context>
-Speaking logging messages</context>
+Speaking logging messages, One complication to be aware of: if your conversational protocol allows multiple messages to be sent back to back (without some kind of reply), and you pass "recv" an arbitrary chunk size, you may end up reading the start of a following message. You'll need to put that aside and hold onto it, until it's needed., from logging.handlers import MemoryHandler, 11. "MemoryHandler" instances send messages to a buffer in memory, which is flushed whenever specific criteria are met., There might be situations when it is desirable to have logging messages rendered in an audible rather than a visible format. This is easy to do if you have text-to-speech (TTS) functionality available in your system, even if it doesn't have a Python binding. Most TTS systems have a command line program you can run, and this can be invoked from a handler using "subprocess". It's assumed here that TTS command line programs won't expect to interact with users or take a long time to complete, and that the frequency of logged messages will be not so high as to swamp the user with messages, and that it's acceptable to have the messages spoken one at a time rather than concurrently, The example implementation below waits for one message to be spoken before the next is processed, and this might cause other handlers to be kept waiting. Here is a short example showing the approach, which assumes that the "espeak" TTS package is available:</context>
 </line>
 <line>
 <line_number>15</line_number>
 <line_content>from langchain.chat_models import ChatOpenAI</line_content>
 <context>
-class StructuredMessage: def __init__(self, message, /, **kwargs): self.message = message self.kwargs = kwargs</context>
+class StructuredMessage: def __init__(self, message, /, **kwargs): self.message = message self.kwargs = kwargs, class StructuredMessage: def __init__(self, message, /, **kwargs): self.message = message self.kwargs = kwargs, Otherwise, use the *locale encoding*: "nl_langinfo(CODESET)", import auxiliary_module, Deprecated Py_UNICODE APIs</context>
 </line>
 <line>
 <line_number>18</line_number>
 <line_content>from llama_index import Document, GPTSimpleVectorIndex, LLMPredictor</line_content>
 <context>
-Changed in version 3.8: Use "__index__()" if available.</context>
+Changed in version 3.8: Use "__index__()" if available., Changed in version 3.8: Use "__index__()" if available., Changed in version 3.8: Use "__index__()" if available., Changed in version 3.8: Use "__index__()" if available., Changed in version 3.8: Use "__index__()" if available.</context>
 </line>
 <line>
 <line_number>19</line_number>
 <line_content>from pypdf import PdfReader</line_content>
 <context>
-"PyFile_FromFd()"</context>
+"PyFile_FromFd()", The .pypirc file, PyRun_FileEx(FILE, "PyFloat_FromDouble()", PyMarshal_ReadObjectFromFile(FILE</context>
 </line>
 <line>
 <line_number>20</line_number>
 <line_content>from s3 import S3</line_content>
 <context>
->>> import custom3</context>
+>>> import custom3, import, >>> import io, sys, imports, Imports</context>
 </line>
 <line>
 <line_number>23</line_number>
 <line_content>logging.basicConfig(stream=sys.stdout, level=logging.INFO)</line_content>
 <context>
-logging.basicConfig(level=logging.INFO)</context>
+logging.basicConfig(level=logging.INFO), logging.basicConfig(level=logging.INFO), logging.basicConfig(level=logging.DEBUG), logging.basicConfig(level=logging.DEBUG), logging.basicConfig(level=logging.DEBUG)</context>
 </line>
 <line>
 <line_number>26</line_number>
 <line_content>load_dotenv()</line_content>
 <context>
-Py_GETENV(s)</context>
+Py_GETENV(s), "PySys_SetArgv()", Name(id='str', ctx=Load())],, ctx=Load())), ctx=Load()))</context>
 </line>
 <line>
 <line_number>27</line_number>
 <line_content>if os.getenv('OPENAI_API_KEY') is None:</line_content>
 <context>
-f has_key example.py</context>
+f has_key example.py, self.key = key, self.key = key, Like "getenv(s)", but returns "NULL" if "-E" was passed on the command line (i.e. if "Py_IgnoreEnvironmentFlag" is set)., This version of the API does not support platforms where the native TLS key is defined in a way that cannot be safely cast to "int". On such platforms, "PyThread_create_key()" will return immediately with a failure status, and the other TLS functions will all be no-ops on such platforms.</context>
 </line>
 <line>
 <line_number>28</line_number>
 <line_content>st.error('OpenAI API key not set')</line_content>
 <context>
-Changed in version 3.10: Added the *key* parameter.</context>
+Changed in version 3.10: Added the *key* parameter., Changed in version 3.10: Added the *key* parameter., Changed in version 3.10: Added the *key* parameter., Changed in version 3.10: Added the *key* parameter., Due to the compatibility problem noted above, this version of the API should not be used in new code.</context>
 </line>
 <line>
 <line_number>30</line_number>
 <line_content>openai.api_key = os.getenv('OPENAI_API_KEY')</line_content>
 <context>
-self.key = key</context>
+self.key = key, self.key = key, "PyThread_get_key_value()", f has_key example.py, keys may be introduced in future Python versions):</context>
 </line>
 <line>
 <line_number>33</line_number>
 <line_content>s3 = S3('classgpt')</line_content>
 <context>
-class Song:</context>
+class Song:, The classes can be used like this:, 1.__class__, s2, Py_ssize_t size), >>> hex(id(c.__class__))</context>
 </line>
 <line>
 <line_number>39</line_number>
 <line_content>def parse_pdf(file: BytesIO):</line_content>
 <context>
-Python methods "int.to_bytes()" and "int.from_bytes()" to convert a "PyLongObject" to/from an array of bytes in base "256". You can call those from C using "PyObject_CallMethod()".</context>
+Python methods "int.to_bytes()" and "int.from_bytes()" to convert a "PyLongObject" to/from an array of bytes in base "256". You can call those from C using "PyObject_CallMethod()"., Print an object *o*, on file *fp*. Returns "-1" on error. The flags argument is used to enable certain printing options. The only option currently supported is "Py_PRINT_RAW"; if given, the "str()" of the object is written instead of the "repr()"., Encode a Unicode object to "Py_FileSystemDefaultEncoding" with the "Py_FileSystemDefaultEncodeErrors" error handler, and return "bytes". Note that the resulting "bytes" object may contain null bytes., def reader():, >>> parser.add_argument('out', type=argparse.FileType('w', encoding='UTF</context>
 </line>
 <line>
 <line_number>41</line_number>
 <line_content>pdf = PdfReader(file)</line_content>
 <context>
-def reader():</context>
+def reader():, StreamReader, "StreamReader" and "StreamWriter" classes., Any of the standard README files ("README", "README.txt", or, The TextFile class</context>
 </line>
 <line>
 <line_number>42</line_number>
 <line_content>text_list = []</line_content>
 <context>
->>> a_list = []</context>
+>>> a_list = [], >>> stripped_list = [line.strip() for line in line_list ...                  if line != ""], >>> a_list += [1], >>> line_list = ['  line 1\n', 'line 2  \n', ' \n', ''], 'list of strings'</context>
 </line>
 <line>
 <line_number>44</line_number>
 <line_content># Get the number of pages in the PDF document</line_content>
 <context>
-print(args.filename, args.count, args.verbose)</context>
+print(args.filename, args.count, args.verbose), "'count'" - This counts the number of times a keyword argument, >>> print(s.increment()), >>> print(s.increment()), the_page = response.read()</context>
 </line>
 <line>
 <line_number>45</line_number>
 <line_content>num_pages = len(pdf.pages)</line_content>
 <context>
->>> print(len(s))</context>
+>>> print(len(s)), Py_ssize_t len, Return the number of items in the dictionary. This is equivalent to "len(p)" on a dictionary., the_page = response.read(), print(args.filename, args.count, args.verbose)</context>
 </line>
 <line>
 <line_number>47</line_number>
 <line_content># Iterate over every page</line_content>
 <context>
-Iteration</context>
+Iteration, # Get resulting contents, # some code, get_loop(), get_loop()</context>
 </line>
 <line>
 <line_number>48</line_number>
 <line_content>for page in range(num_pages):</line_content>
 <context>
-for i in range(10):</context>
+for i in range(10):, for i in range(10):, for i in range(10):, for i in range(3):, for i in range(n):</context>
 </line>
 <line>
 <line_number>49</line_number>
 <line_content># Extract the text from the page</line_content>
 <context>
-# Get resulting contents</context>
+# Get resulting contents, Displaying Text, All text from the, print("Content, Throws the text away.</context>
 </line>
 <line>
 <line_number>50</line_number>
 <line_content>page_text = pdf.pages[page].extract_text()</line_content>
 <context>
-the_page = response.read()</context>
+the_page = response.read(), class distutils.text_file.TextFile([filename=None, file=None, *, Here you can put a string (or its address) that you want returned when the Python script references "obj.__doc__" to retrieve the doc string., data = urllib.parse.urlencode(values) data = data.encode('ascii') # data should be bytes req = urllib.request.Request(url, data) with urllib.request.urlopen(req) as response: the_page = response.read(), data = urllib.parse.urlencode(values) data = data.encode('ascii') req = urllib.request.Request(url, data, headers) with urllib.request.urlopen(req) as response: the_page = response.read()</context>
 </line>
 <line>
 <line_number>51</line_number>
 <line_content>text_list.append(page_text)</line_content>
 <context>
-Append items from the list. This is equivalent to "for x in list: a.append(x)" except that if there is a type error, the array is unchanged.</context>
+Append items from the list. This is equivalent to "for x in list: a.append(x)" except that if there is a type error, the array is unchanged., "'append_const'" - This stores a list, and appends the value, "'append'" - This stores a list, and appends each argument value to, append(...), L.append(x)</context>
 </line>
 <line>
 <line_number>53</line_number>
 <line_content>text = '\n'.join(text_list)</line_content>
 <context>
->>> line_list = ['  line 1\n', 'line 2  \n', ' \n', '']</context>
+>>> line_list = ['  line 1\n', 'line 2  \n', ' \n', ''], >>> stripped_list = [line.strip() for line in line_list ...                  if line != ""], ", ".join(['1', '2', '4', '8', '16']), def format(self, record): s = super().format(record) if record.exc_text: s = s.replace('\n', '') + '|' return s, result = ''.join(chunks)</context>
 </line>
 <line>
 <line_number>55</line_number>
 <line_content>return [Document(text)]</line_content>
 <context>
-print("Content</context>
+print("Content, text, "text, Here you can put a string (or its address) that you want returned when the Python script references "obj.__doc__" to retrieve the doc string., Displaying Text</context>
 </line>
 <line>
 <line_number>58</line_number>
 <line_content>def create_index(pdf_obj, folder_name, file_name):</line_content>
 <context>
-file_created(path)</context>
+file_created(path), distutils.dir_util.create_tree(base_dir, files[, mode=0o777, verbose=0, dry_run=0]), Python Package Index, Changed in version 3.8: Use "__index__()" if available., Changed in version 3.8: Use "__index__()" if available.</context>
 </line>
 <line>
 <line_number>60</line_number>
 <line_content>Create an index for a given PDF file and upload it to S3.</line_content>
 <context>
-"BZ2File" also provides the following method:</context>
+"BZ2File" also provides the following method:, Changed in version 3.3: The "'a'" (append) mode was added, along with support for reading multi-stream files., Changed in version 3.3: The "fileno()", "readable()", "seekable()", "writable()", "read1()" and "readinto()" methods were added., tofile(f), read in) to create the source distribution archive(s)</context>
 </line>
 <line>
 <line_number>62</line_number>
 <line_content>index_name = file_name.replace('.pdf', '.json')</line_content>
 <context>
-To rename a file, use "os.rename(old_path, new_path)".</context>
+To rename a file, use "os.rename(old_path, new_path)"., object_filenames(source_filenames[, strip_dir=0, output_dir='']), stripped_lines = [line.strip() for line in lines] existing_files = filter(os.path.exists, file_list), Invokes "distutils.file_util.move_file()". Renames, distutils.file_util.write_file(filename, contents)</context>
 </line>
 <line>
 <line_number>64</line_number>
 <line_content>logging.info('Generating new index...')</line_content>
 <context>
-logging.info('Doing something')</context>
+logging.info('Doing something'), logging.info('An INFO message'), logging.info('Finished'), logging.info('Started'), logging.info('Hello')</context>
 </line>
 <line>
 <line_number>65</line_number>
 <line_content>documents = parse_pdf(pdf_obj)</line_content>
 <context>
-file as file_obj: object</context>
+file as file_obj: object, Note that the "doc_files" option is simply a whitespace-separated string split across multiple lines for readability., >>> parser.print_help(), >>> parser.print_help(), >>> parser.print_help()</context>
 </line>
 <line>
 <line_number>67</line_number>
 <line_content>logging.info('Creating index...')</line_content>
 <context>
-logging.info('Doing something')</context>
+logging.info('Doing something'), logging.info('An INFO message'), logging.info('Hello'), logging.info('Finished'), logging.info('Started')</context>
 </line>
 <line>
 <line_number>68</line_number>
 <line_content>index = GPTSimpleVectorIndex(documents)</line_content>
 <context>
-index</context>
+index, Changed in version 3.8: Use "__index__()" if available., Changed in version 3.8: Use "__index__()" if available., Changed in version 3.8: Use "__index__()" if available., Changed in version 3.8: Use "__index__()" if available.</context>
 </line>
 <line>
 <line_number>70</line_number>
 <line_content>with tempfile.TemporaryDirectory() as tmp_dir:</line_content>
 <context>
-with tempfile.NamedTemporaryFile(delete=False) as tmp_file:</context>
+with tempfile.NamedTemporaryFile(delete=False) as tmp_file:, import tempfile, If you wish to retrieve a resource via URL and store it in a temporary location, you can do so via the "shutil.copyfileobj()" and "tempfile.NamedTemporaryFile()" functions:, cd c:\Temp\foo, to install modules to the "\Temp\Python" directory on the current drive.</context>
 </line>
 <line>
 <line_number>71</line_number>
 <line_content>tmp_path = f'{tmp_dir}/{index_name}'</line_content>
 <context>
-object_filenames(source_filenames[, strip_dir=0, output_dir=''])</context>
+object_filenames(source_filenames[, strip_dir=0, output_dir='']), distutils.dir_util.mkpath(name[, mode=0o777, verbose=0, dry_run=0]), include_dirs = ['/usr/local/include'],, shared_object_filename(basename[, strip_dir=0, output_dir='']), Changed in version 3.8: Use "__index__()" if available.</context>
 </line>
 <line>
 <line_number>72</line_number>
 <line_content>logging.info('Saving index...')</line_content>
 <context>
-logging.info('Doing something')</context>
+logging.info('Doing something'), logging.info('Finished'), logging.info('An INFO message'), logging.info('Started'), logging.info('Hello')</context>
 </line>
 <line>
 <line_number>73</line_number>
 <line_content>index.save_to_disk(tmp_path)</line_content>
 <context>
-file_created(path)</context>
+file_created(path), Changed in version 3.8: Use "__index__()" if available., Changed in version 3.8: Use "__index__()" if available., Changed in version 3.8: Use "__index__()" if available., Changed in version 3.8: Use "__index__()" if available.</context>
 </line>
 <line>
 <line_number>75</line_number>
 <line_content>with open(tmp_path, 'rb') as f:</line_content>
 <context>
-with open(sys.argv[1], 'rb') as f: data_to_send = f.read()</context>
+with open(sys.argv[1], 'rb') as f: data_to_send = f.read(), with open(file) as f:, with open(tmp_file.name) as html:, def open(path):, run_filename</context>
 </line>
 <line>
 <line_number>76</line_number>
 <line_content>logging.info('Uploading index to s3...')</line_content>
 <context>
-logging.info('Doing something')</context>
+logging.info('Doing something'), logging.info('Finished'), logging.info('An INFO message'), Logging, Module "logging" API reference for the logging module.</context>
 </line>
 <line>
 <line_number>77</line_number>
 <line_content>s3.upload_files(f, f'{folder_name}/{index_name}')</line_content>
 <context>
-Changed in version 3.3: Support was added for *filename* being a *file object* instead of an actual filename.</context>
+Changed in version 3.3: Support was added for *filename* being a *file object* instead of an actual filename., object_filenames(source_filenames[, strip_dir=0, output_dir='']), Changed in version 3.4: The "__file__" attribute is no longer set on the module., shared_object_filename(basename[, strip_dir=0, output_dir='']), "data_files" specifies a sequence of (*directory*, *files*) pairs in the following way:</context>
 </line>
 <line>
 <line_number>79</line_number>
 <line_content>return index</line_content>
 <context>
-index</context>
+index, return result, Return the first index *i* for which "o[i] == value". On error, return "-1". This is equivalent to the Python expression "o.index(value)"., return result;, return value</context>
 </line>
 <line>
 <line_number>82</line_number>
 <line_content>@st.cache_resource(show_spinner=False)</line_content>
 <context>
-The *cached_property* approach only works with methods that do not take any arguments. It does not create a reference to the instance. The cached method result will be kept only as long as the instance is alive.</context>
+The *cached_property* approach only works with methods that do not take any arguments. It does not create a reference to the instance. The cached method result will be kept only as long as the instance is alive., Changed in version 3.4: To detect calls to "register()", you can use the "get_cache_token()" function., "tp_cache", How do I cache method calls? ----------------------------, Returns the current abstract base class cache token.</context>
 </line>
 <line>
 <line_number>83</line_number>
 <line_content>def get_index(folder_name, file_name):</line_content>
 <context>
-def __getitem__(self, index):</context>
+def __getitem__(self, index):, Changed in version 3.8: Use "__index__()" if available., Changed in version 3.8: Use "__index__()" if available., Changed in version 3.8: Use "__index__()" if available., Changed in version 3.8: Use "__index__()" if available.</context>
 </line>
 <line>
 <line_number>85</line_number>
 <line_content>Get the index for a given PDF file.</line_content>
 <context>
-index</context>
+index, print(filename), fromfile(f, n), Return the value of sample *index* from the fragment., "PySlice_GetIndicesEx()"</context>
 </line>
 <line>
 <line_number>87</line_number>
 <line_content>index_name = file_name.replace('.pdf', '.json')</line_content>
 <context>
-To rename a file, use "os.rename(old_path, new_path)".</context>
+To rename a file, use "os.rename(old_path, new_path)"., object_filenames(source_filenames[, strip_dir=0, output_dir='']), stripped_lines = [line.strip() for line in lines] existing_files = filter(os.path.exists, file_list), Invokes "distutils.file_util.move_file()". Renames, distutils.file_util.write_file(filename, contents)</context>
 </line>
 <line>
 <line_number>88</line_number>
 <line_content>index = None</line_content>
 <context>
-index</context>
+index, index* must be greater than or equal to "0"., (excluded). Negative indices, What's a negative index?, have "None" value.</context>
 </line>
 <line>
 <line_number>90</line_number>
 <line_content>if s3.file_exists(folder_name, index_name):</line_content>
 <context>
-If "run_filename" is set and is a directory which contains a</context>
+If "run_filename" is set and is a directory which contains a, If the folder cannot be retrieved, "OSError" is raised., distutils.dir_util.mkpath(name[, mode=0o777, verbose=0, dry_run=0]), dir=python3, If "run_filename" is set, prepend the directory of the filename to</context>
 </line>
 <line>
 <line_number>91</line_number>
 <line_content>logging.info('Index found, loading index...')</line_content>
 <context>
-logging.info('Doing something')</context>
+logging.info('Doing something'), logging.info('Finished'), logging.info('An INFO message'), logging.info('Started'), logger.info('info message')</context>
 </line>
 <line>
 <line_number>92</line_number>
 <line_content>with tempfile.TemporaryDirectory() as tmp_dir:</line_content>
 <context>
-with tempfile.NamedTemporaryFile(delete=False) as tmp_file:</context>
+with tempfile.NamedTemporaryFile(delete=False) as tmp_file:, import tempfile, If you wish to retrieve a resource via URL and store it in a temporary location, you can do so via the "shutil.copyfileobj()" and "tempfile.NamedTemporaryFile()" functions:, cd c:\Temp\foo, to install modules to the "\Temp\Python" directory on the current drive.</context>
 </line>
 <line>
 <line_number>93</line_number>
 <line_content>tmp_path = f'{tmp_dir}/{index_name}'</line_content>
 <context>
-object_filenames(source_filenames[, strip_dir=0, output_dir=''])</context>
+object_filenames(source_filenames[, strip_dir=0, output_dir='']), distutils.dir_util.mkpath(name[, mode=0o777, verbose=0, dry_run=0]), include_dirs = ['/usr/local/include'],, shared_object_filename(basename[, strip_dir=0, output_dir='']), Changed in version 3.8: Use "__index__()" if available.</context>
 </line>
 <line>
 <line_number>94</line_number>
 <line_content>s3.download_file(f'{folder_name}/{index_name}', tmp_path)</line_content>
 <context>
-object_filenames(source_filenames[, strip_dir=0, output_dir=''])</context>
+object_filenames(source_filenames[, strip_dir=0, output_dir='']), shared_object_filename(basename[, strip_dir=0, output_dir='']), {dirname} The name of the directory the file is in., {basename} Just the name of the file, not including the directory., "file" A text file. The file destination takes an extra argument, a template to use for building the filename, like so:</context>
 </line>
 <line>
 <line_number>95</line_number>
 <line_content>index = GPTSimpleVectorIndex.load_from_disk(tmp_path)</line_content>
 <context>
-Changed in version 3.8: Use "__index__()" if available.</context>
+Changed in version 3.8: Use "__index__()" if available., Changed in version 3.8: Use "__index__()" if available., Changed in version 3.8: Use "__index__()" if available., Changed in version 3.8: Use "__index__()" if available., Changed in version 3.8: Use "__index__()" if available.</context>
 </line>
 <line>
 <line_number>98</line_number>
 <line_content>logging.info('Index not found, generating index...')</line_content>
 <context>
-logging.info('Doing something')</context>
+logging.info('Doing something'), logging.info('An INFO message'), logging.info('Finished'), logger.info('A log message'), logging.info('Hello')</context>
 </line>
 <line>
 <line_number>99</line_number>
 <line_content>with tempfile.NamedTemporaryFile('wb') as f_src:</line_content>
 <context>
-with tempfile.NamedTemporaryFile(delete=False) as tmp_file:</context>
+with tempfile.NamedTemporaryFile(delete=False) as tmp_file:, filename = 'filename\u4500abc' with open(filename, 'w') as f: f.write('blah\n'), object_filenames(source_filenames[, strip_dir=0, output_dir='']), raw', type=argparse.FileType('wb', 0)), distutils.file_util.copy_file(src, dst[, preserve_mode=1, preserve_times=1, update=0, link=None, verbose=0, dry_run=0])</context>
 </line>
 <line>
 <line_number>100</line_number>
 <line_content>logging.info(f'{file_name} downloaded')</line_content>
 <context>
-"filename": "app.log",</context>
+"filename": "app.log",, "filename": "app.log",, logging.info('Doing something'), # See what files are created logfiles = glob.glob('%s*' % LOG_FILENAME), Logging to a file</context>
 </line>
 <line>
 <line_number>101</line_number>
 <line_content>s3.download_file(f'{folder_name}/{file_name}', f_src.name)</line_content>
 <context>
-object_filenames(source_filenames[, strip_dir=0, output_dir=''])</context>
+object_filenames(source_filenames[, strip_dir=0, output_dir='']), shared_object_filename(basename[, strip_dir=0, output_dir='']), {basename} Just the name of the file, not including the directory., Changed in version 3.3: Support was added for *filename* being a *file object* instead of an actual filename., Returns the name of the object files for the given source files. *source_filenames* should be a list of filenames.</context>
 </line>
 <line>
 <line_number>103</line_number>
 <line_content>with open(f_src.name, 'rb') as f:</line_content>
 <context>
-with open(file) as f:</context>
+with open(file) as f:, with open(fname, 'r', encoding="ascii", errors="surrogateescape") as f: data = f.read(), with open(sys.argv[1], 'rb') as f: data_to_send = f.read(), f = open(fn, 'w'), open(filename)</context>
 </line>
 <line>
 <line_number>104</line_number>
 <line_content>index = create_index(f, folder_name, file_name)</line_content>
 <context>
-file_created(path)</context>
+file_created(path), distutils.dir_util.create_tree(base_dir, files[, mode=0o777, verbose=0, dry_run=0]), Changed in version 3.8: Use "__index__()" if available., Changed in version 3.8: Use "__index__()" if available., Changed in version 3.8: Use "__index__()" if available.</context>
 </line>
 <line>
 <line_number>106</line_number>
 <line_content>return index</line_content>
 <context>
-index</context>
+index, return result, Return the first index *i* for which "o[i] == value". On error, return "-1". This is equivalent to the Python expression "o.index(value)"., return result;, return value</context>
 </line>
 <line>
 <line_number>109</line_number>
 <line_content>def query_gpt(chosen_class, chosen_pdf, query):</line_content>
 <context>
-"PyClassMethodDescr_Type"</context>
+"PyClassMethodDescr_Type", type (e.g. using Py_VISIT(Py_TYPE(self)))., def get_defining_class(self):, The C type of the object returned by "Py_GenericAlias()". Equivalent to "types.GenericAlias" in Python., Note that "Py_VISIT()" requires the *visit* and *arg* parameters to "local_traverse()" to have these specific names; don't name them just anything.</context>
 </line>
 <line>
 <line_number>111</line_number>
 <line_content>if not os.getenv('OPENAI_API_KEY'):</line_content>
 <context>
-self.key = key</context>
+self.key = key, self.key = key, keys may be introduced in future Python versions):, f has_key example.py, "PyThread_get_key_value()"</context>
 </line>
 <line>
 <line_number>112</line_number>
 <line_content>st.error('Enter your OpenAI API key in the sidebar.')</line_content>
 <context>
-Due to the compatibility problem noted above, this version of the API should not be used in new code.</context>
+Due to the compatibility problem noted above, this version of the API should not be used in new code., "PyUnicode_READY()" on them before calling any other API., Changed in version 3.10: Added the *key* parameter., Changed in version 3.10: Added the *key* parameter., Changed in version 3.10: Added the *key* parameter.</context>
 </line>
 <line>
 <line_number>115</line_number>
 <line_content># LLM Predictor (gpt-3.5-turbo)</line_content>
 <context>
-%m</context>
+%m, class ast.GtE, # some code, class ast.Gt, Changed in version 3.2: Support for ""%lld"" and ""%llu"" added.</context>
 </line>
 <line>
 <line_number>116</line_number>
 <line_content>llm_predictor = LLMPredictor(</line_content>
 <context>
-Changed in version 3.2: Support for ""%lld"" and ""%llu"" added.</context>
+Changed in version 3.2: Support for ""%lld"" and ""%llu"" added., am_aiter(PyObject, "PYGEN_NEXT" if iterator yields. Yielded value is returned via, >>> Perm.X | 4, >>> (~Perm.X).value == (Perm.R|Perm.W).value == 6 True</context>
 </line>
 <line>
 <line_number>117</line_number>
 <line_content>llm=ChatOpenAI(</line_content>
 <context>
-return m;</context>
+return m;, return m;, return m;, return m;, return m;</context>
 </line>
 <line>
 <line_number>118</line_number>
 <line_content>temperature=0,</line_content>
 <context>
-temp;</context>
+temp;, value = 0, 0, zero if, zero,</context>
 </line>
 <line>
 <line_number>119</line_number>
 <line_content>model_name='gpt-3.5-turbo',</line_content>
 <context>
-PyType_Spec.name</context>
+PyType_Spec.name, class Vehicle: __slots__ = ('id_number', 'make', 'model'), type Py_tss_t, "PyType_Spec", "3.0a5+ (py3k:63103M, May 12 2008, 00:53:55) \n[GCC 4.2.3]"</context>
 </line>
 <line>
 <line_number>123</line_number>
 <line_content>index = get_index(chosen_class, chosen_pdf)</line_content>
 <context>
-Changed in version 3.8: Use "__index__()" if available.</context>
+Changed in version 3.8: Use "__index__()" if available., Changed in version 3.8: Use "__index__()" if available., Changed in version 3.8: Use "__index__()" if available., Changed in version 3.8: Use "__index__()" if available., Changed in version 3.8: Use "__index__()" if available.</context>
 </line>
 <line>
 <line_number>124</line_number>
 <line_content>response = index.query(query, llm_predictor=llm_predictor)</line_content>
 <context>
-return conn.execute(self.fetch, [obj.key]).fetchone()[0]</context>
+return conn.execute(self.fetch, [obj.key]).fetchone()[0], value=Name(id='e', ctx=Load()))])), ref = function(args).mydict[index][index], def filter(self, record): request = ctx_request.get() record.method = request.method record.ip = request.ip record.user = request.user record.appName = appName = ctx_appname.get() return appName == self.app.name, _resultobj = Py_None;</context>
 </line>
 <line>
 <line_number>126</line_number>
 <line_content># logging.info(response.get_formatted_sources())</line_content>
 <context>
-logging.Formatter.__init__(fmt=None, datefmt=None, style='%')</context>
+logging.Formatter.__init__(fmt=None, datefmt=None, style='%'), logging.basicConfig(level=logging.INFO, format='%(message)s') logging.info(_('message 1', foo='bar', bar='baz', num=123, fnum=123.456)), 9.18. "distutils.log" --- Simple **PEP 282**-style logging, formatter = logging.Formatter('%(asctime)s, def configure_logging(): h = TTSHandler() root = logging.getLogger() root.addHandler(h) # the default formatter just returns the message root.setLevel(logging.DEBUG)</context>
 </line>
 <line>
 <line_number>128</line_number>
 <line_content>return response</line_content>
 <context>
-return</context>
+return, return, return, return value, return result</context>
 </line>
 <line>
 <line_number>131</line_number>
 <line_content>@st.cache_resource</line_content>
 <context>
-"tp_cache"</context>
+"tp_cache", abc.get_cache_token(), The *cached_property* approach only works with methods that do not take any arguments. It does not create a reference to the instance. The cached method result will be kept only as long as the instance is alive., The module's "__file__" attribute will be set to the code object's "co_filename". If applicable, "__cached__" will also be set., How do I cache method calls? ----------------------------</context>
 </line>
 <line>
 <line_number>132</line_number>
 <line_content>def create_tool(_index, chosen_pdf):</line_content>
 <context>
-Py_mod_create</context>
+Py_mod_create, #define __PICKLE_PICKLER_DUMP_METHODDEF    \ {"dump", (PyCFunction)__pickle_Pickler_dump, METH_O, __pickle_Pickler_dump__doc__},, In our example, "_pickle" is the module, "Pickler" is the class, and "dump()" is the method, so the name becomes "_pickle.Pickler.dump()":, "Py_NewInterpreter()", Python Package Index</context>
 </line>
 <line>
 <line_number>135</line_number>
 <line_content>name=f'{chosen_pdf} index',</line_content>
 <context>
-Changed in version 3.8: Use "__index__()" if available.</context>
+Changed in version 3.8: Use "__index__()" if available., Changed in version 3.8: Use "__index__()" if available., Changed in version 3.8: Use "__index__()" if available., Changed in version 3.8: Use "__index__()" if available., Changed in version 3.8: Use "__index__()" if available.</context>
 </line>
 <line>
 <line_number>136</line_number>
 <line_content>func=lambda q: str(_index.query(q)),</line_content>
 <context>
-4. Convert the lambda to a def statement, using that name.</context>
+4. Convert the lambda to a def statement, using that name., print_assign = lambda name, value: name + '=' + str(value), record = q.get(), The function name or ""<lambda>""., ref = function(args).mydict[index][index]</context>
 </line>
 <line>
 <line_number>137</line_number>
 <line_content>description='Useful to answering questions about the given file',</line_content>
 <context>
-Most calls to the "ArgumentParser" constructor will use the "description=" keyword argument. This argument gives a brief description of what the program does and how it works. In help messages, the description is displayed between the command-line usage string and the help messages for the various arguments:</context>
+Most calls to the "ArgumentParser" constructor will use the "description=" keyword argument. This argument gives a brief description of what the program does and how it works. In help messages, the description is displayed between the command-line usage string and the help messages for the various arguments:, description - description for the sub-parser group in help, "file", "file", The "help" value is a string containing a brief description of the argument. When a user requests help (usually by using "-h" or "--help" at the command line), these "help" descriptions will be displayed with each argument:</context>
 </line>
 <line>
 <line_number>138</line_number>
 <line_content>return_direct=True,</line_content>
 <context>
-Py_RETURN_TRUE</context>
+Py_RETURN_TRUE, return_when* indicates when this function should return. It must, Py_RETURN_FALSE, Returns "False"., return True</context>
 </line>
 <line>
 <line_number>142</line_number>
 <line_content>return tools</line_content>
 <context>
-return</context>
+return, return, return, Return types, return wrapper</context>
 </line>
 <line>
 <line_number>145</line_number>
 <line_content>@st.cache_resource</line_content>
 <context>
-"tp_cache"</context>
+"tp_cache", abc.get_cache_token(), The *cached_property* approach only works with methods that do not take any arguments. It does not create a reference to the instance. The cached method result will be kept only as long as the instance is alive., The module's "__file__" attribute will be set to the code object's "co_filename". If applicable, "__cached__" will also be set., How do I cache method calls? ----------------------------</context>
 </line>
 <line>
 <line_number>146</line_number>
 <line_content>def create_agent(chosen_class, chosen_pdf):</line_content>
 <context>
-def get_defining_class(self):</context>
+def get_defining_class(self):, class build_py(_build_py):, In our example, "_pickle" is the module, "Pickler" is the class, and "dump()" is the method, so the name becomes "_pickle.Pickler.dump()":, defining_class,, "PyClassMethodDescr_Type"</context>
 </line>
 <line>
 <line_number>147</line_number>
 <line_content>memory = ConversationBufferMemory(memory_key='chat_history')</line_content>
 <context>
-async_chat.collect_incoming_data(data)</context>
+async_chat.collect_incoming_data(data), async_chat.discard_buffers(), async_chat.close_when_done(), self.buffer = self.buffer[sent:], self.buffer = self.buffer[sent:]</context>
 </line>
 <line>
 <line_number>148</line_number>
 <line_content>llm = OpenAI(temperature=0, model_name='gpt-3.5-turbo')</line_content>
 <context>
-def current_temperature(self): "Latest hourly observation" # Do not cache this because old results # can be out of date.</context>
+def current_temperature(self): "Latest hourly observation" # Do not cache this because old results # can be out of date., To access the module state in these cases, use the "PyType_GetModuleByDef()" function, and pass in the module definition. Once you have the module, call "PyModule_GetState()" to get the state:, "3.0a5+ (py3k:63103M, May 12 2008, 00:53:55) \n[GCC 4.2.3]", >>> class Planet(Enum): ...     MERCURY = (3.303e+23, 2.4397e6) ...     VENUS   = (4.869e+24, 6.0518e6) ...     EARTH   = (5.976e+24, 6.37814e6) ...     MARS    = (6.421e+23, 3.3972e6) ...     JUPITER = (1.9e+27,   7.1492e7) ...     SATURN  = (5.688e+26, 6.0268e7) ...     URANUS  = (8.686e+25, 2.5559e7) ...     NEPTUNE = (1.024e+26, 2.4746e7) ...     def __init__(self, mass, radius): ...         self.mass = mass       # in kilograms ...         self.radius = radius   # in meters ...     @property ...     def surface_gravity(self): ...         # universal gravitational constant  (m3 kg-1 s-2) ...         G = 6.67300E-11 ...         return G * self.mass / (self.radius * self.radius) ... >>> Planet.EARTH.value (5.976e+24, 6378140.0) >>> Planet.EARTH.surface_gravity 9.802652743337129, temp.<plat>/</context>
 </line>
 <line>
 <line_number>150</line_number>
 <line_content>index = get_index(chosen_class, chosen_pdf)</line_content>
 <context>
-Changed in version 3.8: Use "__index__()" if available.</context>
+Changed in version 3.8: Use "__index__()" if available., Changed in version 3.8: Use "__index__()" if available., Changed in version 3.8: Use "__index__()" if available., Changed in version 3.8: Use "__index__()" if available., Changed in version 3.8: Use "__index__()" if available.</context>
 </line>
 <line>
 <line_number>151</line_number>
 <line_content>tools = create_tool(index, chosen_pdf)</line_content>
 <context>
-Installing the tools</context>
+Installing the tools, What GUI toolkits exist for Python? ===================================, Py_mod_create, See also the "create_task()" function which is the preferred way for creating new Tasks.Save a reference to the result of this function, to avoid a task disappearing mid-execution., file_created(path)</context>
 </line>
 <line>
 <line_number>153</line_number>
 <line_content>agent = initialize_agent(</line_content>
 <context>
-"Py_Initialize()"</context>
+"Py_Initialize()", Initialize Python from, All of the following functions must be called after "Py_Initialize()"., "Py_InitializeEx()", Function to initialize Python:</context>
 </line>
 <line>
 <line_number>154</line_number>
 <line_content>tools, llm, agent='conversational-react-description', memory=memory</line_content>
 <context>
-MemoryHandler</context>
+MemoryHandler, 11. "MemoryHandler" instances send messages to a buffer in memory, which is flushed whenever specific criteria are met., See Memory Management., This module does not work or is not available on WebAssembly platforms "wasm32-emscripten" and "wasm32-wasi". See WebAssembly platforms for more information., This module does not work or is not available on WebAssembly platforms "wasm32-emscripten" and "wasm32-wasi". See WebAssembly platforms for more information.</context>
 </line>
 <line>
 <line_number>157</line_number>
 <line_content>return agent</line_content>
 <context>
-return</context>
+return, return, return, Agent: Thunderbird 1.5.0.9 (X11/20061227), Return a</context>
 </line>
 <line>
 <line_number>160</line_number>
 <line_content>def query_gpt_memory(chosen_class, chosen_pdf, query):</line_content>
 <context>
-objects. The memory is taken from the Python private heap.</context>
+objects. The memory is taken from the Python private heap., How does Python manage memory? ==============================, An array of "Py_ssize_t" of length "ndim" indicating the shape of the memory as an n-dimensional array. Note that "shape[0] * ... * shape[ndim-1] * itemsize" MUST be equal to "len"., All allocating functions belong to one of three different "domains" (see also "PyMemAllocatorDomain"). These domains represent different allocation strategies and are optimized for different purposes. The specific details on how every domain allocates memory or what internal functions each domain calls is considered an implementation detail, but for debugging purposes a simplified table can be found at here. There is no hard requirement to use the memory returned by the allocation functions belonging to a given domain for only the purposes hinted by that domain (although this is the recommended practice). For example, one could use the memory returned by "PyMem_RawMalloc()" for allocating Python objects or the memory returned by "PyObject_Malloc()" for allocating memory for buffers., Object domain: intended for allocating memory belonging to Python</context>
 </line>
 <line>
 <line_number>162</line_number>
 <line_content>agent = create_agent(chosen_class, chosen_pdf)</line_content>
 <context>
-def get_defining_class(self):</context>
+def get_defining_class(self):, In our example, "_pickle" is the module, "Pickler" is the class, and "dump()" is the method, so the name becomes "_pickle.Pickler.dump()":, class build_py(_build_py):, defining_class,, Python must be preinitialized to call this function.</context>
 </line>
 <line>
 <line_number>166</line_number>
 <line_content>res = agent.run(input=query)</line_content>
 <context>
-req = urllib.request.Request('http://python.org/')</context>
+req = urllib.request.Request('http://python.org/'), name = raw_input(), The script's input is connected to the client too, and sometimes the form data is read this way; at other times the form data is passed via the "query string" part of the URL. This module is intended to take care of the different cases and provide a simpler interface to the Python script. It also provides a number of utilities that help in debugging scripts, and the latest addition is support for file uploads from a form (if your browser supports it)., name = input(), >>> req = urllib.request.Request('http://www.pretend_server.org') >>> try: urllib.request.urlopen(req) ... except urllib.error.URLError as e: ...     print(e.reason) ... (4, 'getaddrinfo failed')</context>
 </line>
 <line>
 <line_number>167</line_number>
 <line_content>except Exception as e:</line_content>
 <context>
-except Exception:</context>
+except Exception:, Builtin exceptions;, exception(), exception(), Exceptions</context>
 </line>
 <line>
 <line_number>168</line_number>
 <line_content>logging.error(e)</line_content>
 <context>
-logging.error('An ERROR message')</context>
+logging.error('An ERROR message'), logger.error('error message'), logger.error('error message'), logger.error('error message'), "Logger.error()". The difference is that "Logger.exception()" dumps</context>
 </line>
 <line>
 <line_number>169</line_number>
 <line_content>res = 'Something went wrong... Please try again.'</line_content>
 <context>
-res = None</context>
+res = None, res;, res;, res = await something(), For such REs, specifying the "re.VERBOSE" flag when compiling the regular expression can be helpful, because it allows you to format the regular expression more clearly.</context>
 </line>
 <line>
 <line_number>171</line_number>
 <line_content>st.session_state.memory = agent.memory.buffer</line_content>
 <context>
-11. "MemoryHandler" instances send messages to a buffer in memory, which is flushed whenever specific criteria are met.</context>
+11. "MemoryHandler" instances send messages to a buffer in memory, which is flushed whenever specific criteria are met., self.buffer = self.buffer[sent:], self.buffer = self.buffer[sent:], async_chat.discard_buffers(), buffer_info()</context>
 </line>
 <line>
 <line_number>173</line_number>
 <line_content>return res</line_content>
 <context>
-res = None</context>
+res = None, return, return, return, res = await something()</context>
 </line>
 <line>
 <line_number>179</line_number>
 <line_content>@st.cache_data</line_content>
 <context>
-"tp_cache"</context>
+"tp_cache", abc.get_cache_token(), The *cached_property* approach only works with methods that do not take any arguments. It does not create a reference to the instance. The cached method result will be kept only as long as the instance is alive., The two principal tools for caching methods are "functools.cached_property()" and "functools.lru_cache()". The former stores results at the instance level and the latter at the class level., To make the *lru_cache* approach work when the *station_id* is mutable, the class needs to define the "__eq__()" and "__hash__()" methods so that the cache can detect relevant attribute updates:</context>
 </line>
 <line>
 <line_number>180</line_number>
 <line_content>def show_pdf(folder_name, file_name):</line_content>
 <context>
-filename will be inferred from the library name. *output_dir*</context>
+filename will be inferred from the library name. *output_dir*, print(filename), cgi.print_directory(), print(f"Running '{__file__}'"), shared_object_filename(basename[, strip_dir=0, output_dir=''])</context>
 </line>
 <line>
 <line_number>182</line_number>
 <line_content>with tempfile.NamedTemporaryFile('wb') as f_src:</line_content>
 <context>
-with tempfile.NamedTemporaryFile(delete=False) as tmp_file:</context>
+with tempfile.NamedTemporaryFile(delete=False) as tmp_file:, filename = 'filename\u4500abc' with open(filename, 'w') as f: f.write('blah\n'), object_filenames(source_filenames[, strip_dir=0, output_dir='']), raw', type=argparse.FileType('wb', 0)), distutils.file_util.copy_file(src, dst[, preserve_mode=1, preserve_times=1, update=0, link=None, verbose=0, dry_run=0])</context>
 </line>
 <line>
 <line_number>183</line_number>
 <line_content>logging.info(f'Downloading {file_name}...')</line_content>
 <context>
-logging.info('Doing something')</context>
+logging.info('Doing something'), "filename": "app.log",, "filename": "app.log",, fh = logging.FileHandler('output.txt', 'w'), # See what files are created logfiles = glob.glob('%s*' % LOG_FILENAME)</context>
 </line>
 <line>
 <line_number>184</line_number>
 <line_content>s3.download_file(f'{folder_name}/{file_name}', f_src.name)</line_content>
 <context>
-object_filenames(source_filenames[, strip_dir=0, output_dir=''])</context>
+object_filenames(source_filenames[, strip_dir=0, output_dir='']), shared_object_filename(basename[, strip_dir=0, output_dir='']), {basename} Just the name of the file, not including the directory., Changed in version 3.3: Support was added for *filename* being a *file object* instead of an actual filename., Returns the name of the object files for the given source files. *source_filenames* should be a list of filenames.</context>
 </line>
 <line>
 <line_number>186</line_number>
 <line_content>with open(f_src.name, 'rb') as f:</line_content>
 <context>
-with open(file) as f:</context>
+with open(file) as f:, with open(fname, 'r', encoding="ascii", errors="surrogateescape") as f: data = f.read(), with open(sys.argv[1], 'rb') as f: data_to_send = f.read(), f = open(fn, 'w'), open(filename)</context>
 </line>
 <line>
 <line_number>187</line_number>
 <line_content>base64_pdf = base64.b64encode(f.read()).decode('utf-8')</line_content>
 <context>
-base64.decode(input, output)</context>
+base64.decode(input, output), base64.decodebytes(s), >>> import base64 >>> encoded = base64.b64encode(b'data to be encoded') >>> encoded b'ZGF0YSB0byBiZSBlbmNvZGVk' >>> data = base64.b64decode(encoded) >>> data b'data to be encoded', Decode the Base64 encoded *bytes-like object* or ASCII string *s* and return the decoded "bytes"., base64.standard_b64encode(s)</context>
 </line>
 <line>
 <line_number>189</line_number>
 <line_content>pdf_display = f'''</line_content>
 <context>
-"PyErr_Display()"</context>
+"PyErr_Display()", print("Content, print(f"Running '{__file__}'"), print(f'[stderr]\n{stderr.decode()}'), Converts the "print" statement to the "print()" function.</context>
 </line>
 <line>
 <line_number>191</line_number>
 <line_content>src='data:application/pdf;base64,{base64_pdf}'</line_content>
 <context>
-Valid base64:</context>
+Valid base64:, base64.urlsafe_b64decode(s), base64.decodebytes(s), base64.urlsafe_b64encode(s), base64.standard_b64decode(s)</context>
 </line>
 <line>
 <line_number>192</line_number>
 <line_content>width='100%' height='1000'</line_content>
 <context>
-width</context>
+width, width', default=10.5, type=int), kwargs['width'] = '14.3c', Namespace(length=10, width=10.5), maxsize</context>
 </line>
 <line>
 <line_number>193</line_number>
 <line_content>type='application/pdf'</line_content>
 <context>
-FileType objects</context>
+FileType objects, FileType objects, We provide a doc string for the type in "tp_doc"., type - The type to which the command-line argument should be, "file"</context>
 </line>
 <line>
 <line_number>194</line_number>
 <line_content>style='min-width: 400px;'</line_content>
 <context>
-Use of alternative formatting styles ====================================</context>
+Use of alternative formatting styles ====================================, width, Using particular formatting styles throughout your application ==============================================================, with the milliseconds tacked on at the end. The "style" is one of "'%'", "'{'", or "'$'". If one of these is not specified, then "'%'" will be used., width', default=10.5, type=int)</context>
 </line>
 <line>
 <line_number>199</line_number>
 <line_content>st.markdown(pdf_display, unsafe_allow_html=True)</line_content>
 <context>
-print("Content-Type: text/html")    # HTML is following print()                             # blank line, end of headers
+print("Content-Type: text/html")    # HTML is following print()                             # blank line, end of headers, This relies on the Python interpreter to print the traceback. The content type of the output is set to plain text, which disables all HTML processing. If your script works, the raw HTML will be displayed by your client. If it raises an exception, most likely after the first two lines have been printed, a traceback will be displayed. Because no HTML interpretation is going on, the traceback will be readable., "suppress" The text is suppressed—thrown away., <html>, The optional argument *display* defaults to "1" and can be set to "0" to suppress sending the traceback to the browser. If the argument *logdir* is present, the traceback reports are written to files. The value of *logdir* should be a directory where these files will be placed. The optional argument *context* is the number of lines of context to display around the current line of source code in the traceback; this defaults to "5". If the optional argument *format* is ""html"", the output is formatted as HTML. Any other value forces plain text output. The default value is ""html"".
 </context>
 </line>
 </file_context>

@@ -46,8 +46,6 @@ def main(repo_url):
     for thread in threads:
         thread.join()
 
-    print(python_files)
-
     # python_files is now [(FILE_PATH, [FILE LINES], [(LINE NUMBER, LINE, CONTEXT)])]
     with open("python_files2.txt", "w", encoding="utf-8") as f:
         f.write('<files>')
@@ -182,6 +180,12 @@ def main(repo_url):
     If one of these is not valid, do not add the change.
 
     Reminder to add the entire diff as a cdata section '<![CDATA[' (not individually)
+
+    Reminder to add ANYTHING after the @@ ON A NEW LINE
+    Be sure to add ANYTHING after the @@ ON A NEW LINE
+
+    Be sure to add changes to all files provided.
+
 
     Please find the files for review and modification below:
     {python_files}

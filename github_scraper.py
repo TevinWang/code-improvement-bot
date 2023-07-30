@@ -18,6 +18,7 @@ def fetch_python_files_from_github_url(url, token=GITHUB_TOKEN):
         "Accept": "application/vnd.github.v3+json",
     }
 
+    print(tree_url)
     tree_response = requests.get(tree_url, headers=headers)
     if tree_response.status_code != 200:
         raise ValueError(f"Error fetching repo contents: {tree_response.status_code}")
