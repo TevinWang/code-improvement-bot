@@ -1,5 +1,0 @@
-Uploading Packages to the Package Index
-***************************************
-
-References to up to date PyPI documentation can be found at Reading
-the Python Packaging User Guide.

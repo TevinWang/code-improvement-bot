@@ -2,9 +2,7 @@ from dotenv import load_dotenv
 import os
 load_dotenv()
 import datetime
-import patch
-import unidiff
-from unidiff import PatchSet
+
 
 
 import xml.etree.ElementTree as ET
@@ -73,7 +71,7 @@ def main(repo):
     username = 'TevinWang'
     app_id = '368612'
     private_key_path = 'gooddiff.pem'
-    target_id = '40181391'
+    target_id = '40204273'
     full_repo_name = repo
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
     branch_name = f'gooddiff-{timestamp}'
@@ -84,14 +82,14 @@ def main(repo):
 
     create_branch(repo, branch_name, base_branch_name)
 
-    with open('python_files.txt', 'r') as output:
+    with open('python_files2.txt', 'r', encoding="utf-8") as output:
       xml_data = output.read()
 
     # Parse the XML data
     tree = ET.ElementTree(ET.fromstring(xml_data))
     file_root = tree.getroot()
 
-    with open('completion_output.xml', 'r') as output:
+    with open('completion_output.xml', 'r', encoding="utf-8") as output:
       completion_xml_data = output.read()
 
     # Parse the XML data
@@ -119,4 +117,4 @@ def main(repo):
 
 
 if __name__ == "__main__":
-    main()
+    main("TevinWang/ClassGPT")

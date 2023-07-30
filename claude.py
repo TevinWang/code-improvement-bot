@@ -13,6 +13,7 @@ def main(repo_url):
     # scrape
     github_url = repo_url
     python_files = fetch_python_files_from_github_url(github_url)
+    python_files2 = python_files.copy()
     # ASSUMING OUTPUT IS A LIST OF TUPLES OF (FILE_PATH, [FILE LINES])
     for i, file in enumerate(tqdm(python_files)):
         context_list = []
@@ -48,8 +49,13 @@ def main(repo_url):
     print(python_files)
 
     # python_files is now [(FILE_PATH, [FILE LINES], [(LINE NUMBER, LINE, CONTEXT)])]
-
-
+    with open("python_files2.txt", "w", encoding="utf-8") as f:
+        f.write('<files>')
+        f.writelines(
+            f"<file>\n<file_path>{file_path}</file_path>\n<file_content>\n{file_content}\n</file_content>\n</file>\n"
+            for file_path, file_content in python_files2
+        )
+        f.write('</files>')
     # write the file
     with open("python_files.txt", "w", encoding="utf-8") as f:
         f.write('<files>\n')
