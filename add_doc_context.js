@@ -21,8 +21,21 @@ embed_fun.embed = async function (batch) {
     const table = await db.openTable("python_docs", embed_fun);
 
     let input = process.argv[2];
-    console.log(input);
+    let results = [];
 
-    let result = await table.search(input).select(['text']).limit(5).execute();
-    console.log(result.map(r => r.text))
+    input = input.split("|||||");
+    for (let i of input) {
+        i = i.split("|||");
+        let result = await table.search(i[1]).select(['text']).limit(1).execute();
+        results.push(result[0].text);
+    }
+
+    let response = [];
+    for (let i = 0; i < results.length; i++) {
+        response.push(input[i] + "|||" + results[i]);
+    }
+
+    console.log(response.join("|||||"));
+    // expected: line1|||line|||context|||||...
+
 })();
