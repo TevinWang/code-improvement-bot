@@ -40,7 +40,9 @@ if __name__ == "__main__":
     python_files = fetch_python_files_from_github_url(github_url)
 
     with open("python_files.txt", "w") as f:
+        f.write('<files>')
         for file_path, file_content in python_files:
             f.write(
-                f"<file>\n<file_path>{file_path}</file_path>\n<file_content>{file_content}</file_content>\n</file>\n"
+                f"<file>\n<file_path>{file_path}</file_path>\n<file_content>\n{file_content}\n</file_content>\n</file>\n"
             )
+        f.write('</files>')

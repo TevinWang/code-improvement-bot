@@ -1,0 +1,521 @@
+<root><files><file>
+<file_path>app/01_❓_Ask.py</file_path>
+<file_content>import streamlit as st
+from components.sidebar import sidebar
+from s3 import S3
+from utils import query_gpt, query_gpt_memory, show_pdf
+
+st.set_page_config(
+    page_title="ClassGPT",
+    page_icon="🤖",
+    layout="wide",
+    initial_sidebar_state="expanded",
+    menu_items={
+        "Get Help": "https://twitter.com/benthecoder1",
+        "Report a bug": "https://github.com/benthecoder/ClassGPT/issues",
+        "About": "ClassGPT is a chatbot that answers questions about your pdf files",
+    },
+)
+
+# Session states
+# --------------
+if "chosen_class" not in st.session_state:
+    st.session_state.chosen_class = "--"
+
+if "chosen_pdf" not in st.session_state:
+    st.session_state.chosen_pdf = "--"
+
+if "memory" not in st.session_state:
+    st.session_state.memory = ""
+
+
+sidebar()
+
+st.header("ClassGPT: ChatGPT for your lectures slides")
+
+bucket_name = "classgpt"
+s3 = S3(bucket_name)
+
+all_classes = s3.list_files()
+
+chosen_class = st.selectbox(
+    "Select a class", list(all_classes.keys()) + ["--"], index=len(all_classes)
+)
+
+st.session_state.chosen_class = chosen_class
+
+if st.session_state.chosen_class != "--":
+    all_pdfs = all_classes[chosen_class]
+
+    chosen_pdf = st.selectbox(
+        "Select a PDF file", all_pdfs + ["--"], index=len(all_pdfs)
+    )
+
+    st.session_state.chosen_pdf = chosen_pdf
+
+    if st.session_state.chosen_pdf != "--":
+        col1, col2 = st.columns(2)
+
+        with col1:
+            st.subheader("Ask a question")
+            st.markdown(
+                """
+                Here are some prompts:
+                - `What is the main idea of this lecture in simple terms?`
+                - `Summarize the main points of slide 5`
+                - `Provide 5 practice questions on this lecture with answers`
+                """
+            )
+            query = st.text_area("Enter your question", max_chars=200)
+
+            if st.button("Ask"):
+                if query == "":
+                    st.error("Please enter a question")
+                with st.spinner("Generating answer..."):
+                    # res = query_gpt_memory(chosen_class, chosen_pdf, query)
+                    res = query_gpt(chosen_class, chosen_pdf, query)
+                    st.markdown(res)
+
+                    # with st.expander("Memory"):
+                    #      st.write(st.session_state.memory.replace("\n", "\n\n"))
+
+        with col2:
+            show_pdf(chosen_class, chosen_pdf)
+</file_content>
+</file>
+<file>
+<file_path>app/components/sidebar.py</file_path>
+<file_content>import os
+
+import streamlit as st
+
+
+def sidebar():
+    with st.sidebar:
+        st.markdown(
+            "## How to use\n"
+            "1. Add your files in 📁 Data page\n"
+            "2. Ask a question on the ❓ Ask page\n"
+        )
+        api_key_input = st.text_input(
+            "OpenAI API Key",
+            type="password",
+            placeholder="sk-xxx...",
+            help="Get an API key here 👉 https://platform.openai.com/account/api-keys.",
+            value="",
+        )
+
+        if api_key_input:
+            os.environ["OPENAI_API_KEY"] = api_key_input
+            st.success("API key set")
+
+        st.markdown(
+            """
+            ---
+            ## About
+
+            ClassGPT lets you ask questions about your class \
+                lectures and get accurate answers
+
+            This tool is a work in progress.
+
+            Contributions are welcomed on [GitHub](https://github.com/benthecoder/ClassGPT)
+
+            Made with ♥️ by [Benedict Neo](https://benneo.super.site/)
+            """
+        )
+</file_content>
+</file>
+<file>
+<file_path>app/pages/02_📁_Data.py</file_path>
+<file_content>import streamlit as st
+from components.sidebar import sidebar
+from s3 import S3
+
+sidebar()
+bucket_name = "classgpt"
+s3 = S3(bucket_name)
+all_classes = s3.list_files()
+
+tab1, tab2, tab3 = st.tabs(["Upload data", "Add Class", "Delete"])
+
+with tab1:
+    st.subheader("Upload new lectures")
+
+    chosen_class = st.selectbox(
+        "Select a class",
+        list(all_classes.keys()) + ["--"],
+        index=len(all_classes),
+    )
+
+    if chosen_class != "--":
+        with st.form("upload_pdf"):
+            uploaded_files = st.file_uploader(
+                "Upload a PDF file", type="pdf", accept_multiple_files=True
+            )
+
+            submit_button = st.form_submit_button("Upload")
+
+            if submit_button:
+                if len(uploaded_files) == 0:
+                    st.error("Please upload at least one file")
+                else:
+                    with st.spinner(f"Uploading {len(uploaded_files)} files..."):
+                        for uploaded_file in uploaded_files:
+                            s3.upload_files(
+                                uploaded_file, f"{chosen_class}/{uploaded_file.name}"
+                            )
+
+                        st.success(f"{len(uploaded_files)} files uploaded")
+
+
+with tab2:
+    st.subheader("Add a new class")
+
+    with st.form("add_class"):
+        add_class = st.text_input("Enter a new class name")
+
+        submit_button = st.form_submit_button("Add")
+
+        if submit_button:
+            if add_class == "":
+                st.error("Please enter a class name")
+            else:
+                s3.create_folder(add_class)
+                st.success(f"Class {add_class} added")
+
+with tab3:
+    st.subheader("Delete a class or a PDF file")
+
+    chosen_class = st.selectbox(
+        "Select a class to delete",
+        list(all_classes.keys()) + ["--"],
+        index=len(all_classes),
+    )
+
+    if chosen_class != "--":
+        all_pdfs = all_classes[chosen_class] + ["all"]
+
+        # Remove empty values
+        all_pdfs = [x for x in all_pdfs if x]
+
+        chosen_pdf = st.selectbox(
+            "Select a PDF file or choose 'all' to delete the whole class",
+            all_pdfs + ["--"],
+            index=len(all_pdfs),
+        )
+
+        if chosen_pdf != "--":
+            submit_button = st.button("Remove")
+
+            if submit_button:
+                if chosen_pdf == "all":
+                    s3.remove_folder(chosen_class)
+                    st.success(f"{chosen_class} removed")
+                else:
+                    s3.remove_file(chosen_class, chosen_pdf)
+                    st.success(f"{chosen_pdf} removed")
+</file_content>
+</file>
+<file>
+<file_path>app/s3.py</file_path>
+<file_content>from collections import defaultdict
+
+import boto3
+import botocore
+
+
+class S3:
+    """
+    Class for interacting with S3
+
+    Args:
+        bucket_name (str): Name of the S3 bucket
+
+    Attributes:
+        bucket_name (str): Name of the S3 bucket
+        s3 (boto3.resource): S3 resource
+        bucket (boto3.Bucket): S3 bucket
+
+    Methods:
+        list_folders: List all folders in the S3 bucket
+        list_files: List all files in the S3 bucket
+        folder_exists: Check if a folder exists in the S3 bucket
+        file_exists: Check if a file exists in the S3 bucket
+        create_folder: Create a folder in the S3 bucket
+        upload_files: Upload a file to the S3 bucket
+        remove_folder: Remove a folder from the S3 bucket
+        remove_file: Remove a file from the S3 bucket
+    """
+
+    def __init__(self, bucket_name):
+        self.bucket_name = bucket_name
+        self.s3 = boto3.resource("s3")
+        self.bucket = self.s3.Bucket(bucket_name)
+
+    def list_folders(self):
+        folders = set()
+        for obj in self.bucket.objects.filter():
+            folders.add(obj.key.split("/")[0])
+
+        return folders
+
+    def list_files(self):
+        classes = defaultdict(list)
+
+        # loop through only the parent directory
+        for obj in self.bucket.objects.filter():
+            cname, fname = obj.key.split("/")
+            if not fname.endswith(".json"):
+                classes[cname].append(fname)
+
+        return classes
+
+    def folder_exists(self, folder_name):
+        for _ in self.bucket.objects.filter(Prefix=f"{folder_name}/"):
+            return True
+        return False
+
+    def file_exists(self, folder_name, file_name):
+        try:
+            self.s3.Object(self.bucket_name, f"{folder_name}/{file_name}").load()
+            return True
+        except botocore.exceptions.ClientError as e:
+            if e.response["Error"]["Code"] == "404":
+                return False
+            else:
+                raise
+
+    def create_folder(self, folder_name):
+        if not self.folder_exists(folder_name):
+            self.bucket.put_object(Key=f"{folder_name}/")
+
+    def upload_files(self, file_obj, file_path):
+        self.bucket.upload_fileobj(file_obj, file_path)
+
+    def remove_folder(self, folder_name):
+        if self.folder_exists(folder_name):
+            for key in self.bucket.objects.filter(Prefix=f"{folder_name}/"):
+                key.delete()
+
+    def remove_file(self, folder_name, file_name):
+        if self.folder_exists(folder_name):
+            self.bucket.objects.filter(Prefix=f"{folder_name}/{file_name}").delete(
+                Delete={"Objects": [{"Key": f"{folder_name}/{file_name}"}]}
+            )
+
+    def download_file(self, from_file_path, to_file_path):
+        self.bucket.download_file(from_file_path, to_file_path)
+</file_content>
+</file>
+<file>
+<file_path>app/utils.py</file_path>
+<file_content>import base64
+import logging
+import os
+import sys
+import tempfile
+from io import BytesIO
+
+import openai
+import streamlit as st
+from dotenv import load_dotenv
+from langchain import OpenAI
+
+# langchain
+from langchain.agents import Tool, initialize_agent
+from langchain.chains.conversation.memory import ConversationBufferMemory
+from langchain.chat_models import ChatOpenAI
+
+# llama_index
+from llama_index import Document, GPTSimpleVectorIndex, LLMPredictor
+from pypdf import PdfReader
+from s3 import S3
+
+# set to DEBUG for more verbose logging
+logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+
+
+load_dotenv()
+if os.getenv("OPENAI_API_KEY") is None:
+    st.error("OpenAI API key not set")
+else:
+    openai.api_key = os.getenv("OPENAI_API_KEY")
+
+
+s3 = S3("classgpt")
+
+
+# ------------------- index creation ------------------- #
+
+
+def parse_pdf(file: BytesIO):
+
+    pdf = PdfReader(file)
+    text_list = []
+
+    # Get the number of pages in the PDF document
+    num_pages = len(pdf.pages)
+
+    # Iterate over every page
+    for page in range(num_pages):
+        # Extract the text from the page
+        page_text = pdf.pages[page].extract_text()
+        text_list.append(page_text)
+
+    text = "\n".join(text_list)
+
+    return [Document(text)]
+
+
+def create_index(pdf_obj, folder_name, file_name):
+    """
+    Create an index for a given PDF file and upload it to S3.
+    """
+    index_name = file_name.replace(".pdf", ".json")
+
+    logging.info("Generating new index...")
+    documents = parse_pdf(pdf_obj)
+
+    logging.info("Creating index...")
+    index = GPTSimpleVectorIndex(documents)
+
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        tmp_path = f"{tmp_dir}/{index_name}"
+        logging.info("Saving index...")
+        index.save_to_disk(tmp_path)
+
+        with open(tmp_path, "rb") as f:
+            logging.info("Uploading index to s3...")
+            s3.upload_files(f, f"{folder_name}/{index_name}")
+
+    return index
+
+
+@st.cache_resource(show_spinner=False)
+def get_index(folder_name, file_name):
+    """
+    Get the index for a given PDF file.
+    """
+    index_name = file_name.replace(".pdf", ".json")
+    index = None
+
+    if s3.file_exists(folder_name, index_name):
+        logging.info("Index found, loading index...")
+        with tempfile.TemporaryDirectory() as tmp_dir:
+            tmp_path = f"{tmp_dir}/{index_name}"
+            s3.download_file(f"{folder_name}/{index_name}", tmp_path)
+            index = GPTSimpleVectorIndex.load_from_disk(tmp_path)
+
+    else:
+        logging.info("Index not found, generating index...")
+        with tempfile.NamedTemporaryFile("wb") as f_src:
+            logging.info(f"{file_name} downloaded")
+            s3.download_file(f"{folder_name}/{file_name}", f_src.name)
+
+            with open(f_src.name, "rb") as f:
+                index = create_index(f, folder_name, file_name)
+
+    return index
+
+
+def query_gpt(chosen_class, chosen_pdf, query):
+
+    if not os.getenv("OPENAI_API_KEY"):
+        st.error("Enter your OpenAI API key in the sidebar.")
+        st.stop()
+
+    # LLM Predictor (gpt-3.5-turbo)
+    llm_predictor = LLMPredictor(
+        llm=ChatOpenAI(
+            temperature=0,
+            model_name="gpt-3.5-turbo",
+        )
+    )
+
+    index = get_index(chosen_class, chosen_pdf)
+    response = index.query(query, llm_predictor=llm_predictor)
+
+    # logging.info(response.get_formatted_sources())
+
+    return response
+
+
+@st.cache_resource
+def create_tool(_index, chosen_pdf):
+    tools = [
+        Tool(
+            name=f"{chosen_pdf} index",
+            func=lambda q: str(_index.query(q)),
+            description="Useful to answering questions about the given file",
+            return_direct=True,
+        ),
+    ]
+
+    return tools
+
+
+@st.cache_resource
+def create_agent(chosen_class, chosen_pdf):
+    memory = ConversationBufferMemory(memory_key="chat_history")
+    llm = OpenAI(temperature=0, model_name="gpt-3.5-turbo")
+
+    index = get_index(chosen_class, chosen_pdf)
+    tools = create_tool(index, chosen_pdf)
+
+    agent = initialize_agent(
+        tools, llm, agent="conversational-react-description", memory=memory
+    )
+
+    return agent
+
+
+def query_gpt_memory(chosen_class, chosen_pdf, query):
+
+    agent = create_agent(chosen_class, chosen_pdf)
+    res = ""
+
+    try:
+        res = agent.run(input=query)
+    except Exception as e:
+        logging.error(e)
+        res = "Something went wrong... Please try again."
+
+    st.session_state.memory = agent.memory.buffer
+
+    return res
+
+
+# ------------------- Render PDF ------------------- #
+
+
+@st.cache_data
+def show_pdf(folder_name, file_name):
+
+    with tempfile.NamedTemporaryFile("wb") as f_src:
+        logging.info(f"Downloading {file_name}...")
+        s3.download_file(f"{folder_name}/{file_name}", f_src.name)
+
+        with open(f_src.name, "rb") as f:
+            base64_pdf = base64.b64encode(f.read()).decode("utf-8")
+
+        pdf_display = f"""
+        <iframe src="data:application/pdf;base64,{base64_pdf}" width="100%" height="1000" type="application/pdf" style="min-width: 400px;">
+        </iframe>
+        """
+
+        st.markdown(pdf_display, unsafe_allow_html=True)
+</file_content>
+</file>
+</files>
+<title>
+Improve code quality and index creation
+</title>
+<changes>
+- Changed password type to default for API key input
+- Added error message when asking a blank question
+- Pass conversation history to query_gpt()
+- Create PDF index right after upload
+- Use PyPDF instead of pdfplumber for PDF parsing
+- Improved error message when agent fails
+</changes></root>

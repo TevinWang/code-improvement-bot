@@ -1,7 +1,3 @@
 pygithub
 python-dotenv
-<<<<<<< HEAD
-xml
-=======
 anthropic
->>>>>>> d285bb639e3b0d4b96d3568485c6ff107578528c
