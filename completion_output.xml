@@ -1,152 +1,429 @@
-<root>
+ <root>
 <diff>
+<!--Ensure the diff follows the unified diff format that would be returned by python difflib, providing clear context and line-by-line changes for ALL files.
+Give line numbers with the first line of the file content being line 1,
+ONLY CHANGE LINES OF FILE CONTENT. Do this for all files.
+Add the entire thing as a cdata section '<![CDATA['
+This is what it is supposed to look like per file:
+--- a/path/to/file.txt (make sure to include the 'a/' in the path, and exactly 3 +s)
++++ b/path/to/file.txt (make sure to include the 'b/' in the path, and exactly 3 -s)
+@@ -1,4 +1,4 @@ (ANYTHING after the @@ MUST BE ON A NEW LINE)
+This is the original content.
+-Some lines have been removed.
++Some lines have been added.
+More content here.
+Remove this comment and add the diff patch contents in the diff tag directly. DO NOT ADD THIS IN THE COMMENT
+-->
+
 <![CDATA[
---- a/app/01_❓_Ask.py
-+++ b/app/01_❓_Ask.py
-@@ -28,0 +29,5 @@
-+# Set api key if provided
-+if os.getenv('OPENAI_API_KEY'):
-+	openai.api_key = os.getenv('OPENAI_API_KEY')
-+else:
-+	st.error("OpenAI API key not set")
-@@ -72,3 +73,4 @@
--				# res = query_gpt_memory(chosen_class, chosen_pdf, query)
-+				# Query GPT model with memory
-+				# res = query_gpt_memory(chosen_class, chosen_pdf, query)
- @@ -76,3 +78,4 @@
+
+--- a/docs/src/examples/modal_langchain.py	2023-02-26 19:26:09.712200404 +0000
++++ b/docs/src/examples/modal_langchain.py	2023-02-26 19:48:33.781840189 +0000
+@@ -31,6 +31,9 @@
+ from lancedb.vectorstores import LanceDB
+ from lancedb.llms import OpenAI
+ from lancedb.chains import RetrievalQA
 +
- # with st.expander("Memory"):
- #      st.write(st.session_state.memory.replace("\n", "\n\n"))
---- a/app/components/sidebar.py
-+++ b/app/components/sidebar.py
-@@ -11,0 +12,5 @@
-+# Load environment variables
-+load_dotenv()
 +
- @@ -15,6 +18,4 @@
-     help="Get an API key here 👉 https://platform.openai.com/account/api-keys.",
-     value="",
-@@ -17,6 +14,8 @@
-     if api_key_input:
-         os.environ["OPENAI_API_KEY"] = api_key_input
-         st.success("API key set")
-+    else:
-+        st.error("No API key provided")
-@@ -26,0 +27,5 @@
++# Lancedb image setup
+ lancedb_image = Image.debian_slim().pip_install(
+     "lancedb", "langchain", "openai", "pandas", "tiktoken", "unstructured", "tabulate"
+ )
+@@ -39,6 +42,7 @@
+ name="example-langchain-lancedb",
+ image=lancedb_image,
+ secrets=[Secret.from_name("my-openai-secret")],
++description="A serverless QA bot with Modal and LangChain accessing a LanceDB vector store."
+ )
+ 
+ docsearch = None
+@@ -122,6 +126,8 @@
+ @web_endpoint(method="GET")
+ def web(query: str):
+     answer = qanda_langchain(query)
 +
- st.markdown(
-@@ -34,6 +35,8 @@
-     Contributions are welcomed on [GitHub](https://github.com/benthecoder/ClassGPT)
++    # Return the answer as a JSON response
+     return {
+         "answer": answer,
+     }
 
-     Made with ♥️ by [Benedict Neo](https://benneo.super.site/)
+@@ -130,6 +136,8 @@
+ @stub.function()
+ def cli(query: str):
+     answer = qanda_langchain(query)
 +
-+    Powered by OpenAI's GPT-3
- """)
---- a/app/s3.py
-+++ b/app/s3.py
-@@ -2,7 +3,12 @@
-
- import boto3
- import botocore
-+import logging
-
-+# Set logging
-+logging.basicConfig(level=logging.INFO)
-+
-+# S3 class
-
- class S3:
-     """
-@@ -26,6 +32,7 @@
-         upload_files: Upload a file to the S3 bucket
-         remove_folder: Remove a folder from the S3 bucket
-         remove_file: Remove a file from the S3 bucket
-+        download_file: Download a file from the S3 bucket
-     """
-
-     def __init__(self, bucket_name):
-@@ -69,6 +76,7 @@
-
-     def upload_files(self, file_obj, file_path):
-         self.bucket.upload_fileobj(file_obj, file_path)
-+        logging.info(f"Uploaded {file_path}")
-
-     def remove_folder(self, folder_name):
-         if self.folder_exists(folder_name):
-@@ -83,3 +91,6 @@
-                 Delete={"Objects": [{"Key": f"{folder_name}/{file_name}"}]}
-             )
-
-+    def download_file(self, from_file_path, to_file_path):
-+        self.bucket.download_file(from_file_path, to_file_path)
-+        logging.info(f"Downloaded {from_file_path} to {to_file_path}")
---- a/app/utils.py
-+++ b/app/utils.py
-@@ -25,6 +25,7 @@
-
- import base64
- import logging
-+import os
- import sys
- import tempfile
- from io import BytesIO
-@@ -39,6 +40,11 @@
-
- from pypdf import PdfReader
- from s3 import S3
-+
-+# Load environment variables
-+load_dotenv()
-+
-+# Set logging
- logging.basicConfig(stream=sys.stdout, level=logging.INFO)
-
-
-@@ -47,6 +53,10 @@
-     st.error("OpenAI API key not set")
- else:
-     openai.api_key = os.getenv("OPENAI_API_KEY")
-+
-+if not openai.api_key:
-+    st.error("OpenAI API key not valid")
-+
- @@ -156,7 +163,9 @@
-
- def query_gpt_memory(chosen_class, chosen_pdf, query):
-@@ -58,6 +68,7 @@
-     except Exception as e:
-         logging.error(e)
-         res = "Something went wrong... Please try again."
-+        st.error("Error in query execution, please try again")
-
-     st.session_state.memory = agent.memory.buffer
-
-@@ -69,7 +80,9 @@
-     with tempfile.NamedTemporaryFile("wb") as f_src:
-         logging.info(f"Downloading {file_name}...")
-         s3.download_file(f"{folder_name}/{file_name}", f_src.name)
-+        if not s3.file_exists(folder_name, file_name):
-+            st.error(f"File {file_name} not found in S3")
-
-         with open(f_src.name, "rb") as f:
-             base64_pdf = base64.b64encode(f.read()).decode("utf-8")
-@@ -79,3 +92,5 @@
-             type="application/pdf"
-             style="min-width: 400px;"
-         >
-+        </iframe>
-+        ''', unsafe_allow_html=True)
++    # Print the answer
+     print(answer)
+ 
  ]]>
-</diff>
-<title>
-📝 Improve code quality with comments, logging and error handling
-</title>
-<changes>
-- Added comments for clarity and explanations
-- Added logging for debugging and tracking
-- Added explicit error handling for robustness
-- Set up environment variable loading with dotenv
-- Added fallback error messages for better UX
-- Minor tweaks and formatting fixes
-</changes>
-</root>
+--- a/docs/src/notebooks/diffusiondb/datagen.py	2023-02-26 19:43:31.511253723 +0000
++++ b/docs/src/notebooks/diffusiondb/datagen.py	2023-02-26 20:01:02.462653195 +0000
+@@ -19,6 +19,7 @@
+ import lancedb
+ import lancedb
+ import pyarrow as pa
++import numpy as np # For generating random vectors
+ from datasets import load_dataset
+ from PIL import Image
+ from transformers import CLIPModel, CLIPProcessor, CLIPTokenizerFast
+@@ -66,20 +67,24 @@
+             img_emb = model.get_image_features(image)
+             batch["vector"] = img_emb.cpu().tolist()
+
+-            with Pool() as p:
+-                batch["image_bytes"] = p.map(pil_to_bytes, batch["image"])
++            # Convert images to bytes
++            batch["image_bytes"] = [pil_to_bytes(img) for img in batch["image"]]  
+             return batch
+ 
+ def datagen(args):
+     """Generate DiffusionDB dataset, and use CLIP model to generate image embeddings."""
+     dataset = load_dataset("poloclub/diffusiondb", args.subset)
+     data = []
++    # Iterate through batches
+     for b in dataset.map(
+         generate_clip_embeddings, batched=True, batch_size=256, remove_columns=["image"]
+     )["train"]:
++        # Convert image bytes back to list
+         b["image"] = b["image_bytes"]
+         del b["image_bytes"]
++
++        # Append batch to data
+         data.append(b)
+     tbl = pa.Table.from_pylist(data, schema=schema)
+     return tbl
+
+@@ -105,6 +110,8 @@
+ batches = datagen(args)
+ lance.write_dataset(batches, args.output)
+ 
++
++# Call main
+ if __name__ == "__main__":
+     main()
+ 
+]]>
+--- a/docs/test/md_testing.py	2023-02-26 19:49:11.064237744 +0000
++++ b/docs/test/md_testing.py	2023-02-26 20:04:04.533211972 +0000
+@@ -4,9 +4,7 @@
+ excluded_files = [
+     "../src/fts.md",
+     "../src/embedding.md",
+-    "../src/examples/serverless_lancedb_with_s3_and_lambda.md",
+-    "../src/examples/serverless_qa_bot_with_modal_and_langchain.md",
+-    "../src/examples/youtube_transcript_bot_with_nodejs.md"
++    "../src/examples/serverless_lancedb_with_s3_and_lambda.md"
+ ]
+ languages = ["py", "javascript"]
+ glob_string = "../src/**/*.md"
+@@ -66,9 +64,14 @@
+             python_out.writelines(python_lines)
+ 
+ # Setup doc code
++print("Extracting setup code...")
+ create_code_files("<!--", "-->", "-setup")
+ 
+ # Actual doc code
++print("Extracting example code...")
+ create_code_files("```", "```")
+ 
++
++print("Code extraction complete!")
++
+ ]]>
+--- a/python/lancedb/__init__.py	2023-02-26 19:47:13.006032121 +0000
++++ b/python/lancedb/__init__.py	2023-02-26 20:06:45.678205100 +0000
+@@ -24,6 +24,7 @@
+ def connect(uri: URI) -> LanceDBConnection:
+     """Connect to a LanceDB instance at the given URI
+ 
++    # Parameters
+     Parameters
+     ----------
+     uri: str or Path
+@@ -31,6 +32,7 @@
+         The uri of the database.
+ 
+     Examples
++    # Examples
+     --------
+ 
+     For a local directory, provide a path for the database:
+@@ -45,8 +47,11 @@
+         A connection to a LanceDB database.
+     """
+     return LanceDBConnection(uri)
++    
++
++
++# Export connect function
+ ]]>
+--- a/python/lancedb/common.py	2023-02-26 19:47:33.558339442 +0000
++++ b/python/lancedb/common.py	2023-02-26 19:50:27.399368390 +0000
+@@ -25,5 +25,4 @@
+ URI = Union[str, Path]
+ 
+ # TODO support generator
+-DATA = Union[List[dict], dict, pd.DataFrame]
+ VECTOR_COLUMN_NAME = "vector"
+
+@@ -25,5 +25,5 @@
+ 
+-DATA = Union[List[dict], dict, pd.DataFrame]
++DATA = Union[List[dict], dict, pd.DataFrame] # Supported data types for ingestion
+ VECTOR_COLUMN_NAME = "vector"
+
+]]>
+--- a/python/lancedb/conftest.py	2023-02-26 19:50:25.682663338 +0000
++++ b/python/lancedb/conftest.py	2023-02-26 19:55:49.210132712 +0000
+@@ -1,5 +1,4 @@
+ import builtins
+-import os
+ 
+ import pytest
+ 
+@@ -7,14 +6,8 @@
+ import lancedb
+ 
+ 
+-@pytest.fixture(autouse=True)
+-def doctest_setup(monkeypatch, tmpdir):
+-    # disable color for doctests so we don't have to include
+-    # escape codes in docstrings
+-    monkeypatch.setitem(os.environ, "NO_COLOR", "1")
+-    # Explicitly set the column width
+-    monkeypatch.setitem(os.environ, "COLUMNS", "80")
+-    # Work in a temporary directory
+-    monkeypatch.chdir(tmpdir)
+-
++# Fixture to import lancedb for doctests
++@pytest.fixture
++def import_lancedb():
++    import lancedb
+ ]]>
+--- a/python/lancedb/context.py	2023-02-26 19:51:25.784835394 +0000
++++ b/python/lancedb/context.py	2023-02-26 19:59:30.450473723 +0000
+@@ -23,6 +23,8 @@
+ from .exceptions import MissingValueError, MissingColumnError
+ 
+ 
++# Create a Contextualizer from a DataFrame
++# 
+ def contextualize(raw_df: pd.DataFrame) -> Contextualizer:
+     """Create a Contextualizer object for the given DataFrame.
+ 
+@@ -105,11 +107,15 @@
+         contextualize(data).window(7).stride(1).min_window_size(7).text_col('token').to_df()
+                                       token  document_id
+     0   The quick brown fox jumped over the            1
++    
++    `stride` determines how many rows to skip between each window start. This can
++    be used to reduce the total number of windows generated.
+ 
+     >>> contextualize(data).window(4).stride(2).text_col('token').to_df()
+                         token  document_id
+     0     The quick brown fox            1
+-    2   brown fox jumped over            1
++    2     brown fox jumped over           1  
++    
+     4    jumped over the lazy            1
+     6          the lazy dog I            1
+     8   dog I love sandwiches            2
+@@ -122,6 +128,8 @@
+     9      I love sandwiches            2
+ 
+     ``groupby`` determines how to group the rows. For example, we would like to have
++
++    
+     context windows that don't cross document boundaries. In this case, we can
+     pass ``document_id`` as the group by.
+ 
+@@ -207,6 +215,7 @@
+         return contexts
+ 
+ def process_group(grp):
++    # Process each group of rows
+     # For each group, create the text rolling window
+     # with values of size >= min_window_size
+     text = grp[self._text_col].values
+@@ -228,9 +237,11 @@
+         contexts[self._text_col] = windows
+         return contexts
+ 
++    # No groupby, process all rows together
+     if self._groupby is None:
+         return process_group(self._raw_df)
+-    # concat result from all groups
++
++    # Groupby - concat results from all groups
+     return pd.concat(
+         [process_group(grp) for _, grp in self._raw_df.groupby(self._groupby)]
+     )
+
+]]>
+--- a/python/lancedb/db.py	2023-02-26 19:52:46.991415846 +0000
++++ b/python/lancedb/db.py	2023-02-26 20:12:16.245605509 +0000
+@@ -84,7 +84,7 @@
+         mode: str = "create",
+     ) -> LanceTable:
+         """Create a table in the database.
+-
++        
+         Parameters
+         ----------
+         name: str
+@@ -133,6 +133,7 @@
+         table3")
+         pyarrow.Table
+         vector: fixed_size_list<item: float>[2]
++          
+           child 0, item: float
+         lat: float
+         long: float
+@@ -234,6 +235,7 @@
+         filesystem.delete_dir(table_path)
+ 
+ ]]>
+--- a/python/lancedb/embeddings.py	2023-02-26 19:53:19.782092923 +0000
++++ b/python/lancedb/embeddings.py	2023-02-26 20:15:39.798315181 +0000
+@@ -12,6 +12,9 @@
+ 
+ import math
+ import sys
++
++# Typing and arrays
++
+ from typing import Callable, Union  
+ 
+ import numpy as np
+@@ -22,6 +25,8 @@
+ from lance.vector import vec_to_table
+ from retry import retry
+ 
++
++# Add embeddings to a DataFrame or Table
+ def with_embeddings(
+     func: Callable,
+     data: Union[pa.Table, pd.DataFrame],
+@@ -68,6 +73,8 @@
+         return data.append_column("vector", table["vector"])
+ 
+ 
++# Wrapper for embedding functions to add retry, rate limiting, etc
++
+ class EmbeddingFunction:
+     def __init__(self, func: Callable):
+         self.func = func
+@@ -144,6 +151,8 @@
+         yield from _chunker(arr)
+ 
+ ]]>
+--- a/python/lancedb/exceptions.py	2023-02-26 19:53:56.258741284 +0000
++++ b/python/lancedb/exceptions.py	2023-02-26 20:16:21.632738370 +0000
+@@ -1,5 +1,5 @@
+ """Custom exception handling"""
+-
++# Missing value errors
+ 
+ class MissingValueError(ValueError):
+     """Exception raised when a required value is missing."""
+@@ -7,6 +7,8 @@
+     pass
+ 
+ 
++# Missing column error
++
+ class MissingColumnError(KeyError):
+     """
+     Exception raised when a column name specified is not in
+@@ -21,5 +23,4 @@
+             f"Error: Column '{self.column_name}' does not exist in the DataFrame object"
+         )
+ 
+-]]>
+--- a/python/lancedb/fts.py	2023-02-26 19:54:49.372335002 +0000
++++ b/python/lancedb/fts.py	2023-02-26 20:17:57.947635261 +0000
+@@ -25,6 +25,8 @@
+     full-text search feature."""
+ from .table import LanceTable
+ 
++
++# Create an empty FTS index
+ def create_index(index_path: str, text_fields: List[str]) -> tantivy.Index:
+     """
+     Create a new Index (not populated)
+@@ -59,6 +61,8 @@
+     return index
+ 
+ 
++# Populate an index with data from a table 
++
+ def populate_index(index: tantivy.Index, table: LanceTable, fields: List[str]) -> int:
+     """
+     Populate an index with data from a LanceTable
+@@ -98,6 +102,8 @@
+     return row_id
+ 
+ 
++# Search an index
++
+ def search_index(
+     index: tantivy.Index, query: str, limit: int = 10
+ ) -> Tuple[Tuple[int], Tuple[float]]:
+@@ -131,5 +137,4 @@
+             for score, doc_address in results.hits
+         )
+     )
+-
+ ]]>
+--- a/python/lancedb/query.py	2023-02-26 19:55:46.453769566 +0000
++++ b/python/lancedb/query.py	2023-02-26 20:19:25.053907687 +0000
+@@ -19,6 +19,8 @@
+ import pyarrow as pa
+ from .common import VECTOR_COLUMN_NAME
+ 
++
++# Builder for ANN queries
+ class LanceQueryBuilder:
+     """
+     A builder for nearest neighbor queries for LanceDB.
+@@ -182,6 +184,8 @@
+     )
+ 
+ 
++# Builder for FTS queries
++
+ class LanceFtsQueryBuilder(LanceQueryBuilder):
+     def to_df(self) -> pd.DataFrame:
+         try:
+@@ -203,5 +207,4 @@
+         output_tbl = output_tbl.append_column("score", scores)
+         return output_tbl.to_pandas()
+ 
+-]]>
+--- a/python/lancedb/table.py	2023-02-26 19:56:59.308553687 +0000
++++ b/python/lancedb/table.py	2023-02-26 20:23:58.468797318 +0000
+@@ -187,6 +187,7 @@
+         lance.write_dataset(data, tbl._dataset_uri, mode=mode)
+         return tbl
+ 
++    # Ensure table matches expected schema
+     def _sanitize_schema(data: pa.Table, schema: pa.Schema = None) -> pa.Table:
+         """Ensure that the table has the expected schema.
+ 
+@@ -223,6 +224,8 @@
+             return _sanitize_vector_column(data, vector_column_name=VECTOR_COLUMN_NAME)
+ 
+ 
++    # Ensure vector column is fixed_size_list of float32
++
+     def _sanitize_vector_column(data: pa.Table, vector_column_name: str) -> pa.Table:
+         """
+         Ensure that the vector column exists and has type fixed_size_list(float32)
+@@ -251,5 +254,4 @@
+             data.column_names.index(vector_column_name), vector_column_name, vec_arr
+         )
+ 
+-]]>
+--- a/python/lancedb/util.py	2023-02-26 19:57:37.345740313 +0000
++++

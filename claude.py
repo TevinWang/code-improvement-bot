@@ -19,6 +19,10 @@ def main(repo_url):
         context_list = []
         threads = []
         to_react = []
+
+        add = 1
+        to_react_line = []
+        to_react_number = []
         for j, line in enumerate(file[1].splitlines()):
             if len(line.strip()) < 10:
                 continue
@@ -26,25 +30,42 @@ def main(repo_url):
                 continue
             if (line[0].strip() == "#"):
                 continue
-            line = list(line)
-            for k, char in enumerate(line):
-                if char == "\"":
-                    line[k] = "\'"
-            line = "".join(line).strip()
-            to_react.append(str(j) + "|||" + line)
-        def start(to_react, cur_i):
-            p = subprocess.Popen(['node', 'add_doc_context.js', "|||||".join(to_react)], stdout=subprocess.PIPE)
-            out = p.stdout.read()
-            # expected: line1|||line|||context|||||..
-            context_list = [tuple(line.split("|||")) for line in out.decode("utf-8").split("|||||")]
-            python_files[cur_i] += (context_list,)
+            if add % 3 != 0:
+                line = list(line)
+                for k, char in enumerate(line):
+                    if char == "\"":
+                        line[k] = "\'"
+                line = "".join(line).strip()
+                to_react_number.append(str(j))
+                to_react_line.append(line)
+            else:
+                line = list(line)
+                for k, char in enumerate(line):
+                    if char == "\"":
+                        line[k] = "\'"
+                line = "".join(line).strip()
+                to_react_number.append(str(j))
+                to_react_line.append(line)
+                to_react.append(", ".join(to_react_number) + "|||" + ", \n".join(to_react_line))
 
-        thread = threading.Thread(target=start, args=(to_react, i))
-        threads.append(thread)
-        thread.start()
+                to_react_number = []
+                to_react_line = []
 
-    for thread in threads:
-        thread.join()
+            add += 1
+        # def start(to_react, cur_i):
+        p = subprocess.Popen(['node', 'add_doc_context.js', "|||||".join(to_react)], stdout=subprocess.PIPE)
+        out = p.stdout.read()
+        # expected: line1|||line|||context|||||..
+        context_list = [tuple(line.split("|||")) for line in out.decode("utf-8").split("|||||")]
+        python_files[i] += (context_list,)
+
+    #     thread = threading.Thread(target=start, args=(to_react, i))
+    #     threads.append(thread)
+    #     thread.start()
+
+    # print(threads)
+    # for thread in threads:
+    #     thread.join()
 
     # python_files is now [(FILE_PATH, [FILE LINES], [(LINE NUMBER, LINE, CONTEXT)])]
     with open("python_files2.txt", "w", encoding="utf-8") as f:
@@ -181,7 +202,7 @@ def main(repo_url):
 
     Reminder to add the entire diff as a cdata section '<![CDATA[' (not individually)
 
-    Reminder to add ANYTHING after the @@ ON A NEW LINE
+    Make sure to add ANYTHING after the @@ ON A NEW LINE
     Be sure to add ANYTHING after the @@ ON A NEW LINE
 
     Be sure to add changes to all files provided.
@@ -206,4 +227,4 @@ def main(repo_url):
         file.write(completion.completion)
 
 if __name__ == "__main__":
-    main("https://github.com/tevinwang/ClassGPT")
+    main("https://github.com/tevinwang/lancedb")

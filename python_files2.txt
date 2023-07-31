@@ -1,524 +1,2515 @@
 <files><file>
-<file_path>app/01_❓_Ask.py</file_path>
+<file_path>docs/src/examples/modal_langchain.py</file_path>
 <file_content>
-import streamlit as st
-from components.sidebar import sidebar
-from s3 import S3
-from utils import query_gpt, query_gpt_memory, show_pdf
-
-st.set_page_config(
-    page_title="ClassGPT",
-    page_icon="🤖",
-    layout="wide",
-    initial_sidebar_state="expanded",
-    menu_items={
-        "Get Help": "https://twitter.com/benthecoder1",
-        "Report a bug": "https://github.com/benthecoder/ClassGPT/issues",
-        "About": "ClassGPT is a chatbot that answers questions about your pdf files",
-    },
-)
-
-# Session states
-# --------------
-if "chosen_class" not in st.session_state:
-    st.session_state.chosen_class = "--"
-
-if "chosen_pdf" not in st.session_state:
-    st.session_state.chosen_pdf = "--"
-
-if "memory" not in st.session_state:
-    st.session_state.memory = ""
-
-
-sidebar()
-
-st.header("ClassGPT: ChatGPT for your lectures slides")
-
-bucket_name = "classgpt"
-s3 = S3(bucket_name)
-
-all_classes = s3.list_files()
-
-chosen_class = st.selectbox(
-    "Select a class", list(all_classes.keys()) + ["--"], index=len(all_classes)
-)
-
-st.session_state.chosen_class = chosen_class
-
-if st.session_state.chosen_class != "--":
-    all_pdfs = all_classes[chosen_class]
-
-    chosen_pdf = st.selectbox(
-        "Select a PDF file", all_pdfs + ["--"], index=len(all_pdfs)
-    )
-
-    st.session_state.chosen_pdf = chosen_pdf
-
-    if st.session_state.chosen_pdf != "--":
-        col1, col2 = st.columns(2)
-
-        with col1:
-            st.subheader("Ask a question")
-            st.markdown(
-                """
-                Here are some prompts:
-                - `What is the main idea of this lecture in simple terms?`
-                - `Summarize the main points of slide 5`
-                - `Provide 5 practice questions on this lecture with answers`
-                """
-            )
-            query = st.text_area("Enter your question", max_chars=200)
-
-            if st.button("Ask"):
-                if query == "":
-                    st.error("Please enter a question")
-                with st.spinner("Generating answer..."):
-                    # res = query_gpt_memory(chosen_class, chosen_pdf, query)
-                    res = query_gpt(chosen_class, chosen_pdf, query)
-                    st.markdown(res)
-
-                    # with st.expander("Memory"):
-                    #      st.write(st.session_state.memory.replace("\n", "\n\n"))
-
-        with col2:
-            show_pdf(chosen_class, chosen_pdf)
-
-</file_content>
-</file>
-<file>
-<file_path>app/components/sidebar.py</file_path>
-<file_content>
-import os
-
-import streamlit as st
-
-
-def sidebar():
-    with st.sidebar:
-        st.markdown(
-            "## How to use\n"
-            "1. Add your files in 📁 Data page\n"
-            "2. Ask a question on the ❓ Ask page\n"
-        )
-        api_key_input = st.text_input(
-            "OpenAI API Key",
-            type="password",
-            placeholder="sk-xxx...",
-            help="Get an API key here 👉 https://platform.openai.com/account/api-keys.",
-            value="",
-        )
-
-        if api_key_input:
-            os.environ["OPENAI_API_KEY"] = api_key_input
-            st.success("API key set")
-
-        st.markdown(
-            """
-            ---
-            ## About
-
-            ClassGPT lets you ask questions about your class \
-                lectures and get accurate answers
-
-            This tool is a work in progress.
-
-            Contributions are welcomed on [GitHub](https://github.com/benthecoder/ClassGPT)
-
-            Made with ♥️ by [Benedict Neo](https://benneo.super.site/)
-            """
-        )
-
-</file_content>
-</file>
-<file>
-<file_path>app/pages/02_📁_Data.py</file_path>
-<file_content>
-import streamlit as st
-from components.sidebar import sidebar
-from s3 import S3
-
-sidebar()
-bucket_name = "classgpt"
-s3 = S3(bucket_name)
-all_classes = s3.list_files()
-
-tab1, tab2, tab3 = st.tabs(["Upload data", "Add Class", "Delete"])
-
-with tab1:
-    st.subheader("Upload new lectures")
-
-    chosen_class = st.selectbox(
-        "Select a class",
-        list(all_classes.keys()) + ["--"],
-        index=len(all_classes),
-    )
-
-    if chosen_class != "--":
-        with st.form("upload_pdf"):
-            uploaded_files = st.file_uploader(
-                "Upload a PDF file", type="pdf", accept_multiple_files=True
-            )
-
-            submit_button = st.form_submit_button("Upload")
-
-            if submit_button:
-                if len(uploaded_files) == 0:
-                    st.error("Please upload at least one file")
-                else:
-                    with st.spinner(f"Uploading {len(uploaded_files)} files..."):
-                        for uploaded_file in uploaded_files:
-                            s3.upload_files(
-                                uploaded_file, f"{chosen_class}/{uploaded_file.name}"
-                            )
-
-                        st.success(f"{len(uploaded_files)} files uploaded")
-
-
-with tab2:
-    st.subheader("Add a new class")
-
-    with st.form("add_class"):
-        add_class = st.text_input("Enter a new class name")
-
-        submit_button = st.form_submit_button("Add")
-
-        if submit_button:
-            if add_class == "":
-                st.error("Please enter a class name")
-            else:
-                s3.create_folder(add_class)
-                st.success(f"Class {add_class} added")
-
-with tab3:
-    st.subheader("Delete a class or a PDF file")
-
-    chosen_class = st.selectbox(
-        "Select a class to delete",
-        list(all_classes.keys()) + ["--"],
-        index=len(all_classes),
-    )
-
-    if chosen_class != "--":
-        all_pdfs = all_classes[chosen_class] + ["all"]
-
-        # Remove empty values
-        all_pdfs = [x for x in all_pdfs if x]
-
-        chosen_pdf = st.selectbox(
-            "Select a PDF file or choose 'all' to delete the whole class",
-            all_pdfs + ["--"],
-            index=len(all_pdfs),
-        )
-
-        if chosen_pdf != "--":
-            submit_button = st.button("Remove")
-
-            if submit_button:
-                if chosen_pdf == "all":
-                    s3.remove_folder(chosen_class)
-                    st.success(f"{chosen_class} removed")
-                else:
-                    s3.remove_file(chosen_class, chosen_pdf)
-                    st.success(f"{chosen_pdf} removed")
-
-</file_content>
-</file>
-<file>
-<file_path>app/s3.py</file_path>
-<file_content>
-from collections import defaultdict
-
-import boto3
-import botocore
-
-
-class S3:
-    """
-    Class for interacting with S3
-
-    Args:
-        bucket_name (str): Name of the S3 bucket
-
-    Attributes:
-        bucket_name (str): Name of the S3 bucket
-        s3 (boto3.resource): S3 resource
-        bucket (boto3.Bucket): S3 bucket
-
-    Methods:
-        list_folders: List all folders in the S3 bucket
-        list_files: List all files in the S3 bucket
-        folder_exists: Check if a folder exists in the S3 bucket
-        file_exists: Check if a file exists in the S3 bucket
-        create_folder: Create a folder in the S3 bucket
-        upload_files: Upload a file to the S3 bucket
-        remove_folder: Remove a folder from the S3 bucket
-        remove_file: Remove a file from the S3 bucket
-    """
-
-    def __init__(self, bucket_name):
-        self.bucket_name = bucket_name
-        self.s3 = boto3.resource("s3")
-        self.bucket = self.s3.Bucket(bucket_name)
-
-    def list_folders(self):
-        folders = set()
-        for obj in self.bucket.objects.filter():
-            folders.add(obj.key.split("/")[0])
-
-        return folders
-
-    def list_files(self):
-        classes = defaultdict(list)
-
-        # loop through only the parent directory
-        for obj in self.bucket.objects.filter():
-            cname, fname = obj.key.split("/")
-            if not fname.endswith(".json"):
-                classes[cname].append(fname)
-
-        return classes
-
-    def folder_exists(self, folder_name):
-        for _ in self.bucket.objects.filter(Prefix=f"{folder_name}/"):
-            return True
-        return False
-
-    def file_exists(self, folder_name, file_name):
-        try:
-            self.s3.Object(self.bucket_name, f"{folder_name}/{file_name}").load()
-            return True
-        except botocore.exceptions.ClientError as e:
-            if e.response["Error"]["Code"] == "404":
-                return False
-            else:
-                raise
-
-    def create_folder(self, folder_name):
-        if not self.folder_exists(folder_name):
-            self.bucket.put_object(Key=f"{folder_name}/")
-
-    def upload_files(self, file_obj, file_path):
-        self.bucket.upload_fileobj(file_obj, file_path)
-
-    def remove_folder(self, folder_name):
-        if self.folder_exists(folder_name):
-            for key in self.bucket.objects.filter(Prefix=f"{folder_name}/"):
-                key.delete()
-
-    def remove_file(self, folder_name, file_name):
-        if self.folder_exists(folder_name):
-            self.bucket.objects.filter(Prefix=f"{folder_name}/{file_name}").delete(
-                Delete={"Objects": [{"Key": f"{folder_name}/{file_name}"}]}
-            )
-
-    def download_file(self, from_file_path, to_file_path):
-        self.bucket.download_file(from_file_path, to_file_path)
-
-</file_content>
-</file>
-<file>
-<file_path>app/utils.py</file_path>
-<file_content>
-import base64
-import logging
-import os
 import sys
-import tempfile
-from io import BytesIO
+from modal import Secret, Stub, Image, web_endpoint
+import lancedb
+import re
+import pickle
+import requests
+import zipfile
+from pathlib import Path
 
-import openai
-import streamlit as st
-from dotenv import load_dotenv
-from langchain import OpenAI
+from langchain.document_loaders import UnstructuredHTMLLoader
+from langchain.embeddings import OpenAIEmbeddings
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.vectorstores import LanceDB
+from langchain.llms import OpenAI
+from langchain.chains import RetrievalQA
 
-# langchain
-from langchain.agents import Tool, initialize_agent
-from langchain.chains.conversation.memory import ConversationBufferMemory
-from langchain.chat_models import ChatOpenAI
+lancedb_image = Image.debian_slim().pip_install(
+    "lancedb", "langchain", "openai", "pandas", "tiktoken", "unstructured", "tabulate"
+)
 
-# llama_index
-from llama_index import Document, GPTSimpleVectorIndex, LLMPredictor
-from pypdf import PdfReader
-from s3 import S3
+stub = Stub(
+    name="example-langchain-lancedb",
+    image=lancedb_image,
+    secrets=[Secret.from_name("my-openai-secret")],
+)
 
-# set to DEBUG for more verbose logging
-logging.basicConfig(stream=sys.stdout, level=logging.INFO)
-
-
-load_dotenv()
-if os.getenv("OPENAI_API_KEY") is None:
-    st.error("OpenAI API key not set")
-else:
-    openai.api_key = os.getenv("OPENAI_API_KEY")
-
-
-s3 = S3("classgpt")
+docsearch = None
+docs_path = Path("docs.pkl")
+db_path = Path("lancedb")
 
 
-# ------------------- index creation ------------------- #
+def get_document_title(document):
+    m = str(document.metadata["source"])
+    title = re.findall("pandas.documentation(.*).html", m)
+    if title[0] is not None:
+        return title[0]
+    return ""
 
 
-def parse_pdf(file: BytesIO):
+def download_docs():
+    pandas_docs = requests.get(
+        "https://eto-public.s3.us-west-2.amazonaws.com/datasets/pandas_docs/pandas.documentation.zip"
+    )
+    with open(Path("pandas.documentation.zip"), "wb") as f:
+        f.write(pandas_docs.content)
 
-    pdf = PdfReader(file)
-    text_list = []
-
-    # Get the number of pages in the PDF document
-    num_pages = len(pdf.pages)
-
-    # Iterate over every page
-    for page in range(num_pages):
-        # Extract the text from the page
-        page_text = pdf.pages[page].extract_text()
-        text_list.append(page_text)
-
-    text = "\n".join(text_list)
-
-    return [Document(text)]
+    file = zipfile.ZipFile(Path("pandas.documentation.zip"))
+    file.extractall(path=Path("pandas_docs"))
 
 
-def create_index(pdf_obj, folder_name, file_name):
-    """
-    Create an index for a given PDF file and upload it to S3.
-    """
-    index_name = file_name.replace(".pdf", ".json")
+def store_docs():
+    docs = []
 
-    logging.info("Generating new index...")
-    documents = parse_pdf(pdf_obj)
+    if not docs_path.exists():
+        for p in Path("pandas_docs/pandas.documentation").rglob("*.html"):
+            if p.is_dir():
+                continue
+            loader = UnstructuredHTMLLoader(p)
+            raw_document = loader.load()
 
-    logging.info("Creating index...")
-    index = GPTSimpleVectorIndex(documents)
+            m = {}
+            m["title"] = get_document_title(raw_document[0])
+            m["version"] = "2.0rc0"
+            raw_document[0].metadata = raw_document[0].metadata | m
+            raw_document[0].metadata["source"] = str(raw_document[0].metadata["source"])
+            docs = docs + raw_document
 
-    with tempfile.TemporaryDirectory() as tmp_dir:
-        tmp_path = f"{tmp_dir}/{index_name}"
-        logging.info("Saving index...")
-        index.save_to_disk(tmp_path)
-
-        with open(tmp_path, "rb") as f:
-            logging.info("Uploading index to s3...")
-            s3.upload_files(f, f"{folder_name}/{index_name}")
-
-    return index
-
-
-@st.cache_resource(show_spinner=False)
-def get_index(folder_name, file_name):
-    """
-    Get the index for a given PDF file.
-    """
-    index_name = file_name.replace(".pdf", ".json")
-    index = None
-
-    if s3.file_exists(folder_name, index_name):
-        logging.info("Index found, loading index...")
-        with tempfile.TemporaryDirectory() as tmp_dir:
-            tmp_path = f"{tmp_dir}/{index_name}"
-            s3.download_file(f"{folder_name}/{index_name}", tmp_path)
-            index = GPTSimpleVectorIndex.load_from_disk(tmp_path)
-
+        with docs_path.open("wb") as fh:
+            pickle.dump(docs, fh)
     else:
-        logging.info("Index not found, generating index...")
-        with tempfile.NamedTemporaryFile("wb") as f_src:
-            logging.info(f"{file_name} downloaded")
-            s3.download_file(f"{folder_name}/{file_name}", f_src.name)
+        with docs_path.open("rb") as fh:
+            docs = pickle.load(fh)
 
-            with open(f_src.name, "rb") as f:
-                index = create_index(f, folder_name, file_name)
+    return docs
 
+
+def qanda_langchain(query):
+    download_docs()
+    docs = store_docs()
+
+    text_splitter = RecursiveCharacterTextSplitter(
+        chunk_size=1000,
+        chunk_overlap=200,
+    )
+    documents = text_splitter.split_documents(docs)
+    embeddings = OpenAIEmbeddings()
+
+    db = lancedb.connect(db_path)
+    table = db.create_table(
+        "pandas_docs",
+        data=[
+            {
+                "vector": embeddings.embed_query("Hello World"),
+                "text": "Hello World",
+                "id": "1",
+            }
+        ],
+        mode="overwrite",
+    )
+    docsearch = LanceDB.from_documents(documents, embeddings, connection=table)
+    qa = RetrievalQA.from_chain_type(
+        llm=OpenAI(), chain_type="stuff", retriever=docsearch.as_retriever()
+    )
+    return qa.run(query)
+
+
+@stub.function()
+@web_endpoint(method="GET")
+def web(query: str):
+    answer = qanda_langchain(query)
+    return {
+        "answer": answer,
+    }
+
+
+@stub.function()
+def cli(query: str):
+    answer = qanda_langchain(query)
+    print(answer)
+
+</file_content>
+</file>
+<file>
+<file_path>docs/src/notebooks/diffusiondb/datagen.py</file_path>
+<file_content>
+#!/usr/bin/env python
+#
+#  Copyright 2023 LanceDB Developers
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+
+"""Dataset hf://poloclub/diffusiondb
+"""
+
+import io
+from argparse import ArgumentParser
+from multiprocessing import Pool
+
+import lance
+import lancedb
+import pyarrow as pa
+from datasets import load_dataset
+from PIL import Image
+from transformers import CLIPModel, CLIPProcessor, CLIPTokenizerFast
+
+MODEL_ID = "openai/clip-vit-base-patch32"
+
+device = "cuda"
+
+tokenizer = CLIPTokenizerFast.from_pretrained(MODEL_ID)
+model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32").to(device)
+processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
+
+schema = pa.schema(
+    [
+        pa.field("prompt", pa.string()),
+        pa.field("seed", pa.uint32()),
+        pa.field("step", pa.uint16()),
+        pa.field("cfg", pa.float32()),
+        pa.field("sampler", pa.string()),
+        pa.field("width", pa.uint16()),
+        pa.field("height", pa.uint16()),
+        pa.field("timestamp", pa.timestamp("s")),
+        pa.field("image_nsfw", pa.float32()),
+        pa.field("prompt_nsfw", pa.float32()),
+        pa.field("vector", pa.list_(pa.float32(), 512)),
+        pa.field("image", pa.binary()),
+    ]
+)
+
+
+def pil_to_bytes(img) -> list[bytes]:
+    buf = io.BytesIO()
+    img.save(buf, format="PNG")
+    return buf.getvalue()
+
+
+def generate_clip_embeddings(batch) -> pa.RecordBatch:
+    image = processor(text=None, images=batch["image"], return_tensors="pt")[
+        "pixel_values"
+    ].to(device)
+    img_emb = model.get_image_features(image)
+    batch["vector"] = img_emb.cpu().tolist()
+
+    with Pool() as p:
+        batch["image_bytes"] = p.map(pil_to_bytes, batch["image"])
+    return batch
+
+
+def datagen(args):
+    """Generate DiffusionDB dataset, and use CLIP model to generate image embeddings."""
+    dataset = load_dataset("poloclub/diffusiondb", args.subset)
+    data = []
+    for b in dataset.map(
+        generate_clip_embeddings, batched=True, batch_size=256, remove_columns=["image"]
+    )["train"]:
+        b["image"] = b["image_bytes"]
+        del b["image_bytes"]
+        data.append(b)
+    tbl = pa.Table.from_pylist(data, schema=schema)
+    return tbl
+
+
+def main():
+    parser = ArgumentParser()
+    parser.add_argument(
+        "-o", "--output", metavar="DIR", help="Output lance directory", required=True
+    )
+    parser.add_argument(
+        "-s",
+        "--subset",
+        choices=["2m_all", "2m_first_10k", "2m_first_100k"],
+        default="2m_first_10k",
+        help="subset of the hg dataset",
+    )
+
+    args = parser.parse_args()
+
+    batches = datagen(args)
+    lance.write_dataset(batches, args.output)
+
+
+if __name__ == "__main__":
+    main()
+
+</file_content>
+</file>
+<file>
+<file_path>docs/test/md_testing.py</file_path>
+<file_content>
+import glob
+from typing import Iterator
+from pathlib import Path
+
+excluded_files = [
+    "../src/fts.md",
+    "../src/embedding.md",
+    "../src/examples/serverless_lancedb_with_s3_and_lambda.md",
+    "../src/examples/serverless_qa_bot_with_modal_and_langchain.md",
+    "../src/examples/youtube_transcript_bot_with_nodejs.md"
+]
+languages = ["py", "javascript"]
+glob_string = "../src/**/*.md"
+
+def yield_lines(lines: Iterator[str], prefix: str, suffix: str, languages: list):
+    current_language = {language: False for language in languages}
+    for line in lines:
+        for language in languages:
+            if line.strip().startswith(prefix + language):
+                current_language[language] = True
+            elif current_language[language] and line.strip().startswith(suffix):
+                current_language[language] = False
+                yield ("\n", language)
+            elif current_language[language]:
+                yield (line, language)
+
+def create_code_files(prefix: str, suffix: str, file_ending: str = ""):
+    for file in filter(lambda file: file not in excluded_files, glob.glob(glob_string, recursive=True)):
+        with open(file, "r") as f:
+            lines = list(yield_lines(iter(f), prefix, suffix, languages))
+            python_lines = [line[0] for line in lines if line[1] == "py"]
+            node_lines = [line[0] for line in lines if line[1] == "javascript"]
+
+        if len(python_lines) > 0:
+            python_out_path = Path("python") / Path(file).name.strip(".md") / (Path(file).name.strip(".md") + file_ending + ".py")
+            python_out_path.parent.mkdir(exist_ok=True, parents=True)
+            with open(python_out_path, "w") as python_out:
+                python_out.writelines(python_lines)
+
+        if len(node_lines) > 0:
+            node_out_path = Path("node") / Path(file).name.strip(".md") / (Path(file).name.strip(".md") + file_ending + ".js")
+            node_out_path.parent.mkdir(exist_ok=True, parents=True)
+            with open(node_out_path, "w") as node_out:
+                node_out.write("(async () => {\n")
+                node_out.writelines(node_lines)
+                node_out.write("})();")
+
+# Setup doc code
+create_code_files("<!--", "-->", "-setup")
+
+# Actual doc code
+create_code_files("```", "```")
+
+</file_content>
+</file>
+<file>
+<file_path>python/lancedb/__init__.py</file_path>
+<file_content>
+#  Copyright 2023 LanceDB Developers
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+
+from .db import URI, LanceDBConnection
+
+
+def connect(uri: URI) -> LanceDBConnection:
+    """Connect to a LanceDB instance at the given URI
+
+    Parameters
+    ----------
+    uri: str or Path
+        The uri of the database.
+
+    Examples
+    --------
+
+    For a local directory, provide a path for the database:
+
+    >>> import lancedb
+    >>> db = lancedb.connect("~/.lancedb")
+
+    For object storage, use a URI prefix:
+
+    >>> db = lancedb.connect("s3://my-bucket/lancedb")
+
+    Returns
+    -------
+    conn : LanceDBConnection
+        A connection to a LanceDB database.
+    """
+    return LanceDBConnection(uri)
+
+</file_content>
+</file>
+<file>
+<file_path>python/lancedb/common.py</file_path>
+<file_content>
+#  Copyright 2023 LanceDB Developers
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+from pathlib import Path
+from typing import List, Union
+
+import numpy as np
+import pandas as pd
+import pyarrow as pa
+
+VEC = Union[list, np.ndarray, pa.Array, pa.ChunkedArray]
+URI = Union[str, Path]
+
+# TODO support generator
+DATA = Union[List[dict], dict, pd.DataFrame]
+VECTOR_COLUMN_NAME = "vector"
+
+</file_content>
+</file>
+<file>
+<file_path>python/lancedb/conftest.py</file_path>
+<file_content>
+import builtins
+import os
+
+import pytest
+
+# import lancedb so we don't have to in every example
+import lancedb
+
+
+@pytest.fixture(autouse=True)
+def doctest_setup(monkeypatch, tmpdir):
+    # disable color for doctests so we don't have to include
+    # escape codes in docstrings
+    monkeypatch.setitem(os.environ, "NO_COLOR", "1")
+    # Explicitly set the column width
+    monkeypatch.setitem(os.environ, "COLUMNS", "80")
+    # Work in a temporary directory
+    monkeypatch.chdir(tmpdir)
+
+</file_content>
+</file>
+<file>
+<file_path>python/lancedb/context.py</file_path>
+<file_content>
+#  Copyright 2023 LanceDB Developers
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+from __future__ import annotations
+
+import pandas as pd
+from .exceptions import MissingValueError, MissingColumnError
+
+
+def contextualize(raw_df: pd.DataFrame) -> Contextualizer:
+    """Create a Contextualizer object for the given DataFrame.
+
+    Used to create context windows. Context windows are rolling subsets of text
+    data.
+
+    The input text column should already be separated into rows that will be the
+    unit of the window. So to create a context window over tokens, start with
+    a DataFrame with one token per row. To create a context window over sentences,
+    start with a DataFrame with one sentence per row.
+
+    Examples
+    --------
+    >>> from lancedb.context import contextualize
+    >>> import pandas as pd
+    >>> data = pd.DataFrame({
+    ...    'token': ['The', 'quick', 'brown', 'fox', 'jumped', 'over',
+    ...              'the', 'lazy', 'dog', 'I', 'love', 'sandwiches'],
+    ...    'document_id': [1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2]
+    ... })
+
+    ``window`` determines how many rows to include in each window. In our case
+    this how many tokens, but depending on the input data, it could be sentences,
+    paragraphs, messages, etc.
+
+    >>> contextualize(data).window(3).stride(1).text_col('token').to_df()
+                    token  document_id
+    0     The quick brown            1
+    1     quick brown fox            1
+    2    brown fox jumped            1
+    3     fox jumped over            1
+    4     jumped over the            1
+    5       over the lazy            1
+    6        the lazy dog            1
+    7          lazy dog I            1
+    8          dog I love            1
+    9   I love sandwiches            2
+    10    love sandwiches            2
+    >>> contextualize(data).window(7).stride(1).min_window_size(7).text_col('token').to_df()
+                                      token  document_id
+    0   The quick brown fox jumped over the            1
+    1  quick brown fox jumped over the lazy            1
+    2    brown fox jumped over the lazy dog            1
+    3        fox jumped over the lazy dog I            1
+    4       jumped over the lazy dog I love            1
+    5   over the lazy dog I love sandwiches            1
+
+    ``stride`` determines how many rows to skip between each window start. This can
+    be used to reduce the total number of windows generated.
+
+    >>> contextualize(data).window(4).stride(2).text_col('token').to_df()
+                        token  document_id
+    0     The quick brown fox            1
+    2   brown fox jumped over            1
+    4    jumped over the lazy            1
+    6          the lazy dog I            1
+    8   dog I love sandwiches            1
+    10        love sandwiches            2
+
+    ``groupby`` determines how to group the rows. For example, we would like to have
+    context windows that don't cross document boundaries. In this case, we can
+    pass ``document_id`` as the group by.
+
+    >>> contextualize(data).window(4).stride(2).text_col('token').groupby('document_id').to_df()
+                       token  document_id
+    0    The quick brown fox            1
+    2  brown fox jumped over            1
+    4   jumped over the lazy            1
+    6           the lazy dog            1
+    9      I love sandwiches            2
+
+    ``min_window_size`` determines the minimum size of the  context windows that are generated
+    This can be used to trim the last few context windows which have size less than
+    ``min_window_size``. By default context windows of size 1 are skipped.
+
+    >>> contextualize(data).window(6).stride(3).text_col('token').groupby('document_id').to_df()
+                                 token  document_id
+    0  The quick brown fox jumped over            1
+    3     fox jumped over the lazy dog            1
+    6                     the lazy dog            1
+    9                I love sandwiches            2
+
+    >>> contextualize(data).window(6).stride(3).min_window_size(4).text_col('token').groupby('document_id').to_df()
+                                 token  document_id
+    0  The quick brown fox jumped over            1
+    3     fox jumped over the lazy dog            1
+
+    """
+    return Contextualizer(raw_df)
+
+
+class Contextualizer:
+    """Create context windows from a DataFrame. See [lancedb.context.contextualize][]."""
+
+    def __init__(self, raw_df):
+        self._text_col = None
+        self._groupby = None
+        self._stride = None
+        self._window = None
+        self._min_window_size = 2
+        self._raw_df = raw_df
+
+    def window(self, window: int) -> Contextualizer:
+        """Set the window size. i.e., how many rows to include in each window.
+
+        Parameters
+        ----------
+        window: int
+            The window size.
+        """
+        self._window = window
+        return self
+
+    def stride(self, stride: int) -> Contextualizer:
+        """Set the stride. i.e., how many rows to skip between each window.
+
+        Parameters
+        ----------
+        stride: int
+            The stride.
+        """
+        self._stride = stride
+        return self
+
+    def groupby(self, groupby: str) -> Contextualizer:
+        """Set the groupby column. i.e., how to group the rows.
+        Windows don't cross groups
+
+        Parameters
+        ----------
+        groupby: str
+            The groupby column.
+        """
+        self._groupby = groupby
+        return self
+
+    def text_col(self, text_col: str) -> Contextualizer:
+        """Set the text column used to make the context window.
+
+        Parameters
+        ----------
+        text_col: str
+            The text column.
+        """
+        self._text_col = text_col
+        return self
+
+    def min_window_size(self, min_window_size: int) -> Contextualizer:
+        """Set the (optional) min_window_size size for the context window.
+
+        Parameters
+        ----------
+        min_window_size: int
+            The min_window_size.
+        """
+        self._min_window_size = min_window_size
+        return self
+
+    def to_df(self) -> pd.DataFrame:
+        """Create the context windows and return a DataFrame."""
+
+        if self._text_col not in self._raw_df.columns.tolist():
+            raise MissingColumnError(self._text_col)
+
+        if self._window is None or self._window < 1:
+            raise MissingValueError(
+                "The value of window is None or less than 1. Specify the "
+                "window size (number of rows to include in each window)"
+            )
+
+        if self._stride is None or self._stride < 1:
+            raise MissingValueError(
+                "The value of stride is None or less than 1. Specify the "
+                "stride (number of rows to skip between each window)"
+            )
+
+        def process_group(grp):
+            # For each group, create the text rolling window
+            # with values of size >= min_window_size
+            text = grp[self._text_col].values
+            contexts = grp.iloc[:: self._stride, :].copy()
+            windows = [
+                " ".join(text[start_i : min(start_i + self._window, len(grp))])
+                for start_i in range(0, len(grp), self._stride)
+                if start_i + self._window <= len(grp)
+                or len(grp) - start_i >= self._min_window_size
+            ]
+            # if last few rows dropped
+            if len(windows) < len(contexts):
+                contexts = contexts.iloc[: len(windows)]
+            contexts[self._text_col] = windows
+            return contexts
+
+        if self._groupby is None:
+            return process_group(self._raw_df)
+        # concat result from all groups
+        return pd.concat(
+            [process_group(grp) for _, grp in self._raw_df.groupby(self._groupby)]
+        )
+
+</file_content>
+</file>
+<file>
+<file_path>python/lancedb/db.py</file_path>
+<file_content>
+#  Copyright 2023 LanceDB Developers
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+
+from __future__ import annotations
+
+import os
+from pathlib import Path
+import os
+
+import pyarrow as pa
+from pyarrow import fs
+
+from .common import DATA, URI
+from .table import LanceTable
+from .util import get_uri_scheme, get_uri_location
+
+
+class LanceDBConnection:
+    """
+    A connection to a LanceDB database.
+
+    Parameters
+    ----------
+    uri: str or Path
+        The root uri of the database.
+
+    Examples
+    --------
+    >>> import lancedb
+    >>> db = lancedb.connect("./.lancedb")
+    >>> db.create_table("my_table", data=[{"vector": [1.1, 1.2], "b": 2},
+    ...                                   {"vector": [0.5, 1.3], "b": 4}])
+    LanceTable(my_table)
+    >>> db.create_table("another_table", data=[{"vector": [0.4, 0.4], "b": 6}])
+    LanceTable(another_table)
+    >>> db.table_names()
+    ['another_table', 'my_table']
+    >>> len(db)
+    2
+    >>> db["my_table"]
+    LanceTable(my_table)
+    >>> "my_table" in db
+    True
+    >>> db.drop_table("my_table")
+    >>> db.drop_table("another_table")
+    """
+
+    def __init__(self, uri: URI):
+        is_local = isinstance(uri, Path) or get_uri_scheme(uri) == "file"
+        if is_local:
+            if isinstance(uri, str):
+                uri = Path(uri)
+            uri = uri.expanduser().absolute()
+            Path(uri).mkdir(parents=True, exist_ok=True)
+        self._uri = str(uri)
+
+    @property
+    def uri(self) -> str:
+        return self._uri
+
+    def table_names(self) -> list[str]:
+        """Get the names of all tables in the database.
+
+        Returns
+        -------
+        list of str
+            A list of table names.
+        """
+        try:
+            filesystem, path = fs.FileSystem.from_uri(self.uri)
+        except pa.ArrowInvalid:
+            raise NotImplementedError("Unsupported scheme: " + self.uri)
+
+        try:
+            paths = filesystem.get_file_info(
+                fs.FileSelector(get_uri_location(self.uri))
+            )
+        except FileNotFoundError:
+            # It is ok if the file does not exist since it will be created
+            paths = []
+        tables = [
+            os.path.splitext(file_info.base_name)[0]
+            for file_info in paths
+            if file_info.extension == "lance"
+        ]
+        return tables
+
+    def __len__(self) -> int:
+        return len(self.table_names())
+
+    def __contains__(self, name: str) -> bool:
+        return name in self.table_names()
+
+    def __getitem__(self, name: str) -> LanceTable:
+        return self.open_table(name)
+
+    def create_table(
+        self,
+        name: str,
+        data: DATA = None,
+        schema: pa.Schema = None,
+        mode: str = "create",
+    ) -> LanceTable:
+        """Create a table in the database.
+
+        Parameters
+        ----------
+        name: str
+            The name of the table.
+        data: list, tuple, dict, pd.DataFrame; optional
+            The data to insert into the table.
+        schema: pyarrow.Schema; optional
+            The schema of the table.
+        mode: str; default "create"
+            The mode to use when creating the table.
+            By default, if the table already exists, an exception is raised.
+            If you want to overwrite the table, use mode="overwrite".
+
+        Note
+        ----
+        The vector index won't be created by default.
+        To create the index, call the `create_index` method on the table.
+
+        Returns
+        -------
+        LanceTable
+            A reference to the newly created table.
+
+        Examples
+        --------
+
+        Can create with list of tuples or dictionaries:
+
+        >>> import lancedb
+        >>> db = lancedb.connect("./.lancedb")
+        >>> data = [{"vector": [1.1, 1.2], "lat": 45.5, "long": -122.7},
+        ...         {"vector": [0.2, 1.8], "lat": 40.1, "long":  -74.1}]
+        >>> db.create_table("my_table", data)
+        LanceTable(my_table)
+        >>> db["my_table"].head()
+        pyarrow.Table
+        vector: fixed_size_list<item: float>[2]
+          child 0, item: float
+        lat: double
+        long: double
+        ----
+        vector: [[[1.1,1.2],[0.2,1.8]]]
+        lat: [[45.5,40.1]]
+        long: [[-122.7,-74.1]]
+
+        You can also pass a pandas DataFrame:
+
+        >>> import pandas as pd
+        >>> data = pd.DataFrame({
+        ...    "vector": [[1.1, 1.2], [0.2, 1.8]],
+        ...    "lat": [45.5, 40.1],
+        ...    "long": [-122.7, -74.1]
+        ... })
+        >>> db.create_table("table2", data)
+        LanceTable(table2)
+        >>> db["table2"].head()
+        pyarrow.Table
+        vector: fixed_size_list<item: float>[2]
+          child 0, item: float
+        lat: double
+        long: double
+        ----
+        vector: [[[1.1,1.2],[0.2,1.8]]]
+        lat: [[45.5,40.1]]
+        long: [[-122.7,-74.1]]
+
+        Data is converted to Arrow before being written to disk. For maximum
+        control over how data is saved, either provide the PyArrow schema to
+        convert to or else provide a PyArrow table directly.
+
+        >>> custom_schema = pa.schema([
+        ...   pa.field("vector", pa.list_(pa.float32(), 2)),
+        ...   pa.field("lat", pa.float32()),
+        ...   pa.field("long", pa.float32())
+        ... ])
+        >>> db.create_table("table3", data, schema = custom_schema)
+        LanceTable(table3)
+        >>> db["table3"].head()
+        pyarrow.Table
+        vector: fixed_size_list<item: float>[2]
+          child 0, item: float
+        lat: float
+        long: float
+        ----
+        vector: [[[1.1,1.2],[0.2,1.8]]]
+        lat: [[45.5,40.1]]
+        long: [[-122.7,-74.1]]
+        """
+        if data is not None:
+            tbl = LanceTable.create(self, name, data, schema, mode=mode)
+        else:
+            tbl = LanceTable(self, name)
+        return tbl
+
+    def open_table(self, name: str) -> LanceTable:
+        """Open a table in the database.
+
+        Parameters
+        ----------
+        name: str
+            The name of the table.
+
+        Returns
+        -------
+        A LanceTable object representing the table.
+        """
+        return LanceTable(self, name)
+
+    def drop_table(self, name: str):
+        """Drop a table from the database.
+
+        Parameters
+        ----------
+        name: str
+            The name of the table.
+        """
+        filesystem, path = pa.fs.FileSystem.from_uri(self.uri)
+        table_path = os.path.join(path, name + ".lance")
+        filesystem.delete_dir(table_path)
+
+</file_content>
+</file>
+<file>
+<file_path>python/lancedb/embeddings.py</file_path>
+<file_content>
+#  Copyright 2023 LanceDB Developers
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+
+import math
+import sys
+from typing import Callable, Union
+
+import numpy as np
+import pandas as pd
+import pyarrow as pa
+from lance.vector import vec_to_table
+from retry import retry
+
+
+def with_embeddings(
+    func: Callable,
+    data: Union[pa.Table, pd.DataFrame],
+    column: str = "text",
+    wrap_api: bool = True,
+    show_progress: bool = False,
+    batch_size: int = 1000,
+) -> pa.Table:
+    """Add a vector column to a table using the given embedding function.
+
+    The new columns will be called "vector".
+
+    Parameters
+    ----------
+    func : Callable
+        A function that takes a list of strings and returns a list of vectors.
+    data : pa.Table or pd.DataFrame
+        The data to add an embedding column to.
+    column : str, default "text"
+        The name of the column to use as input to the embedding function.
+    wrap_api : bool, default True
+        Whether to wrap the embedding function in a retry and rate limiter.
+    show_progress : bool, default False
+        Whether to show a progress bar.
+    batch_size : int, default 1000
+        The number of row values to pass to each call of the embedding function.
+
+    Returns
+    -------
+    pa.Table
+        The input table with a new column called "vector" containing the embeddings.
+    """
+    func = EmbeddingFunction(func)
+    if wrap_api:
+        func = func.retry().rate_limit()
+    func = func.batch_size(batch_size)
+    if show_progress:
+        func = func.show_progress()
+    if isinstance(data, pd.DataFrame):
+        data = pa.Table.from_pandas(data, preserve_index=False)
+    embeddings = func(data[column].to_numpy())
+    table = vec_to_table(np.array(embeddings))
+    return data.append_column("vector", table["vector"])
+
+
+class EmbeddingFunction:
+    def __init__(self, func: Callable):
+        self.func = func
+        self.rate_limiter_kwargs = {}
+        self.retry_kwargs = {}
+        self._batch_size = None
+        self._progress = False
+
+    def __call__(self, text):
+        # Get the embedding with retry
+        if len(self.retry_kwargs) > 0:
+
+            @retry(**self.retry_kwargs)
+            def embed_func(c):
+                return self.func(c.tolist())
+
+        else:
+
+            def embed_func(c):
+                return self.func(c.tolist())
+
+        if len(self.rate_limiter_kwargs) > 0:
+            v = int(sys.version_info.minor)
+            if v >= 11:
+                print(
+                    "WARNING: rate limit only support up to 3.10, proceeding without rate limiter"
+                )
+            else:
+                import ratelimiter
+
+                max_calls = self.rate_limiter_kwargs["max_calls"]
+                limiter = ratelimiter.RateLimiter(
+                    max_calls, period=self.rate_limiter_kwargs["period"]
+                )
+                embed_func = limiter(embed_func)
+        batches = self.to_batches(text)
+        embeds = [emb for c in batches for emb in embed_func(c)]
+        return embeds
+
+    def __repr__(self):
+        return f"EmbeddingFunction(func={self.func})"
+
+    def rate_limit(self, max_calls=0.9, period=1.0):
+        self.rate_limiter_kwargs = dict(max_calls=max_calls, period=period)
+        return self
+
+    def retry(self, tries=10, delay=1, max_delay=30, backoff=3, jitter=1):
+        self.retry_kwargs = dict(
+            tries=tries,
+            delay=delay,
+            max_delay=max_delay,
+            backoff=backoff,
+            jitter=jitter,
+        )
+        return self
+
+    def batch_size(self, batch_size):
+        self._batch_size = batch_size
+        return self
+
+    def show_progress(self):
+        self._progress = True
+        return self
+
+    def to_batches(self, arr):
+        length = len(arr)
+
+        def _chunker(arr):
+            for start_i in range(0, len(arr), self._batch_size):
+                yield arr[start_i : start_i + self._batch_size]
+
+        if self._progress:
+            from tqdm.auto import tqdm
+
+            yield from tqdm(_chunker(arr), total=math.ceil(length / self._batch_size))
+        else:
+            yield from _chunker(arr)
+
+</file_content>
+</file>
+<file>
+<file_path>python/lancedb/exceptions.py</file_path>
+<file_content>
+"""Custom exception handling"""
+
+
+class MissingValueError(ValueError):
+    """Exception raised when a required value is missing."""
+
+    pass
+
+
+class MissingColumnError(KeyError):
+    """
+    Exception raised when a column name specified is not in
+    the  DataFrame object
+    """
+
+    def __init__(self, column_name):
+        self.column_name = column_name
+
+    def __str__(self):
+        return (
+            f"Error: Column '{self.column_name}' does not exist in the DataFrame object"
+        )
+
+</file_content>
+</file>
+<file>
+<file_path>python/lancedb/fts.py</file_path>
+<file_content>
+#  Copyright 2023 LanceDB Developers
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+
+"""Full text search index using tantivy-py"""
+import os
+from typing import List, Tuple
+
+import pyarrow as pa
+
+try:
+    import tantivy
+except ImportError:
+    raise ImportError(
+        "Please install tantivy-py `pip install tantivy@git+https://github.com/quickwit-oss/tantivy-py#164adc87e1a033117001cf70e38c82a53014d985` to use the full text search feature."
+    )
+
+from .table import LanceTable
+
+
+def create_index(index_path: str, text_fields: List[str]) -> tantivy.Index:
+    """
+    Create a new Index (not populated)
+
+    Parameters
+    ----------
+    index_path : str
+        Path to the index directory
+    text_fields : List[str]
+        List of text fields to index
+
+    Returns
+    -------
+    index : tantivy.Index
+        The index object (not yet populated)
+    """
+    # Declaring our schema.
+    schema_builder = tantivy.SchemaBuilder()
+    # special field that we'll populate with row_id
+    schema_builder.add_integer_field("doc_id", stored=True)
+    # data fields
+    for name in text_fields:
+        schema_builder.add_text_field(name, stored=True)
+    schema = schema_builder.build()
+    os.makedirs(index_path, exist_ok=True)
+    index = tantivy.Index(schema, path=index_path)
     return index
 
 
-def query_gpt(chosen_class, chosen_pdf, query):
+def populate_index(index: tantivy.Index, table: LanceTable, fields: List[str]) -> int:
+    """
+    Populate an index with data from a LanceTable
 
-    if not os.getenv("OPENAI_API_KEY"):
-        st.error("Enter your OpenAI API key in the sidebar.")
-        st.stop()
+    Parameters
+    ----------
+    index : tantivy.Index
+        The index object
+    table : LanceTable
+        The table to index
+    fields : List[str]
+        List of fields to index
 
-    # LLM Predictor (gpt-3.5-turbo)
-    llm_predictor = LLMPredictor(
-        llm=ChatOpenAI(
-            temperature=0,
-            model_name="gpt-3.5-turbo",
+    Returns
+    -------
+    int
+        The number of rows indexed
+    """
+    # first check the fields exist and are string or large string type
+    for name in fields:
+        f = table.schema.field(name)  # raises KeyError if not found
+        if not pa.types.is_string(f.type) and not pa.types.is_large_string(f.type):
+            raise TypeError(f"Field {name} is not a string type")
+
+    # create a tantivy writer
+    writer = index.writer()
+    # write data into index
+    dataset = table.to_lance()
+    row_id = 0
+    for b in dataset.to_batches(columns=fields):
+        for i in range(b.num_rows):
+            doc = tantivy.Document()
+            doc.add_integer("doc_id", row_id)
+            for name in fields:
+                doc.add_text(name, b[name][i].as_py())
+            writer.add_document(doc)
+            row_id += 1
+    # commit changes
+    writer.commit()
+    return row_id
+
+
+def search_index(
+    index: tantivy.Index, query: str, limit: int = 10
+) -> Tuple[Tuple[int], Tuple[float]]:
+    """
+    Search an index for a query
+
+    Parameters
+    ----------
+    index : tantivy.Index
+        The index object
+    query : str
+        The query string
+    limit : int
+        The maximum number of results to return
+
+    Returns
+    -------
+    ids_and_score: list[tuple[int], tuple[float]]
+        A tuple of two tuples, the first containing the document ids
+        and the second containing the scores
+    """
+    searcher = index.searcher()
+    query = index.parse_query(query)
+    # get top results
+    results = searcher.search(query, limit)
+    if results.count == 0:
+        return tuple(), tuple()
+    return tuple(
+        zip(
+            *[
+                (searcher.doc(doc_address)["doc_id"][0], score)
+                for score, doc_address in results.hits
+            ]
         )
     )
 
-    index = get_index(chosen_class, chosen_pdf)
-    response = index.query(query, llm_predictor=llm_predictor)
+</file_content>
+</file>
+<file>
+<file_path>python/lancedb/query.py</file_path>
+<file_content>
+#  Copyright 2023 LanceDB Developers
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+from __future__ import annotations
+from typing import Literal
 
-    # logging.info(response.get_formatted_sources())
+import numpy as np
+import pandas as pd
+import pyarrow as pa
 
-    return response
+from .common import VECTOR_COLUMN_NAME
 
 
-@st.cache_resource
-def create_tool(_index, chosen_pdf):
-    tools = [
-        Tool(
-            name=f"{chosen_pdf} index",
-            func=lambda q: str(_index.query(q)),
-            description="Useful to answering questions about the given file",
-            return_direct=True,
-        ),
+class LanceQueryBuilder:
+    """
+    A builder for nearest neighbor queries for LanceDB.
+
+    Examples
+    --------
+    >>> import lancedb
+    >>> data = [{"vector": [1.1, 1.2], "b": 2},
+    ...         {"vector": [0.5, 1.3], "b": 4},
+    ...         {"vector": [0.4, 0.4], "b": 6},
+    ...         {"vector": [0.4, 0.4], "b": 10}]
+    >>> db = lancedb.connect("./.lancedb")
+    >>> table = db.create_table("my_table", data=data)
+    >>> (table.search([0.4, 0.4])
+    ...       .metric("cosine")
+    ...       .where("b < 10")
+    ...       .select(["b"])
+    ...       .limit(2)
+    ...       .to_df())
+       b      vector  score
+    0  6  [0.4, 0.4]    0.0
+    """
+
+    def __init__(self, table: "lancedb.table.LanceTable", query: np.ndarray):
+        self._metric = "L2"
+        self._nprobes = 20
+        self._refine_factor = None
+        self._table = table
+        self._query = query
+        self._limit = 10
+        self._columns = None
+        self._where = None
+
+    def limit(self, limit: int) -> LanceQueryBuilder:
+        """Set the maximum number of results to return.
+
+        Parameters
+        ----------
+        limit: int
+            The maximum number of results to return.
+
+        Returns
+        -------
+        LanceQueryBuilder
+            The LanceQueryBuilder object.
+        """
+        self._limit = limit
+        return self
+
+    def select(self, columns: list) -> LanceQueryBuilder:
+        """Set the columns to return.
+
+        Parameters
+        ----------
+        columns: list
+            The columns to return.
+
+        Returns
+        -------
+        LanceQueryBuilder
+            The LanceQueryBuilder object.
+        """
+        self._columns = columns
+        return self
+
+    def where(self, where: str) -> LanceQueryBuilder:
+        """Set the where clause.
+
+        Parameters
+        ----------
+        where: str
+            The where clause.
+
+        Returns
+        -------
+        LanceQueryBuilder
+            The LanceQueryBuilder object.
+        """
+        self._where = where
+        return self
+
+    def metric(self, metric: Literal["L2", "cosine"]) -> LanceQueryBuilder:
+        """Set the distance metric to use.
+
+        Parameters
+        ----------
+        metric: "L2" or "cosine"
+            The distance metric to use. By default "L2" is used.
+
+        Returns
+        -------
+        LanceQueryBuilder
+            The LanceQueryBuilder object.
+        """
+        self._metric = metric
+        return self
+
+    def nprobes(self, nprobes: int) -> LanceQueryBuilder:
+        """Set the number of probes to use.
+
+        Higher values will yield better recall (more likely to find vectors if
+        they exist) at the expense of latency.
+
+        See discussion in [Querying an ANN Index][../querying-an-ann-index] for
+        tuning advice.
+
+        Parameters
+        ----------
+        nprobes: int
+            The number of probes to use.
+
+        Returns
+        -------
+        LanceQueryBuilder
+            The LanceQueryBuilder object.
+        """
+        self._nprobes = nprobes
+        return self
+
+    def refine_factor(self, refine_factor: int) -> LanceQueryBuilder:
+        """Set the refine factor to use, increasing the number of vectors sampled.
+
+        As an example, a refine factor of 2 will sample 2x as many vectors as
+        requested, re-ranks them, and returns the top half most relevant results.
+
+        See discussion in [Querying an ANN Index][querying-an-ann-index] for
+        tuning advice.
+
+        Parameters
+        ----------
+        refine_factor: int
+            The refine factor to use.
+
+        Returns
+        -------
+        LanceQueryBuilder
+            The LanceQueryBuilder object.
+        """
+        self._refine_factor = refine_factor
+        return self
+
+    def to_df(self) -> pd.DataFrame:
+        """
+        Execute the query and return the results as a pandas DataFrame.
+        In addition to the selected columns, LanceDB also returns a vector
+        and also the "score" column which is the distance between the query
+        vector and the returned vector.
+        """
+        ds = self._table.to_lance()
+        tbl = ds.to_table(
+            columns=self._columns,
+            filter=self._where,
+            nearest={
+                "column": VECTOR_COLUMN_NAME,
+                "q": self._query,
+                "k": self._limit,
+                "metric": self._metric,
+                "nprobes": self._nprobes,
+                "refine_factor": self._refine_factor,
+            },
+        )
+        return tbl.to_pandas()
+
+
+class LanceFtsQueryBuilder(LanceQueryBuilder):
+    def to_df(self) -> pd.DataFrame:
+        try:
+            import tantivy
+        except ImportError:
+            raise ImportError(
+                "Please install tantivy-py `pip install tantivy@git+https://github.com/quickwit-oss/tantivy-py#164adc87e1a033117001cf70e38c82a53014d985` to use the full text search feature."
+            )
+
+        from .fts import search_index
+
+        # get the index path
+        index_path = self._table._get_fts_index_path()
+        # open the index
+        index = tantivy.Index.open(index_path)
+        # get the scores and doc ids
+        row_ids, scores = search_index(index, self._query, self._limit)
+        if len(row_ids) == 0:
+            return pd.DataFrame()
+        scores = pa.array(scores)
+        output_tbl = self._table.to_lance().take(row_ids, columns=self._columns)
+        output_tbl = output_tbl.append_column("score", scores)
+        return output_tbl.to_pandas()
+
+</file_content>
+</file>
+<file>
+<file_path>python/lancedb/table.py</file_path>
+<file_content>
+#  Copyright 2023 LanceDB Developers
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+
+from __future__ import annotations
+
+import os
+import shutil
+from functools import cached_property
+from typing import List, Union
+
+import lance
+import numpy as np
+import pandas as pd
+import pyarrow as pa
+from lance import LanceDataset
+from lance.vector import vec_to_table
+
+from .common import DATA, VEC, VECTOR_COLUMN_NAME
+from .query import LanceFtsQueryBuilder, LanceQueryBuilder
+from .util import get_uri_scheme
+
+
+def _sanitize_data(data, schema):
+    if isinstance(data, list):
+        data = pa.Table.from_pylist(data)
+        data = _sanitize_schema(data, schema=schema)
+    if isinstance(data, dict):
+        data = vec_to_table(data)
+    if isinstance(data, pd.DataFrame):
+        data = pa.Table.from_pandas(data)
+        data = _sanitize_schema(data, schema=schema)
+    if not isinstance(data, pa.Table):
+        raise TypeError(f"Unsupported data type: {type(data)}")
+    return data
+
+
+class LanceTable:
+    """
+    A table in a LanceDB database.
+
+    Examples
+    --------
+
+    Create using [LanceDBConnection.create_table][lancedb.LanceDBConnection.create_table]
+    (more examples in that method's documentation).
+
+    >>> import lancedb
+    >>> db = lancedb.connect("./.lancedb")
+    >>> table = db.create_table("my_table", data=[{"vector": [1.1, 1.2], "b": 2}])
+    >>> table.head()
+    pyarrow.Table
+    vector: fixed_size_list<item: float>[2]
+      child 0, item: float
+    b: int64
+    ----
+    vector: [[[1.1,1.2]]]
+    b: [[2]]
+
+    Can append new data with [LanceTable.add][lancedb.table.LanceTable.add].
+
+    >>> table.add([{"vector": [0.5, 1.3], "b": 4}])
+    2
+
+    Can query the table with [LanceTable.search][lancedb.table.LanceTable.search].
+
+    >>> table.search([0.4, 0.4]).select(["b"]).to_df()
+       b      vector  score
+    0  4  [0.5, 1.3]   0.82
+    1  2  [1.1, 1.2]   1.13
+
+    Search queries are much faster when an index is created. See
+    [LanceTable.create_index][lancedb.table.LanceTable.create_index].
+
+    """
+
+    def __init__(
+        self, connection: "lancedb.db.LanceDBConnection", name: str, version: int = None
+    ):
+        self._conn = connection
+        self.name = name
+        self._version = version
+
+    def _reset_dataset(self):
+        try:
+            del self.__dict__["_dataset"]
+        except AttributeError:
+            pass
+
+    @property
+    def schema(self) -> pa.Schema:
+        """Return the schema of the table.
+
+        Returns
+        -------
+        pa.Schema
+            A PyArrow schema object."""
+        return self._dataset.schema
+
+    def list_versions(self):
+        """List all versions of the table"""
+        return self._dataset.versions()
+
+    @property
+    def version(self) -> int:
+        """Get the current version of the table"""
+        return self._dataset.version
+
+    def checkout(self, version: int):
+        """Checkout a version of the table. This is an in-place operation.
+
+        This allows viewing previous versions of the table.
+
+        Parameters
+        ----------
+        version : int
+            The version to checkout.
+
+        Examples
+        --------
+        >>> import lancedb
+        >>> db = lancedb.connect("./.lancedb")
+        >>> table = db.create_table("my_table", [{"vector": [1.1, 0.9], "type": "vector"}])
+        >>> table.version
+        1
+        >>> table.to_pandas()
+               vector    type
+        0  [1.1, 0.9]  vector
+        >>> table.add([{"vector": [0.5, 0.2], "type": "vector"}])
+        2
+        >>> table.version
+        2
+        >>> table.checkout(1)
+        >>> table.to_pandas()
+               vector    type
+        0  [1.1, 0.9]  vector
+        """
+        max_ver = max([v["version"] for v in self._dataset.versions()])
+        if version < 1 or version > max_ver:
+            raise ValueError(f"Invalid version {version}")
+        self._version = version
+        self._reset_dataset()
+
+    def __len__(self):
+        return self._dataset.count_rows()
+
+    def __repr__(self) -> str:
+        return f"LanceTable({self.name})"
+
+    def __str__(self) -> str:
+        return self.__repr__()
+
+    def head(self, n=5) -> pa.Table:
+        """Return the first n rows of the table."""
+        return self._dataset.head(n)
+
+    def to_pandas(self) -> pd.DataFrame:
+        """Return the table as a pandas DataFrame.
+
+        Returns
+        -------
+        pd.DataFrame
+        """
+        return self.to_arrow().to_pandas()
+
+    def to_arrow(self) -> pa.Table:
+        """Return the table as a pyarrow Table.
+
+        Returns
+        -------
+        pa.Table"""
+        return self._dataset.to_table()
+
+    @property
+    def _dataset_uri(self) -> str:
+        return os.path.join(self._conn.uri, f"{self.name}.lance")
+
+    def create_index(self, metric="L2", num_partitions=256, num_sub_vectors=96):
+        """Create an index on the table.
+
+        Parameters
+        ----------
+        metric: str, default "L2"
+            The distance metric to use when creating the index. Valid values are "L2" or "cosine".
+            L2 is euclidean distance.
+        num_partitions: int
+            The number of IVF partitions to use when creating the index.
+            Default is 256.
+        num_sub_vectors: int
+            The number of PQ sub-vectors to use when creating the index.
+            Default is 96.
+        """
+        self._dataset.create_index(
+            column=VECTOR_COLUMN_NAME,
+            index_type="IVF_PQ",
+            metric=metric,
+            num_partitions=num_partitions,
+            num_sub_vectors=num_sub_vectors,
+        )
+        self._reset_dataset()
+
+    def create_fts_index(self, field_names: Union[str, List[str]]):
+        """Create a full-text search index on the table.
+
+        Warning - this API is highly experimental and is highly likely to change
+        in the future.
+
+        Parameters
+        ----------
+        field_names: str or list of str
+            The name(s) of the field to index.
+        """
+        from .fts import create_index, populate_index
+
+        if isinstance(field_names, str):
+            field_names = [field_names]
+        index = create_index(self._get_fts_index_path(), field_names)
+        populate_index(index, self, field_names)
+
+    def _get_fts_index_path(self):
+        return os.path.join(self._dataset_uri, "_indices", "tantivy")
+
+    @cached_property
+    def _dataset(self) -> LanceDataset:
+        return lance.dataset(self._dataset_uri, version=self._version)
+
+    def to_lance(self) -> LanceDataset:
+        """Return the LanceDataset backing this table."""
+        return self._dataset
+
+    def add(self, data: DATA, mode: str = "append") -> int:
+        """Add data to the table.
+
+        Parameters
+        ----------
+        data: list-of-dict, dict, pd.DataFrame
+            The data to insert into the table.
+        mode: str
+            The mode to use when writing the data. Valid values are
+            "append" and "overwrite".
+
+        Returns
+        -------
+        int
+            The number of vectors in the table.
+        """
+        data = _sanitize_data(data, self.schema)
+        lance.write_dataset(data, self._dataset_uri, mode=mode)
+        self._reset_dataset()
+        return len(self)
+
+    def search(self, query: Union[VEC, str]) -> LanceQueryBuilder:
+        """Create a search query to find the nearest neighbors
+        of the given query vector.
+
+        Parameters
+        ----------
+        query: list, np.ndarray
+            The query vector.
+
+        Returns
+        -------
+        LanceQueryBuilder
+            A query builder object representing the query.
+            Once executed, the query returns selected columns, the vector,
+            and also the "score" column which is the distance between the query
+            vector and the returned vector.
+        """
+        if isinstance(query, str):
+            # fts
+            return LanceFtsQueryBuilder(self, query)
+
+        if isinstance(query, list):
+            query = np.array(query)
+        if isinstance(query, np.ndarray):
+            query = query.astype(np.float32)
+        else:
+            raise TypeError(f"Unsupported query type: {type(query)}")
+        return LanceQueryBuilder(self, query)
+
+    @classmethod
+    def create(cls, db, name, data, schema=None, mode="create"):
+        tbl = LanceTable(db, name)
+        data = _sanitize_data(data, schema)
+        lance.write_dataset(data, tbl._dataset_uri, mode=mode)
+        return tbl
+
+
+def _sanitize_schema(data: pa.Table, schema: pa.Schema = None) -> pa.Table:
+    """Ensure that the table has the expected schema.
+
+    Parameters
+    ----------
+    data: pa.Table
+        The table to sanitize.
+    schema: pa.Schema; optional
+        The expected schema. If not provided, this just converts the
+        vector column to fixed_size_list(float32) if necessary.
+    """
+    if schema is not None:
+        if data.schema == schema:
+            return data
+        # cast the columns to the expected types
+        data = data.combine_chunks()
+        data = _sanitize_vector_column(data, vector_column_name=VECTOR_COLUMN_NAME)
+        return pa.Table.from_arrays(
+            [data[name] for name in schema.names], schema=schema
+        )
+    # just check the vector column
+    return _sanitize_vector_column(data, vector_column_name=VECTOR_COLUMN_NAME)
+
+
+def _sanitize_vector_column(data: pa.Table, vector_column_name: str) -> pa.Table:
+    """
+    Ensure that the vector column exists and has type fixed_size_list(float32)
+
+    Parameters
+    ----------
+    data: pa.Table
+        The table to sanitize.
+    vector_column_name: str
+        The name of the vector column.
+    """
+    if vector_column_name not in data.column_names:
+        raise ValueError(f"Missing vector column: {vector_column_name}")
+    vec_arr = data[vector_column_name].combine_chunks()
+    if pa.types.is_fixed_size_list(vec_arr.type):
+        return data
+    if not pa.types.is_list(vec_arr.type):
+        raise TypeError(f"Unsupported vector column type: {vec_arr.type}")
+    values = vec_arr.values
+    if not pa.types.is_float32(values.type):
+        values = values.cast(pa.float32())
+    list_size = len(values) / len(data)
+    vec_arr = pa.FixedSizeListArray.from_arrays(values, list_size)
+    return data.set_column(
+        data.column_names.index(vector_column_name), vector_column_name, vec_arr
+    )
+
+</file_content>
+</file>
+<file>
+<file_path>python/lancedb/util.py</file_path>
+<file_content>
+#  Copyright 2023 LanceDB Developers
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+
+from urllib.parse import ParseResult, urlparse
+
+from pyarrow import fs
+
+
+def get_uri_scheme(uri: str) -> str:
+    """
+    Get the scheme of a URI. If the URI does not have a scheme, assume it is a file URI.
+
+    Parameters
+    ----------
+    uri : str
+        The URI to parse.
+
+    Returns
+    -------
+    str: The scheme of the URI.
+    """
+    parsed = urlparse(uri)
+    scheme = parsed.scheme
+    if not scheme:
+        scheme = "file"
+    elif scheme in ["s3a", "s3n"]:
+        scheme = "s3"
+    elif len(scheme) == 1:
+        # Windows drive names are parsed as the scheme
+        # e.g. "c:\path" -> ParseResult(scheme="c", netloc="", path="/path", ...)
+        # So we add special handling here for schemes that are a single character
+        scheme = "file"
+    return scheme
+
+
+def get_uri_location(uri: str) -> str:
+    """
+    Get the location of a URI. If the parameter is not a url, assumes it is just a path
+
+    Parameters
+    ----------
+    uri : str
+        The URI to parse.
+
+    Returns
+    -------
+    str: Location part of the URL, without scheme
+    """
+    parsed = urlparse(uri)
+    if not parsed.netloc:
+        return parsed.path
+    else:
+        return parsed.netloc + parsed.path
+
+</file_content>
+</file>
+<file>
+<file_path>python/setup.py</file_path>
+<file_content>
+#  Copyright 2023 LanceDB Developers
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+
+import setuptools
+
+if __name__ == "__main__":
+    setuptools.setup()
+
+</file_content>
+</file>
+<file>
+<file_path>python/tests/test_context.py</file_path>
+<file_content>
+#  Copyright 2023 LanceDB Developers
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+
+import pandas as pd
+import pytest
+
+from lancedb.context import contextualize
+
+
+@pytest.fixture
+def raw_df() -> pd.DataFrame:
+    return pd.DataFrame(
+        {
+            "token": [
+                "The",
+                "quick",
+                "brown",
+                "fox",
+                "jumped",
+                "over",
+                "the",
+                "lazy",
+                "dog",
+                "I",
+                "love",
+                "sandwiches",
+            ],
+            "document_id": [1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2],
+        }
+    )
+
+
+def test_contextualizer(raw_df: pd.DataFrame):
+    result = (
+        contextualize(raw_df)
+        .window(6)
+        .stride(3)
+        .text_col("token")
+        .groupby("document_id")
+        .to_df()["token"]
+        .to_list()
+    )
+
+    assert result == [
+        "The quick brown fox jumped over",
+        "fox jumped over the lazy dog",
+        "the lazy dog",
+        "I love sandwiches",
     ]
 
-    return tools
 
-
-@st.cache_resource
-def create_agent(chosen_class, chosen_pdf):
-    memory = ConversationBufferMemory(memory_key="chat_history")
-    llm = OpenAI(temperature=0, model_name="gpt-3.5-turbo")
-
-    index = get_index(chosen_class, chosen_pdf)
-    tools = create_tool(index, chosen_pdf)
-
-    agent = initialize_agent(
-        tools, llm, agent="conversational-react-description", memory=memory
+def test_contextualizer_with_threshold(raw_df: pd.DataFrame):
+    result = (
+        contextualize(raw_df)
+        .window(6)
+        .stride(3)
+        .text_col("token")
+        .groupby("document_id")
+        .min_window_size(4)
+        .to_df()["token"]
+        .to_list()
     )
 
-    return agent
+    assert result == [
+        "The quick brown fox jumped over",
+        "fox jumped over the lazy dog",
+    ]
+
+</file_content>
+</file>
+<file>
+<file_path>python/tests/test_db.py</file_path>
+<file_content>
+#  Copyright 2023 LanceDB Developers
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+
+import pandas as pd
+import pytest
+
+import lancedb
 
 
-def query_gpt_memory(chosen_class, chosen_pdf, query):
+def test_basic(tmp_path):
+    db = lancedb.connect(tmp_path)
 
-    agent = create_agent(chosen_class, chosen_pdf)
-    res = ""
+    assert db.uri == str(tmp_path)
+    assert db.table_names() == []
 
-    try:
-        res = agent.run(input=query)
-    except Exception as e:
-        logging.error(e)
-        res = "Something went wrong... Please try again."
+    table = db.create_table(
+        "test",
+        data=[
+            {"vector": [3.1, 4.1], "item": "foo", "price": 10.0},
+            {"vector": [5.9, 26.5], "item": "bar", "price": 20.0},
+        ],
+    )
+    rs = table.search([100, 100]).limit(1).to_df()
+    assert len(rs) == 1
+    assert rs["item"].iloc[0] == "bar"
 
-    st.session_state.memory = agent.memory.buffer
+    rs = table.search([100, 100]).where("price < 15").limit(2).to_df()
+    assert len(rs) == 1
+    assert rs["item"].iloc[0] == "foo"
 
-    return res
+    assert db.table_names() == ["test"]
+    assert "test" in db
+    assert len(db) == 1
+
+    assert db.open_table("test").name == db["test"].name
 
 
-# ------------------- Render PDF ------------------- #
+def test_ingest_pd(tmp_path):
+    db = lancedb.connect(tmp_path)
+
+    assert db.uri == str(tmp_path)
+    assert db.table_names() == []
+
+    data = pd.DataFrame(
+        {
+            "vector": [[3.1, 4.1], [5.9, 26.5]],
+            "item": ["foo", "bar"],
+            "price": [10.0, 20.0],
+        }
+    )
+    table = db.create_table("test", data=data)
+    rs = table.search([100, 100]).limit(1).to_df()
+    assert len(rs) == 1
+    assert rs["item"].iloc[0] == "bar"
+
+    rs = table.search([100, 100]).where("price < 15").limit(2).to_df()
+    assert len(rs) == 1
+    assert rs["item"].iloc[0] == "foo"
+
+    assert db.table_names() == ["test"]
+    assert "test" in db
+    assert len(db) == 1
+
+    assert db.open_table("test").name == db["test"].name
 
 
-@st.cache_data
-def show_pdf(folder_name, file_name):
+def test_create_mode(tmp_path):
+    db = lancedb.connect(tmp_path)
+    data = pd.DataFrame(
+        {
+            "vector": [[3.1, 4.1], [5.9, 26.5]],
+            "item": ["foo", "bar"],
+            "price": [10.0, 20.0],
+        }
+    )
+    db.create_table("test", data=data)
 
-    with tempfile.NamedTemporaryFile("wb") as f_src:
-        logging.info(f"Downloading {file_name}...")
-        s3.download_file(f"{folder_name}/{file_name}", f_src.name)
+    with pytest.raises(Exception):
+        db.create_table("test", data=data)
 
-        with open(f_src.name, "rb") as f:
-            base64_pdf = base64.b64encode(f.read()).decode("utf-8")
+    new_data = pd.DataFrame(
+        {
+            "vector": [[3.1, 4.1], [5.9, 26.5]],
+            "item": ["fizz", "buzz"],
+            "price": [10.0, 20.0],
+        }
+    )
+    tbl = db.create_table("test", data=new_data, mode="overwrite")
+    assert tbl.to_pandas().item.tolist() == ["fizz", "buzz"]
 
-        pdf_display = f"""
-        <iframe
-            src="data:application/pdf;base64,{base64_pdf}"
-            width="100%" height="1000"
-            type="application/pdf"
-            style="min-width: 400px;"
-        >
-        </iframe>
-        """
 
-        st.markdown(pdf_display, unsafe_allow_html=True)
+def test_delete_table(tmp_path):
+    db = lancedb.connect(tmp_path)
+    data = pd.DataFrame(
+        {
+            "vector": [[3.1, 4.1], [5.9, 26.5]],
+            "item": ["foo", "bar"],
+            "price": [10.0, 20.0],
+        }
+    )
+    db.create_table("test", data=data)
+
+    with pytest.raises(Exception):
+        db.create_table("test", data=data)
+
+    assert db.table_names() == ["test"]
+
+    db.drop_table("test")
+    assert db.table_names() == []
+
+    db.create_table("test", data=data)
+    assert db.table_names() == ["test"]
+
+</file_content>
+</file>
+<file>
+<file_path>python/tests/test_embeddings.py</file_path>
+<file_content>
+#  Copyright 2023 LanceDB Developers
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+import sys
+
+import numpy as np
+import pyarrow as pa
+from lancedb.embeddings import with_embeddings
+
+
+def mock_embed_func(input_data):
+    return [np.random.randn(128).tolist() for _ in range(len(input_data))]
+
+
+def test_with_embeddings():
+    for wrap_api in [True, False]:
+        if wrap_api and sys.version_info.minor >= 11:
+            # ratelimiter package doesn't work on 3.11
+            continue
+        data = pa.Table.from_arrays(
+            [
+                pa.array(["foo", "bar"]),
+                pa.array([10.0, 20.0]),
+            ],
+            names=["text", "price"],
+        )
+        data = with_embeddings(mock_embed_func, data, wrap_api=wrap_api)
+        assert data.num_columns == 3
+        assert data.num_rows == 2
+        assert data.column_names == ["text", "price", "vector"]
+        assert data.column("text").to_pylist() == ["foo", "bar"]
+        assert data.column("price").to_pylist() == [10.0, 20.0]
+
+</file_content>
+</file>
+<file>
+<file_path>python/tests/test_fts.py</file_path>
+<file_content>
+# Copyright 2023 LanceDB Developers
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+import os
+import random
+
+import lancedb.fts
+import numpy as np
+import pandas as pd
+import pytest
+import tantivy
+
+import lancedb as ldb
+
+
+@pytest.fixture
+def table(tmp_path) -> ldb.table.LanceTable:
+    db = ldb.connect(tmp_path)
+    vectors = [np.random.randn(128) for _ in range(100)]
+
+    nouns = ("puppy", "car", "rabbit", "girl", "monkey")
+    verbs = ("runs", "hits", "jumps", "drives", "barfs")
+    adv = ("crazily.", "dutifully.", "foolishly.", "merrily.", "occasionally.")
+    adj = ("adorable", "clueless", "dirty", "odd", "stupid")
+    text = [
+        " ".join(
+            [
+                nouns[random.randrange(0, 5)],
+                verbs[random.randrange(0, 5)],
+                adv[random.randrange(0, 5)],
+                adj[random.randrange(0, 5)],
+            ]
+        )
+        for _ in range(100)
+    ]
+    table = db.create_table(
+        "test", data=pd.DataFrame({"vector": vectors, "text": text, "text2": text})
+    )
+    return table
+
+
+def test_create_index(tmp_path):
+    index = ldb.fts.create_index(str(tmp_path / "index"), ["text"])
+    assert isinstance(index, tantivy.Index)
+    assert os.path.exists(str(tmp_path / "index"))
+
+
+def test_populate_index(tmp_path, table):
+    index = ldb.fts.create_index(str(tmp_path / "index"), ["text"])
+    assert ldb.fts.populate_index(index, table, ["text"]) == len(table)
+
+
+def test_search_index(tmp_path, table):
+    index = ldb.fts.create_index(str(tmp_path / "index"), ["text"])
+    ldb.fts.populate_index(index, table, ["text"])
+    index.reload()
+    results = ldb.fts.search_index(index, query="puppy", limit=10)
+    assert len(results) == 2
+    assert len(results[0]) == 10  # row_ids
+    assert len(results[1]) == 10  # scores
+
+
+def test_create_index_from_table(tmp_path, table):
+    table.create_fts_index("text")
+    df = table.search("puppy").limit(10).select(["text"]).to_df()
+    assert len(df) == 10
+    assert "text" in df.columns
+
+
+def test_create_index_multiple_columns(tmp_path, table):
+    table.create_fts_index(["text", "text2"])
+    df = table.search("puppy").limit(10).to_df()
+    assert len(df) == 10
+    assert "text" in df.columns
+    assert "text2" in df.columns
+
+
+def test_empty_rs(tmp_path, table, mocker):
+    table.create_fts_index(["text", "text2"])
+    mocker.patch("lancedb.fts.search_index", return_value=([], []))
+    df = table.search("puppy").limit(10).to_df()
+    assert len(df) == 0
+
+</file_content>
+</file>
+<file>
+<file_path>python/tests/test_io.py</file_path>
+<file_content>
+#  Copyright 2023 LanceDB Developers
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+
+import os
+import pytest
+
+import lancedb
+
+# You need to setup AWS credentials an a base path to run this test. Example
+#    AWS_PROFILE=default TEST_S3_BASE_URL=s3://my_bucket/dataset pytest tests/test_io.py
+
+
+@pytest.mark.skipif(
+    (os.environ.get("TEST_S3_BASE_URL") is None),
+    reason="please setup s3 base url",
+)
+def test_s3_io():
+    db = lancedb.connect(os.environ.get("TEST_S3_BASE_URL"))
+    assert db.table_names() == []
+
+    table = db.create_table(
+        "test",
+        data=[
+            {"vector": [3.1, 4.1], "item": "foo", "price": 10.0},
+            {"vector": [5.9, 26.5], "item": "bar", "price": 20.0},
+        ],
+    )
+    rs = table.search([100, 100]).limit(1).to_df()
+    assert len(rs) == 1
+    assert rs["item"].iloc[0] == "bar"
+
+    rs = table.search([100, 100]).where("price < 15").limit(2).to_df()
+    assert len(rs) == 1
+    assert rs["item"].iloc[0] == "foo"
+
+    assert db.table_names() == ["test"]
+    assert "test" in db
+    assert len(db) == 1
+
+    assert db.open_table("test").name == db["test"].name
+
+</file_content>
+</file>
+<file>
+<file_path>python/tests/test_query.py</file_path>
+<file_content>
+#  Copyright 2023 LanceDB Developers
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+
+import lance
+import numpy as np
+import pandas as pd
+import pandas.testing as tm
+import pyarrow as pa
+import pytest
+from lancedb.query import LanceQueryBuilder
+
+
+class MockTable:
+    def __init__(self, tmp_path):
+        self.uri = tmp_path
+
+    def to_lance(self):
+        return lance.dataset(self.uri)
+
+
+@pytest.fixture
+def table(tmp_path) -> MockTable:
+    df = pa.table(
+        {
+            "vector": pa.array(
+                [[1, 2], [3, 4]], type=pa.list_(pa.float32(), list_size=2)
+            ),
+            "id": pa.array([1, 2]),
+            "str_field": pa.array(["a", "b"]),
+            "float_field": pa.array([1.0, 2.0]),
+        }
+    )
+    lance.write_dataset(df, tmp_path)
+    return MockTable(tmp_path)
+
+
+def test_query_builder(table):
+    df = LanceQueryBuilder(table, [0, 0]).limit(1).select(["id"]).to_df()
+    assert df["id"].values[0] == 1
+    assert all(df["vector"].values[0] == [1, 2])
+
+
+def test_query_builder_with_filter(table):
+    df = LanceQueryBuilder(table, [0, 0]).where("id = 2").to_df()
+    assert df["id"].values[0] == 2
+    assert all(df["vector"].values[0] == [3, 4])
+
+
+def test_query_builder_with_metric(table):
+    query = [4, 8]
+    df_default = LanceQueryBuilder(table, query).to_df()
+    df_l2 = LanceQueryBuilder(table, query).metric("L2").to_df()
+    tm.assert_frame_equal(df_default, df_l2)
+
+    df_cosine = LanceQueryBuilder(table, query).metric("cosine").limit(1).to_df()
+    assert df_cosine.score[0] == pytest.approx(
+        cosine_distance(query, df_cosine.vector[0]),
+        abs=1e-6,
+    )
+    assert 0 <= df_cosine.score[0] <= 1
+
+
+def cosine_distance(vec1, vec2):
+    return 1 - np.dot(vec1, vec2) / (np.linalg.norm(vec1) * np.linalg.norm(vec2))
+
+</file_content>
+</file>
+<file>
+<file_path>python/tests/test_table.py</file_path>
+<file_content>
+#  Copyright 2023 LanceDB Developers
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+
+from pathlib import Path
+
+import pandas as pd
+import pyarrow as pa
+import pytest
+from lancedb.table import LanceTable
+
+
+class MockDB:
+    def __init__(self, uri: Path):
+        self.uri = uri
+
+
+@pytest.fixture
+def db(tmp_path) -> MockDB:
+    return MockDB(tmp_path)
+
+
+def test_basic(db):
+    ds = LanceTable.create(
+        db,
+        "test",
+        data=[
+            {"vector": [3.1, 4.1], "item": "foo", "price": 10.0},
+            {"vector": [5.9, 26.5], "item": "bar", "price": 20.0},
+        ],
+    ).to_lance()
+
+    table = LanceTable(db, "test")
+    assert table.name == "test"
+    assert table.schema == ds.schema
+    assert table.to_lance().to_table() == ds.to_table()
+
+
+def test_create_table(db):
+    schema = pa.schema(
+        [
+            pa.field("vector", pa.list_(pa.float32(), 2)),
+            pa.field("item", pa.string()),
+            pa.field("price", pa.float32()),
+        ]
+    )
+    expected = pa.Table.from_arrays(
+        [
+            pa.FixedSizeListArray.from_arrays(pa.array([3.1, 4.1, 5.9, 26.5]), 2),
+            pa.array(["foo", "bar"]),
+            pa.array([10.0, 20.0]),
+        ],
+        schema=schema,
+    )
+    data = [
+        [
+            {"vector": [3.1, 4.1], "item": "foo", "price": 10.0},
+            {"vector": [5.9, 26.5], "item": "bar", "price": 20.0},
+        ]
+    ]
+    df = pd.DataFrame(data[0])
+    data.append(df)
+    data.append(pa.Table.from_pandas(df, schema=schema))
+
+    for i, d in enumerate(data):
+        tbl = (
+            LanceTable.create(db, f"test_{i}", data=d, schema=schema)
+            .to_lance()
+            .to_table()
+        )
+        assert expected == tbl
+
+
+def test_add(db):
+    table = LanceTable.create(
+        db,
+        "test",
+        data=[
+            {"vector": [3.1, 4.1], "item": "foo", "price": 10.0},
+            {"vector": [5.9, 26.5], "item": "bar", "price": 20.0},
+        ],
+    )
+
+    # table = LanceTable(db, "test")
+    assert len(table) == 2
+
+    count = table.add([{"vector": [6.3, 100.5], "item": "new", "price": 30.0}])
+    assert count == 3
+
+    expected = pa.Table.from_arrays(
+        [
+            pa.FixedSizeListArray.from_arrays(
+                pa.array([3.1, 4.1, 5.9, 26.5, 6.3, 100.5]), 2
+            ),
+            pa.array(["foo", "bar", "new"]),
+            pa.array([10.0, 20.0, 30.0]),
+        ],
+        schema=pa.schema(
+            [
+                pa.field("vector", pa.list_(pa.float32(), 2)),
+                pa.field("item", pa.string()),
+                pa.field("price", pa.float64()),
+            ]
+        ),
+    )
+    assert expected == table.to_arrow()
+
+
+def test_versioning(db):
+    table = LanceTable.create(
+        db,
+        "test",
+        data=[
+            {"vector": [3.1, 4.1], "item": "foo", "price": 10.0},
+            {"vector": [5.9, 26.5], "item": "bar", "price": 20.0},
+        ],
+    )
+
+    assert len(table.list_versions()) == 1
+    assert table.version == 1
+
+    table.add([{"vector": [6.3, 100.5], "item": "new", "price": 30.0}])
+    assert len(table.list_versions()) == 2
+    assert table.version == 2
+    assert len(table) == 3
+
+    table.checkout(1)
+    assert table.version == 1
+    assert len(table) == 2
+
+</file_content>
+</file>
+<file>
+<file_path>python/tests/test_util.py</file_path>
+<file_content>
+#  Copyright 2023 LanceDB Developers
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+
+from lancedb.util import get_uri_scheme
+
+
+def test_normalize_uri():
+    uris = [
+        "relative/path",
+        "/absolute/path",
+        "file:///absolute/path",
+        "s3://bucket/path",
+        "gs://bucket/path",
+        "c:\\windows\\path",
+    ]
+    schemes = ["file", "file", "file", "s3", "gs", "file"]
+
+    for uri, expected_scheme in zip(uris, schemes):
+        parsed_scheme = get_uri_scheme(uri)
+        assert parsed_scheme == expected_scheme
 
 </file_content>
 </file>
