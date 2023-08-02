@@ -12,8 +12,10 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.5.8",
     "@guoyunhe/downloader": "^1.3.0",
+    "@lancedb/vectordb-darwin-x64": "^0.1.19",
     "@xenova/transformers": "^2.4.4",
     "langchain": "^0.0.119",
+    "sharp": "^0.32.4",
     "vectordb": "^0.1.19"
   },
   "devDependencies": {

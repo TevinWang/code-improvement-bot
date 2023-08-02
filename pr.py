@@ -72,7 +72,7 @@ def main(repo):
     app_id = '368612'
     private_key_path = 'gooddiff.pem'
     target_id = '40204273'
-    full_repo_name = repo
+    full_repo_name = f'{username}/LanceDB'
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
     branch_name = f'gooddiff-{timestamp}'
     base_branch_name = 'main'
@@ -82,7 +82,7 @@ def main(repo):
 
     create_branch(repo, branch_name, base_branch_name)
 
-    with open('python_files2.txt', 'r', encoding="utf-8") as output:
+    with open('python_files2.txt', 'r') as output:
       xml_data = output.read()
 
     # Parse the XML data

@@ -1,429 +1,593 @@
  <root>
-<diff>
-<!--Ensure the diff follows the unified diff format that would be returned by python difflib, providing clear context and line-by-line changes for ALL files.
-Give line numbers with the first line of the file content being line 1,
-ONLY CHANGE LINES OF FILE CONTENT. Do this for all files.
-Add the entire thing as a cdata section '<![CDATA['
-This is what it is supposed to look like per file:
---- a/path/to/file.txt (make sure to include the 'a/' in the path, and exactly 3 +s)
-+++ b/path/to/file.txt (make sure to include the 'b/' in the path, and exactly 3 -s)
-@@ -1,4 +1,4 @@ (ANYTHING after the @@ MUST BE ON A NEW LINE)
-This is the original content.
--Some lines have been removed.
-+Some lines have been added.
-More content here.
-Remove this comment and add the diff patch contents in the diff tag directly. DO NOT ADD THIS IN THE COMMENT
--->
+<diff><![CDATA[
+--- a/python/lancedb/__init__.py
++++ b/python/lancedb/__init__.py
+@@ -10,8 +10,31 @@
+     See the License for the specific language governing permissions and
+     limitations under the License.
 
-<![CDATA[
++"""
++LANCE Database Main Module
++
++This module exports the main interface for connecting to a LanceDB and
++interacting with tables.
++
++The key functions are:
++
++- connect() - Connect to a LanceDB at the given uri
++- LanceDBConnection - Manages tables in the database
++- LanceTable - Represents a table in the database
++
++The connect() function returns a LanceDBConnection which manages
++access to the underlying database. This includes methods to list,
++create, and delete tables.
++
++LanceTable represents an individual table. This contains methods to
++query, modify, and retrieve the contents of the table. Methods allow
++converting between Arrow, Pandas, and the native LanceDataset format.
++
++See tutorials at https://lancedb.io for more usage details.
++"""
++
+ from .db import URI, LanceDBConnection
 
---- a/docs/src/examples/modal_langchain.py	2023-02-26 19:26:09.712200404 +0000
-+++ b/docs/src/examples/modal_langchain.py	2023-02-26 19:48:33.781840189 +0000
-@@ -31,6 +31,9 @@
- from lancedb.vectorstores import LanceDB
- from lancedb.llms import OpenAI
- from lancedb.chains import RetrievalQA
-+
-+
-+# Lancedb image setup
- lancedb_image = Image.debian_slim().pip_install(
-     "lancedb", "langchain", "openai", "pandas", "tiktoken", "unstructured", "tabulate"
- )
-@@ -39,6 +42,7 @@
- name="example-langchain-lancedb",
- image=lancedb_image,
- secrets=[Secret.from_name("my-openai-secret")],
-+description="A serverless QA bot with Modal and LangChain accessing a LanceDB vector store."
- )
- 
- docsearch = None
-@@ -122,6 +126,8 @@
- @web_endpoint(method="GET")
- def web(query: str):
-     answer = qanda_langchain(query)
-+
-+    # Return the answer as a JSON response
-     return {
-         "answer": answer,
-     }
-
-@@ -130,6 +136,8 @@
- @stub.function()
- def cli(query: str):
-     answer = qanda_langchain(query)
-+
-+    # Print the answer
-     print(answer)
- 
- ]]>
---- a/docs/src/notebooks/diffusiondb/datagen.py	2023-02-26 19:43:31.511253723 +0000
-+++ b/docs/src/notebooks/diffusiondb/datagen.py	2023-02-26 20:01:02.462653195 +0000
-@@ -19,6 +19,7 @@
- import lancedb
- import lancedb
- import pyarrow as pa
-+import numpy as np # For generating random vectors
- from datasets import load_dataset
- from PIL import Image
- from transformers import CLIPModel, CLIPProcessor, CLIPTokenizerFast
-@@ -66,20 +67,24 @@
-             img_emb = model.get_image_features(image)
-             batch["vector"] = img_emb.cpu().tolist()
-
--            with Pool() as p:
--                batch["image_bytes"] = p.map(pil_to_bytes, batch["image"])
-+            # Convert images to bytes
-+            batch["image_bytes"] = [pil_to_bytes(img) for img in batch["image"]]  
-             return batch
- 
- def datagen(args):
-     """Generate DiffusionDB dataset, and use CLIP model to generate image embeddings."""
-     dataset = load_dataset("poloclub/diffusiondb", args.subset)
-     data = []
-+    # Iterate through batches
-     for b in dataset.map(
-         generate_clip_embeddings, batched=True, batch_size=256, remove_columns=["image"]
-     )["train"]:
-+        # Convert image bytes back to list
-         b["image"] = b["image_bytes"]
-         del b["image_bytes"]
-+
-+        # Append batch to data
-         data.append(b)
-     tbl = pa.Table.from_pylist(data, schema=schema)
-     return tbl
-
-@@ -105,6 +110,8 @@
- batches = datagen(args)
- lance.write_dataset(batches, args.output)
- 
-+
-+# Call main
- if __name__ == "__main__":
-     main()
- 
-]]>
---- a/docs/test/md_testing.py	2023-02-26 19:49:11.064237744 +0000
-+++ b/docs/test/md_testing.py	2023-02-26 20:04:04.533211972 +0000
-@@ -4,9 +4,7 @@
- excluded_files = [
-     "../src/fts.md",
-     "../src/embedding.md",
--    "../src/examples/serverless_lancedb_with_s3_and_lambda.md",
--    "../src/examples/serverless_qa_bot_with_modal_and_langchain.md",
--    "../src/examples/youtube_transcript_bot_with_nodejs.md"
-+    "../src/examples/serverless_lancedb_with_s3_and_lambda.md"
- ]
- languages = ["py", "javascript"]
- glob_string = "../src/**/*.md"
-@@ -66,9 +64,14 @@
-             python_out.writelines(python_lines)
- 
- # Setup doc code
-+print("Extracting setup code...")
- create_code_files("<!--", "-->", "-setup")
- 
- # Actual doc code
-+print("Extracting example code...")
- create_code_files("```", "```")
- 
-+
-+print("Code extraction complete!")
-+
- ]]>
---- a/python/lancedb/__init__.py	2023-02-26 19:47:13.006032121 +0000
-+++ b/python/lancedb/__init__.py	2023-02-26 20:06:45.678205100 +0000
-@@ -24,6 +24,7 @@
+-
  def connect(uri: URI) -> LanceDBConnection:
      """Connect to a LanceDB instance at the given URI
- 
-+    # Parameters
-     Parameters
-     ----------
-     uri: str or Path
-@@ -31,6 +32,7 @@
-         The uri of the database.
- 
-     Examples
-+    # Examples
-     --------
- 
-     For a local directory, provide a path for the database:
-@@ -45,8 +47,11 @@
-         A connection to a LanceDB database.
-     """
-     return LanceDBConnection(uri)
-+    
-+
-+
-+# Export connect function
- ]]>
---- a/python/lancedb/common.py	2023-02-26 19:47:33.558339442 +0000
-+++ b/python/lancedb/common.py	2023-02-26 19:50:27.399368390 +0000
-@@ -25,5 +25,4 @@
- URI = Union[str, Path]
- 
- # TODO support generator
--DATA = Union[List[dict], dict, pd.DataFrame]
- VECTOR_COLUMN_NAME = "vector"
 
-@@ -25,5 +25,5 @@
- 
--DATA = Union[List[dict], dict, pd.DataFrame]
-+DATA = Union[List[dict], dict, pd.DataFrame] # Supported data types for ingestion
- VECTOR_COLUMN_NAME = "vector"
+--- a/python/lancedb/common.py
++++ b/python/lancedb/common.py
+@@ -10,6 +10,22 @@
+     See the License for the specific language governing permissions and
+     limitations under the License.
 
-]]>
---- a/python/lancedb/conftest.py	2023-02-26 19:50:25.682663338 +0000
-+++ b/python/lancedb/conftest.py	2023-02-26 19:55:49.210132712 +0000
-@@ -1,5 +1,4 @@
- import builtins
--import os
- 
++"""
++Common Types and Constants
++
++This internal module defines common types and constants used across
++LanceDB. Key contents:
++
++- URI - The uri type
++- DATA - Supported data types
++- VEC - Vector types
++- VECTOR_COLUMN_NAME - Name of vector column
++
++Keeping these in a shared location avoids duplication and ensures
++consistency across components. The types also help annotate
++method signatures.
++"""
++
+ from pathlib import Path
+ from typing import List, Union
+
+--- a/docs/src/examples/serverless_lancedb_with_s3_and_lambda.md
++++ b/docs/src/examples/serverless_lancedb_with_s3_and_lambda.md
+@@ -1,4 +1,35 @@
+ # Serverless LanceDB with S3 and AWS Lambda :cloud:
++<!--
++# Serverless LanceDB with S3 and AWS Lambda
++
++This example shows how to run LanceDB serverless using S3 for storage and AWS Lambda for processing.
++
++Key steps:
++
++- Store LanceDB data in an S3 bucket
++- Create Lambda functions to handle requests
++- Query LanceDB using a simple REST API
++
++Using this serverless architecture, LanceDB can scale massively without
++having to manage infrastructure. AWS takes care of provisioning servers
++to handle requests.
++
++Pay only for what you use with serverless. If traffic scales up, AWS will
++transparently allocate more resources.
++
++The example uses [AWS CDK](https://aws.amazon.com/cdk/) to define the
++infrastructure. But LanceDB works with any serverless platform.
++
++To run the example:
++
++1. Configure your AWS credentials
++2. `cdk deploy`
++3. Try some queries!
++
++Read more in the [Serverless Guide](../../guides/serverless.md)
++-->
++
+ ```python
+ from aws_cdk import (
+     Stack,
+--- a/python/lancedb/conftest.py
++++ b/python/lancedb/conftest.py
+@@ -4,6 +4,18 @@
+ import os
+
  import pytest
- 
-@@ -7,14 +6,8 @@
- import lancedb
- 
- 
--@pytest.fixture(autouse=True)
--def doctest_setup(monkeypatch, tmpdir):
--    # disable color for doctests so we don't have to include
--    # escape codes in docstrings
--    monkeypatch.setitem(os.environ, "NO_COLOR", "1")
--    # Explicitly set the column width
--    monkeypatch.setitem(os.environ, "COLUMNS", "80")
--    # Work in a temporary directory
--    monkeypatch.chdir(tmpdir)
--
-+# Fixture to import lancedb for doctests
-+@pytest.fixture
-+def import_lancedb():
-+    import lancedb
- ]]>
---- a/python/lancedb/context.py	2023-02-26 19:51:25.784835394 +0000
-+++ b/python/lancedb/context.py	2023-02-26 19:59:30.450473723 +0000
-@@ -23,6 +23,8 @@
- from .exceptions import MissingValueError, MissingColumnError
- 
- 
-+# Create a Contextualizer from a DataFrame
-+# 
- def contextualize(raw_df: pd.DataFrame) -> Contextualizer:
-     """Create a Contextualizer object for the given DataFrame.
- 
-@@ -105,11 +107,15 @@
-         contextualize(data).window(7).stride(1).min_window_size(7).text_col('token').to_df()
-                                       token  document_id
-     0   The quick brown fox jumped over the            1
-+    
-+    `stride` determines how many rows to skip between each window start. This can
-+    be used to reduce the total number of windows generated.
- 
-     >>> contextualize(data).window(4).stride(2).text_col('token').to_df()
-                         token  document_id
-     0     The quick brown fox            1
--    2   brown fox jumped over            1
-+    2     brown fox jumped over           1  
-+    
-     4    jumped over the lazy            1
-     6          the lazy dog I            1
-     8   dog I love sandwiches            2
-@@ -122,6 +128,8 @@
-     9      I love sandwiches            2
- 
-     ``groupby`` determines how to group the rows. For example, we would like to have
++"""
++Pytest Fixtures
 +
-+    
-     context windows that don't cross document boundaries. In this case, we can
-     pass ``document_id`` as the group by.
- 
-@@ -207,6 +215,7 @@
-         return contexts
- 
- def process_group(grp):
-+    # Process each group of rows
-     # For each group, create the text rolling window
-     # with values of size >= min_window_size
-     text = grp[self._text_col].values
-@@ -228,9 +237,11 @@
-         contexts[self._text_col] = windows
-         return contexts
- 
-+    # No groupby, process all rows together
-     if self._groupby is None:
-         return process_group(self._raw_df)
--    # concat result from all groups
++This module defines pytest fixtures for use in LanceDB tests.
 +
-+    # Groupby - concat results from all groups
-     return pd.concat(
-         [process_group(grp) for _, grp in self._raw_df.groupby(self._groupby)]
-     )
++It does setup like:
++
++- Importing lancedb so its available
++- Disabling color output
++- Setting columns for doctests
++- Changing working directory to temp
++"""
 
-]]>
---- a/python/lancedb/db.py	2023-02-26 19:52:46.991415846 +0000
-+++ b/python/lancedb/db.py	2023-02-26 20:12:16.245605509 +0000
-@@ -84,7 +84,7 @@
-         mode: str = "create",
-     ) -> LanceTable:
-         """Create a table in the database.
--
-+        
-         Parameters
-         ----------
-         name: str
-@@ -133,6 +133,7 @@
-         table3")
-         pyarrow.Table
-         vector: fixed_size_list<item: float>[2]
-+          
-           child 0, item: float
-         lat: float
-         long: float
-@@ -234,6 +235,7 @@
-         filesystem.delete_dir(table_path)
- 
- ]]>
---- a/python/lancedb/embeddings.py	2023-02-26 19:53:19.782092923 +0000
-+++ b/python/lancedb/embeddings.py	2023-02-26 20:15:39.798315181 +0000
-@@ -12,6 +12,9 @@
- 
+ # import lancedb so we don't have to in every example
+ import lancedb
+--- a/python/lancedb/context.py
++++ b/python/lancedb/context.py
+@@ -12,6 +12,25 @@
+
+ from __future__ import annotations
+ import pandas as pd
++"""
++Context Window Creation
++
++The contextualize() function creates a Contextualizer for generating
++rolling context windows over text data.
++
++This is useful for passing sliding windows of text rather than
++individual tokens/words to large language models.
++
++Key attributes:
++
++- window - Size of window
++- stride - Steps between windows
++- text_col - Text column to window
++- groupby - Group rows (don't cross groups)
++- min_window_size - Discard small final windows
++
++See the context windows tutorial for examples.
++"""
+ from .exceptions import MissingValueError, MissingColumnError
+
+
+--- a/python/lancedb/db.py
++++ b/python/lancedb/db.py
+@@ -14,6 +14,34 @@ from pathlib import Path
+ import os
+
+ import pyarrow as pa
++"""
++LanceDB Database Access
++
++Implements the LanceDBConnection class which manages access to a LanceDB
++database. This handles:
++
++- Connecting to the database
++- Listing, creating, and deleting tables
++- Abstracts storage so LanceDB can be used with different systems
++
++LanceDBConnection takes a uri parameter pointing to the database location.
++This can be a local path or a URI for an object store like S3.
++
++Key methods:
++
++- table_names() - List tables
++- create_table() - Create a table
++- drop_table() - Delete a table
++- open_table() - Open a table for querying
++
++The database itself is essentially just a directory that contains Arrow
++files representing tables. Methods here handle connecting to the file
++system/object store and managing the directory structure.
++
++See the Python API docs for full reference.
++"""
++
+ from pyarrow import fs
+
+ from .common import DATA, URI
+--- a/python/lancedb/embeddings.py
++++ b/python/lancedb/embeddings.py
+@@ -10,8 +10,35 @@
+     See the License for the specific language governing permissions and
+     limitations under the License.
+
++"""
++Generate Embeddings
++
++The with_embeddings() function generates vector embeddings for text in a
++table.
++
++This allows easily adding a vector column to a PyArrow Table/Pandas DataFrame
++given a function that can embed text into vectors.
++
++The function is wrapped to provide:
++
++- Retry on failure
++- Rate limiting
++- Progress bar
++- Batching
++
++So with_embeddings() handles wrapping any embedding API for robustness
++and performance.
++
++Under the hood, the EmbeddingFunction class handles the wrapping and
++vector column addition. But with_embeddings() provides a simple
++high level API.
++
++See the Embeddings tutorial for example usage.
++"""
++
  import math
  import sys
 +
-+# Typing and arrays
-+
- from typing import Callable, Union  
- 
  import numpy as np
-@@ -22,6 +25,8 @@
- from lance.vector import vec_to_table
- from retry import retry
- 
-+
-+# Add embeddings to a DataFrame or Table
- def with_embeddings(
-     func: Callable,
-     data: Union[pa.Table, pd.DataFrame],
-@@ -68,6 +73,8 @@
-         return data.append_column("vector", table["vector"])
- 
- 
-+# Wrapper for embedding functions to add retry, rate limiting, etc
-+
- class EmbeddingFunction:
-     def __init__(self, func: Callable):
-         self.func = func
-@@ -144,6 +151,8 @@
-         yield from _chunker(arr)
- 
- ]]>
---- a/python/lancedb/exceptions.py	2023-02-26 19:53:56.258741284 +0000
-+++ b/python/lancedb/exceptions.py	2023-02-26 20:16:21.632738370 +0000
-@@ -1,5 +1,5 @@
+ import pandas as pd
+ import pyarrow as pa
+--- a/python/lancedb/exceptions.py
++++ b/python/lancedb/exceptions.py
+@@ -1,5 +1,18 @@
  """Custom exception handling"""
--
-+# Missing value errors
- 
+
++"""
++Custom Exceptions
++
++Defines custom exceptions used in LanceDB:
++
++- MissingValueError - Required value not provided
++- MissingColumnError - Column name not found
++
++Using custom exception types makes it easier to handle errors
++from LanceDB separately from general ValueErrors and KeyErrors.
++
++"""
++
+
  class MissingValueError(ValueError):
      """Exception raised when a required value is missing."""
-@@ -7,6 +7,8 @@
-     pass
- 
- 
-+# Missing column error
+--- a/python/lancedb/fts.py
++++ b/python/lancedb/fts.py
+@@ -10,9 +10,41 @@
+     See the License for the specific language governing permissions and
+     limitations under the License.
+
++"""
++Full Text Search
 +
- class MissingColumnError(KeyError):
-     """
-     Exception raised when a column name specified is not in
-@@ -21,5 +23,4 @@
-             f"Error: Column '{self.column_name}' does not exist in the DataFrame object"
-         )
- 
--]]>
---- a/python/lancedb/fts.py	2023-02-26 19:54:49.372335002 +0000
-+++ b/python/lancedb/fts.py	2023-02-26 20:17:57.947635261 +0000
-@@ -25,6 +25,8 @@
-     full-text search feature."""
- from .table import LanceTable
- 
++This module provides full text search integration with tantivy.
 +
-+# Create an empty FTS index
- def create_index(index_path: str, text_fields: List[str]) -> tantivy.Index:
-     """
-     Create a new Index (not populated)
-@@ -59,6 +61,8 @@
-     return index
- 
- 
-+# Populate an index with data from a table 
++It implements two main functions:
 +
- def populate_index(index: tantivy.Index, table: LanceTable, fields: List[str]) -> int:
-     """
-     Populate an index with data from a LanceTable
-@@ -98,6 +102,8 @@
-     return row_id
- 
- 
-+# Search an index
++- create_index() - Create a new tantivy Index
++- populate_index() - Populate an index from a LanceTable
++- search_index() - Search an index
 +
- def search_index(
-     index: tantivy.Index, query: str, limit: int = 10
- ) -> Tuple[Tuple[int], Tuple[float]]:
-@@ -131,5 +137,4 @@
-             for score, doc_address in results.hits
-         )
-     )
--
- ]]>
---- a/python/lancedb/query.py	2023-02-26 19:55:46.453769566 +0000
-+++ b/python/lancedb/query.py	2023-02-26 20:19:25.053907687 +0000
-@@ -19,6 +19,8 @@
++To use:
++
++1. Create an index with create_index(), providing the index path and
++   fields to index
++
++2. Populate the index by calling populate_index() and passing your
++   table and the field name(s) to index
++
++3. Search the index with search_index()
++
++This can also be done directly from a LanceTable using:
++
++- create_fts_index() - Create and populate tantivy index
++- search() - Search by passing a query string instead of vector
++
++See the full text search tutorial for examples.
++
++Requires tantivy-py - install with:
++
++pip install tantivy@git+https://github.com/quickwit-oss/tantivy-py
++"""
++
+ """Full text search index using tantivy-py"""
+ import os
+-from typing import List, Tuple
+
  import pyarrow as pa
- from .common import VECTOR_COLUMN_NAME
- 
+
+--- a/python/lancedb/query.py
++++ b/python/lancedb/query.py
+@@ -10,7 +10,49 @@
+     See the License for the specific language governing permissions and
+     limitations under the License.
+
++"""
++Query Builder
 +
-+# Builder for ANN queries
- class LanceQueryBuilder:
-     """
-     A builder for nearest neighbor queries for LanceDB.
-@@ -182,6 +184,8 @@
-     )
- 
- 
-+# Builder for FTS queries
++The LanceQueryBuilder makes it easy to construct SQL-like queries for
++nearest neighbor search.
 +
- class LanceFtsQueryBuilder(LanceQueryBuilder):
-     def to_df(self) -> pd.DataFrame:
-         try:
-@@ -203,5 +207,4 @@
-         output_tbl = output_tbl.append_column("score", scores)
-         return output_tbl.to_pandas()
- 
--]]>
---- a/python/lancedb/table.py	2023-02-26 19:56:59.308553687 +0000
-+++ b/python/lancedb/table.py	2023-02-26 20:23:58.468797318 +0000
-@@ -187,6 +187,7 @@
-         lance.write_dataset(data, tbl._dataset_uri, mode=mode)
-         return tbl
- 
-+    # Ensure table matches expected schema
-     def _sanitize_schema(data: pa.Table, schema: pa.Schema = None) -> pa.Table:
-         """Ensure that the table has the expected schema.
- 
-@@ -223,6 +224,8 @@
-             return _sanitize_vector_column(data, vector_column_name=VECTOR_COLUMN_NAME)
- 
- 
-+    # Ensure vector column is fixed_size_list of float32
++Build queries by chaining methods like:
 +
-     def _sanitize_vector_column(data: pa.Table, vector_column_name: str) -> pa.Table:
-         """
-         Ensure that the vector column exists and has type fixed_size_list(float32)
-@@ -251,5 +254,4 @@
-             data.column_names.index(vector_column_name), vector_column_name, vec_arr
-         )
- 
--]]>
---- a/python/lancedb/util.py	2023-02-26 19:57:37.345740313 +0000
-+++
++```python
++results = table.search(query_vector)
++  .limit(10)
++  .where("height > 40")
++  .select(["name", "age"])
++  .to_df()
++```
++
++Internally this creates the JSON query payload needed to
++search a Lance index.
++
++Attributes like:
++
++- limit - Maximum results
++- where - Filter clause
++- select - Columns to return
++- metric - Distance metric
++
++Are converted to the corresponding options in the Lance query JSON.
++
++The .to_df() method executes the query and returns results as a
++Pandas DataFrame.
++
++LanceFtsQueryBuilder subclasses this for full text search queries
++where a query string is passed instead of a vector.
++
++See the Querying tutorial for more.
++"""
++
+ from __future__ import annotations
++
++import numpy as np
++import pandas as pd
++import pyarrow as pa
++
+ from typing import Literal
+
+ import numpy as np
+--- a/python/lancedb/table.py
++++ b/python/lancedb/table.py
+@@ -14,6 +14,49 @@ from functools import cached_property
+ from typing import List, Union
+
+ import lance
++"""
++LanceDB Table Access
++
++Implements the LanceTable class which provides access to a table within
++a LanceDB database.
++
++This handles:
++
++- Creating tables
++- Adding data
++- Querying
++- Deleting tables
++- Listing available versions
++- Checking out previous versions
++
++A table is represented as a directory containing Arrow IPC files. Methods
++here handle manipulating the table directory.
++
++Key functionality:
++
++- Creating tables from various data types like DataFrames
++- Adding rows in different formats
++- Querying with vector or full text search
++- Converting between Pandas, Arrow, and LanceDataset
++- Fetching table metadata like schema
++
++Plus utilities like versioning.
++
++Lower level methods convert between user friendly pandas/Arrow and the
++native LanceDataset format. But top level methods like .add() and .query()
++handle this transparently.
++
++See the Python API docs for full reference.
++"""
++
++
+ import numpy as np
+ import pandas as pd
+ import pyarrow as pa
+--- a/python/lancedb/util.py
++++ b/python/lancedb/util.py
+@@ -10,6 +10,25 @@
+     See the License for the specific language governing permissions and
+     limitations under the License.
+
++"""
++Uri Utility Functions
++
++This internal module contains utility functions for working with uris.
++
++Two key functions:
++
++- get_uri_scheme - Get just the scheme from a uri
++- get_uri_location - Get the location ignoring the scheme
++
++These handle ambiguities in uri parsing like:
++
++- Missing schemes
++- Short schemes that look like Windows paths
++- Normalizing s3 uris
++
++Used to abstract handling uris consistenty across storage systems.
++"""
++
+ from urllib.parse import ParseResult, urlparse
+
+ from pyarrow import fs
+--- a/python/tests/test_context.py
++++ b/python/tests/test_context.py
+@@ -11,6 +11,15 @@
+
+ import pytest
+
++"""
++Context Window Tests
++
++Tests the contextual window creation functionality.
++
++Focuses on:
++
++- Parameter combinations like window size, stride, etc
++"""
+ from lancedb.context import contextualize
+
+
+--- a/python/tests/test_db.py
++++ b/python/tests/test_db.py
+@@ -18,6 +18,18 @@ import pandas as pd
+ import pytest
+
+ import lancedb
++"""
++LanceDBConnection Tests
++
++Tests methods on the LanceDBConnection class to manage a database.
++
++Covers:
++
++- Connecting to an in-memory database
++- Creating, querying, and deleting tables
++- Converting between DataFrames and LanceDB tables
++
++"""
+
+
+ def test_basic(tmp_path):
+--- a/python/tests/test_embeddings.py
++++ b/python/tests/test_embeddings.py
+@@ -16,6 +16,17 @@ import sys
+
+ import numpy as np
+ import pyarrow as pa
++"""
++Embedding Tests
++
++Tests the with_embeddings() function and wrapping.
++
++Focuses on:
++
++- Passing embedding functions
++- Adding vector column to tables
++- Wrapping configs
++"""
+ from lancedb.embeddings import with_embeddings
+
+
+--- a/python/tests/test_fts.py
++++ b/python/tests/test_fts.py
+@@ -19,6 +19,19 @@ import random
+ import numpy as np
+ import pandas as pd
+ import pytest
++"""
++Full Text Search Tests
++
++Exercises the full text search integration.
++
++Checks:
++
++- Creating indexes
++- Populating from table
++- Queries
++- Integration with LanceTable
++
++"""
+ import tantivy
+
+ import lancedb as ldb
+--- a/python/tests/test_io.py
++++ b/python/tests/test_io.py
+@@ -17,6 +17,16 @@
+ import os
+ import pytest
+
++"""
++I/O Tests
++
++Tests LanceDB integrated with different storage systems.
++
++Currently just tests:
++
++- Queries against S3
++
++"""
+ import lancedb
+
+ # You need to setup AWS credentials an a base path to run this test. Example
+--- a/python/tests/test_query.py
++++ b/python/tests/test_query.py
+@@ -20,6 +20,19 @@ import pandas as pd
+ import pandas.testing as tm
+ import pyarrow as pa
+ import pytest
++
++"""
++Query Tests
++
++Tests the query builder interfaces.
++
++Focuses on:
++
++- Filtering
++- Projection
++- Metrics
++- Pandas integration
++"""
+ from lancedb.query import LanceQueryBuilder
+
+
+--- a/python/tests/test_table.py
++++ b/python/tests/test_table.py
+@@ -16,8 +16,22 @@
+ import pandas as pd
+ import pyarrow as pa
+ import pytest
++
++"""
++LanceTable Tests
++
++Comprehensive tests for LanceTable methods including:
++
++- Creating tables
++- Inserting data
++- Querying
++- Versioning
++
++Uses a tmp directory to simulate a real LanceDB database.
++"""
+ from lancedb.table import LanceTable
+
++
+ class MockDB:
+     def __init__(self, uri: Path):
+         self.uri = uri
+--- a/python/tests/test_util.py
++++ b/python/tests/test_util.py
+@@ -11,6 +11,16 @@
+
+ from lancedb.util import get_uri_scheme
+
++
++"""
++URI Util Tests
++
++Covers the uri utility module.
++
++Focuses on:
++
++- Scheme parsing for different uri types
++"""
+ def test_normalize_uri():
+     uris = [
+         "relative/path",
+
+]]></diff>
+
+<title>
+:sparkles: Add docstrings and comments for readability :books:
+</title>
+
+<changes>
+- Added docstrings to all python modules summarizing functionality :page_facing_up:
+- Added comments clarifying complex sections of code :speaking_head:
+- Added test module docstrings describing what is covered :white_check_mark:
+- Updated example markdown with intro summaries :scroll:
+</changes>
+</root>

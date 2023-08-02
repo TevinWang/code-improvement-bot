@@ -53,70 +53,70 @@ def main(repo_url):
 
             add += 1
         # def start(to_react, cur_i):
-        p = subprocess.Popen(['node', 'add_doc_context.js', "|||||".join(to_react)], stdout=subprocess.PIPE)
-        out = p.stdout.read()
-        # expected: line1|||line|||context|||||..
-        context_list = [tuple(line.split("|||")) for line in out.decode("utf-8").split("|||||")]
-        python_files[i] += (context_list,)
+        #     p = subprocess.Popen(['node', 'add_doc_context.js', "|||||".join(to_react)], stdout=subprocess.PIPE)
+        #     out = p.stdout.read()
+        #     # expected: line1|||line|||context|||||..
+        #     context_list = [tuple(line.split("|||")) for line in out.decode("utf-8").split("|||||")]
+        #     python_files[i] += (context_list,)
 
-    #     thread = threading.Thread(target=start, args=(to_react, i))
-    #     threads.append(thread)
-    #     thread.start()
+        # thread = threading.Thread(target=start, args=(to_react, i))
+        # threads.append(thread)
+        # thread.start()
 
     # print(threads)
     # for thread in threads:
     #     thread.join()
 
-    # python_files is now [(FILE_PATH, [FILE LINES], [(LINE NUMBER, LINE, CONTEXT)])]
+    # # python_files is now [(FILE_PATH, [FILE LINES], [(LINE NUMBER, LINE, CONTEXT)])]
     with open("python_files2.txt", "w", encoding="utf-8") as f:
         f.write('<files>')
         f.writelines(
-            f"<file>\n<file_path>{file_path}</file_path>\n<file_content>\n{file_content}\n</file_content>\n</file>\n"
+            f"<file>\n<file_path>{file_path}</file_path>\n<file_content><![CDATA[\n{file_content}\n]]></file_content>\n</file>\n"
             for file_path, file_content in python_files2
         )
         f.write('</files>')
     # write the file
-    with open("python_files.txt", "w", encoding="utf-8") as f:
-        f.write('<files>\n')
-        for file_path, file_content, file_context in python_files:
-            f.write(f"<file>\n<file_path>{file_path}</file_path>\n<file_content>\n{file_content}\n</file_content>\n<file_context>\n")
-            for context in file_context:
-                f.write(f"<line>\n<line_number>{context[0]}</line_number>\n<line_content>{context[1]}</line_content>\n<context>\n{context[2]}</context>\n</line>\n")
-            f.write("</file_context>\n</file>\n")
-        f.write('</files>')
+    # with open("python_files.txt", "w", encoding="utf-8") as f:
+    #     f.write('<files>\n')
+    #     for file_path, file_content, file_context in python_files:
+    #         f.write(f"<file>\n<file_path>{file_path}</file_path>\n<file_content>\n{file_content}\n</file_content>\n<file_context>\n")
+    #         for context in file_context:
+    #             f.write(f"<line>\n<line_number>{context[0]}</line_number>\n<line_content>{context[1]}</line_content>\n<context>\n{context[2]}</context>\n</line>\n")
+    #         f.write("</file_context>\n</file>\n")
+    #     f.write('</files>')
 
-    # LOOKS LIKE
-    """
-    <files>
-        <file>
-            <file_path>path/to/file.py</file_path>
-            <file_content>
-                import os, subprocess
-                etc
-                etc
-            </file_content>
-            <file_context>
-                <line>
-                    <line_number>1</line_number>
-                    <line_content>import os, subprocess</line_content>
-                    <context>
-                        import os, subprocess
-                        context here
-                    </context>
-                </line>
-                <line>
-                    <line_number>2</line_number>
-                    etc
-                    etc
-                </line>
-            </file_context>
-        </file>
-        <file>
-            etc
-            etc
-        </file>
-    </files>
-    """
+    # # LOOKS LIKE
+    # """
+    # <files>
+    #     <file>
+    #         <file_path>path/to/file.py</file_path>
+    #         <file_content>
+    #             import os, subprocess
+    #             etc
+    #             etc
+    #         </file_content>
+    #         <file_context>
+    #             <line>
+    #                 <line_number>1</line_number>
+    #                 <line_content>import os, subprocess</line_content>
+    #                 <context>
+    #                     import os, subprocess
+    #                     context here
+    #                 </context>
+    #             </line>
+    #             <line>
+    #                 <line_number>2</line_number>
+    #                 etc
+    #                 etc
+    #             </line>
+    #         </file_context>
+    #     </file>
+    #     <file>
+    #         etc
+    #         etc
+    #     </file>
+    # </files>
+    # """
 
     # read the file
     with open("python_files.txt", "r", encoding="utf-8") as f:
@@ -124,10 +124,9 @@ def main(repo_url):
 
 
     prompt = f"""{HUMAN_PROMPT}
-    "Codebase Cleanup and Documentation: LLM Quick Prompt"
 
     Description:
-    In this prompt, you are given a codebase that requires thorough cleanup, additional comments, and the implementation of documentation tests (doc tests). Your task is to enhance the readability, maintainability, and understanding of the codebase through comments and clear documentation. Additionally, you will implement doc tests to ensure the accuracy of the documentation while also verifying the code's functionality.
+    In this prompt, you are given a open source codebase that requires thorough cleanup, additional comments, and the implementation of documentation tests (doc tests). Your task is to enhance the readability, maintainability, and understanding of the codebase through comments and clear documentation. Additionally, you will implement doc tests to ensure the accuracy of the documentation while also verifying the code's functionality.
 
     Tasks:
 
@@ -162,19 +161,19 @@ def main(repo_url):
     Ensure that the doc tests cover various scenarios to validate the code's correctness.
     This prompt allows the LLM to work on improving codebase quality through comments and documentation while also implementing doc tests for verification. Cleaning up and enhancing codebases in this way is a crucial skill for any developer, as it facilitates teamwork, code maintenance, and future development efforts.Claude, I'm seeking your expertise in adding comments and doc tests to Python code files.:
 
-    Provide the updated code in a xml structure:
+    Provide the updated code in a xml structure where your entire response is parseable by xml:
 
     <root>
     <diff>
     <!--Ensure the diff follows the unified diff format that would be returned by python difflib, providing clear context and line-by-line changes for ALL files.
     Give line numbers with the first line of the file content being line 1,
-    ONLY CHANGE LINES OF FILE CONTENT. Do this for all files.
+    ONLY CHANGE LINES OF FILE CONTENT (NOT ANY OF THE XML TAGS). Do this for all files.
     Add the entire thing as a cdata section '<![CDATA['
     This is what it is supposed to look like per file:
     --- a/path/to/file.txt (make sure to include the 'a/' in the path, and exactly 3 +s)
     +++ b/path/to/file.txt (make sure to include the 'b/' in the path, and exactly 3 -s)
     @@ -1,4 +1,4 @@ (ANYTHING after the @@ MUST BE ON A NEW LINE)
-    This is the original content.
+    This is the original content.s
     -Some lines have been removed.
     +Some lines have been added.
     More content here.
@@ -207,11 +206,22 @@ def main(repo_url):
 
     Be sure to add changes to all files provided.
 
+    Reminder that the title should contain a relevant emoji and be github style. The changes section should include changes in bullet points.
 
-    Please find the files for review and modification below:
+    Please find the files for review and modification below. They also contain the relevant context and documentation from python to help guide you.
     {python_files}
 
-    Now act as a XML code outputter. Do not add any additional context or introduction in your response, make sure your entire response is parseable by xml.
+    Remember the output is in the form: <root>
+    <diff>
+    </diff>
+    <title>
+    </title>
+    <changes>
+    </changes>
+    </root>
+
+    DO NOT STOP IN THE MIDDLE.
+    Now act as a XML code outputter. Generate based off of the entire instructions, do not cut out in the middle (remember to populate the patch in the diff section). Do not add any additional context or introduction in your response, make sure your entire response is parseable by xml.
     {AI_PROMPT}"""
 
     anthropic = Anthropic(

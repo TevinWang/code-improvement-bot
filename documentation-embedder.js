@@ -4,6 +4,7 @@ import * as path from "node:path";
 import { download } from '@guoyunhe/downloader';
 import dotenv from 'dotenv'
 import Anthropic from '@anthropic-ai/sdk'
+import { WriteMode } from "vectordb";
 
 dotenv.config()
 const lancedb = await import("vectordb");
@@ -13,7 +14,7 @@ const { pipeline } = await import('@xenova/transformers')
 const pipe = await pipeline('feature-extraction', 'Xenova/all-MiniLM-L6-v2');
 
 const anthropic = new Anthropic({
-    apiKey: process.env.ANTHROPIC_API_KEY,
+    apiKey: process.env.CLAUDE_API,
 });
 
 async function read_data(){
@@ -35,7 +36,7 @@ async function read_data(){
                     const prompt = `\n\n${Anthropic.HUMAN_PROMPT}: You are to act as a summarizer bot whose task is to read the following code documentation about a python function and summarize it in a few paragraphs without bullet points. You should include what the function does and potentially a few examples on how to use it, in multiple paragraphs, but leave out any unrelated information that is not about the functionality of it in python, including a preface to the response, such as 'Here is a summary...'. \n\nREMEMBER: \nDo NOT begin your response with an introduction. \nMake sure your entire response can fit in a research paper. \nDo not use bullet points. \nKeep responses in paragraph form. \nDo not respond with extra context or your introduction to the reponse.\n\nNow act like the summarizer bot, and follow all instructions. Do not add any additional context or introduction in your response. Here is the documentation file:\n${output}\n\n${Anthropic.AI_PROMPT}:`
                     let completion = await anthropic.completions.create({
                         model: 'claude-2',
-                        max_tokens_to_sample: 1000,
+                        max_tokens_to_sample: 100000,
                         prompt: prompt,
                     });
                     completion = completion.completion.split(":\n\n").slice(1);
@@ -85,6 +86,6 @@ embed_fun.embed = async function (batch) {
     }
 
     console.log("creating table");
-    const _ = await db.createTable("python_docs", data, embed_fun);
+    const _ = await db.createTable("python_docs", data, embed_fun, { writeMode: WriteMode.Overwrite });
     console.log("table created");
 })();
