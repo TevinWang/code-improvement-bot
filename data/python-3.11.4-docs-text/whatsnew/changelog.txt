@@ -50,6 +50,9 @@ Core and Builtins
 Library
 -------
 
+* gh-46376: Prevent memory leak and use-after-free when using pointers
+  to pointers with ctypes
+
 * gh-62519: Make "gettext.pgettext()" search plural definitions when
   translation is not found.
 
@@ -90,6 +93,9 @@ Library
 
 * gh-102541: Make pydoc.doc catch bad module ImportError when output
   stream is not None.
+
+* gh-106263: Fix crash when calling "repr" with a manually constructed
+  SignalDict object. Patch by Charlie Zhao.
 
 * gh-105375: Fix a bug in "_Unpickler_SetInputStream()" where an
   exception could end up being overwritten in case of failure.
@@ -202,6 +208,12 @@ Windows
 
 * gh-105436: Ensure that an empty environment block is terminated by
   two null characters, as is required by Windows.
+
+
+macOS
+-----
+
+* gh-99079: Update macOS installer to use OpenSSL 3.0.9.
 
 
 Tools/Demos

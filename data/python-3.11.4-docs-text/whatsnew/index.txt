@@ -41,6 +41,8 @@ most important changes between major Python versions.  They are a
 
   * Notable Changes in 3.11.4
 
+  * Notable Changes in 3.11.5
+
 * What's New In Python 3.10
 
   * Summary -- Release highlights

@@ -2525,3 +2525,14 @@ tarfile
   Python 3.12, use without the *filter* argument will show a
   "DeprecationWarning". In Python 3.14, the default will switch to
   "'data'". (Contributed by Petr Viktorin in **PEP 706**.)
+
+
+Notable Changes in 3.11.5
+=========================
+
+
+OpenSSL
+-------
+
+* Windows builds and macOS installers from python.org now use OpenSSL
+  3.0.

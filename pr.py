@@ -73,8 +73,8 @@ if __name__ == "__main__":
     username = 'TevinWang'
     app_id = '368612'
     private_key_path = 'gooddiff.pem'
-    target_id = '40181391'
-    full_repo_name = f'{username}/ClassGPT'
+    target_id = '40204273'
+    full_repo_name = f'{username}/LanceDB'
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
     branch_name = f'gooddiff-{timestamp}'
     base_branch_name = 'main'
@@ -84,7 +84,7 @@ if __name__ == "__main__":
 
     create_branch(repo, branch_name, base_branch_name)
 
-    with open('python_files.txt', 'r') as output:
+    with open('python_files2.txt', 'r') as output:
       xml_data = output.read()
 
     # Parse the XML data

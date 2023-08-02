@@ -180,6 +180,10 @@ Python Documentation contents
 
       * tarfile
 
+    * Notable Changes in 3.11.5
+
+      * OpenSSL
+
   * What's New In Python 3.10
 
     * Summary -- Release highlights
@@ -2441,6 +2445,8 @@ Python Documentation contents
       * Build
 
       * Windows
+
+      * macOS
 
       * Tools/Demos
 
@@ -9930,8 +9936,6 @@ Python Documentation contents
   * Argument Clinic How-To
 
     * Background
-
-      * The goals of Argument Clinic
 
       * Basic concepts
 

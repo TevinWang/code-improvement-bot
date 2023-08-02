@@ -24,7 +24,7 @@ int PyCode_GetNumFree(PyCodeObject *co)
 
    Return the number of free variables in *co*.
 
-PyCodeObject *PyCode_New(int argcount, int kwonlyargcount, int nlocals, int stacksize, int flags, PyObject *code, PyObject *consts, PyObject *names, PyObject *varnames, PyObject *freevars, PyObject *cellvars, PyObject *filename, PyObject *name, int firstlineno, PyObject *linetable, PyObject *exceptiontable)
+PyCodeObject *PyCode_New(int argcount, int kwonlyargcount, int nlocals, int stacksize, int flags, PyObject *code, PyObject *consts, PyObject *names, PyObject *varnames, PyObject *freevars, PyObject *cellvars, PyObject *filename, PyObject *name, PyObject *qualname, int firstlineno, PyObject *linetable, PyObject *exceptiontable)
     *Return value: New reference.*
 
    Return a new code object.  If you need a dummy code object to
@@ -36,9 +36,10 @@ PyCodeObject *PyCode_New(int argcount, int kwonlyargcount, int nlocals, int stac
    incorrect execution or VM crashes. Use this function only with
    extreme care.
 
-   Changed in version 3.11: Added "exceptiontable" parameter.
+   Changed in version 3.11: Added "qualname" and "exceptiontable"
+   parameters.
 
-PyCodeObject *PyCode_NewWithPosOnlyArgs(int argcount, int posonlyargcount, int kwonlyargcount, int nlocals, int stacksize, int flags, PyObject *code, PyObject *consts, PyObject *names, PyObject *varnames, PyObject *freevars, PyObject *cellvars, PyObject *filename, PyObject *name, int firstlineno, PyObject *linetable, PyObject *exceptiontable)
+PyCodeObject *PyCode_NewWithPosOnlyArgs(int argcount, int posonlyargcount, int kwonlyargcount, int nlocals, int stacksize, int flags, PyObject *code, PyObject *consts, PyObject *names, PyObject *varnames, PyObject *freevars, PyObject *cellvars, PyObject *filename, PyObject *name, PyObject *qualname, int firstlineno, PyObject *linetable, PyObject *exceptiontable)
     *Return value: New reference.*
 
    Similar to "PyCode_New()", but with an extra "posonlyargcount" for
@@ -47,7 +48,8 @@ PyCodeObject *PyCode_NewWithPosOnlyArgs(int argcount, int posonlyargcount, int k
 
    New in version 3.8.
 
-   Changed in version 3.11: Added "exceptiontable" parameter.
+   Changed in version 3.11: Added "qualname" and  "exceptiontable"
+   parameters.
 
 PyCodeObject *PyCode_NewEmpty(const char *filename, const char *funcname, int firstlineno)
     *Return value: New reference.*

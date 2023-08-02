@@ -27,7 +27,7 @@ embed_fun.embed = async function (batch) {
     for (let i of input) {
         i = i.split("|||");
         let result = await table.search(i[1]).select(['text']).limit(1).execute();
-        results.push(result[0].text);
+        results.push(result.map(r => r.text).join(", "));
     }
 
     let response = [];
